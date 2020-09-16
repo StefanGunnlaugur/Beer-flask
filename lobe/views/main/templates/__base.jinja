@@ -11,10 +11,10 @@
     {% endif %}
     <link rel="stylesheet" href='{{url_for("main.static", filename="styles/fontawesome/all.css")}}'>
     <link rel="stylesheet" href='{{url_for("main.static", filename="styles/main.css")}}'>
-    <link rel="icon" type="image/png" href="{{url_for('main.static', filename='favicon.ico')}}" />
+    <link rel="icon" type="image/png" href="{{url_for('main.static', filename='logo.ico')}}" />
     {% block headscripts %}
     {% endblock %}
-    <title>LOBE</title>
+    <title>Bjór í mig</title>
   </head>
   {% if current_user.progression %}
     {{macros.font_link(current_user.progression.equipped_font)}}

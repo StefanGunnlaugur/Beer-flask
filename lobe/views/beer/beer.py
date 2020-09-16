@@ -23,13 +23,14 @@ beer = Blueprint(
 @login_required
 @roles_accepted('admin')
 def beer_list():
-    page = int(request.args.get('page', 1))
-    beer_list = Beer.query.order_by(
-            resolve_order(
-                Beer,
-                request.args.get('sort_by', default='created_at'),
-                order=request.args.get('order', default='desc')))\
-        .paginate(page, per_page=app.config['BEER_PAGINATION'])
+    beer_list = Beer.query.all()
+    #page = int(request.args.get('page', 1))
+    #beer_list = Beer.query.order_by(
+    #        resolve_order(
+    #            Beer,
+    #            request.args.get('sort_by', default='created_at'),
+    #            order=request.args.get('order', default='desc')))
+        #.paginate(page, per_page=app.config['BEER_PAGINATION'])
     return render_template(
         'beer_list.jinja',
         beer_list=beer_list,

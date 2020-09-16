@@ -121,7 +121,7 @@ class Beer(BaseModel, db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     name = db.Column(db.String(255))
     price = db.Column(db.Integer)
-    alcohol = db.Column(db.Integer)
+    alcohol = db.Column(db.Float)
     volume = db.Column(db.Integer)
     country = db.Column(db.String(255))
     manufacturer = db.Column(db.String(255))

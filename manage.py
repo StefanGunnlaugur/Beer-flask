@@ -18,7 +18,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from termcolor import colored
 
 from lobe import app
-from lobe.models import (User, Role, db)
+from lobe.models import (User, Role, db, Beer)
 
 
 migrate = Migrate(app, db)
@@ -78,6 +78,20 @@ class AddUser(Command):
             except IntegrityError as e:
                 print(e)
 
+class AddBeersFromJson(Command):
+    def run(self):
+        with open('scraper/data-16-09-2020.json') as json_file:
+            data = json.load(json_file)
+            for p in data:
+                beer = Beer()
+                beer.name = p['name']
+                beer.price = int(p['price'].replace('.', '').replace(' kr', ''))
+                beer.alcohol = float(p['alcohol'].replace('%', ''))
+                beer.beer_type = p['taste']
+                beer.volume = int(p['volume'].replace(' ml', ''))
+                db.session.add(beer)
+        db.session.commit()
+                
 
 class changePass(Command):
     def run(self):
@@ -116,6 +130,8 @@ manager.add_command('add_user', AddUser)
 manager.add_command('change_pass', changePass)
 manager.add_command('add_default_roles', AddDefaultRoles)
 manager.add_command('add_column_defaults', AddColumnDefaults)
+manager.add_command('add_beers_from_json', AddBeersFromJson)
+
 
 
 if __name__ == '__main__':

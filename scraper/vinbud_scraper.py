@@ -2,6 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
 from time import sleep
+from datetime import date
 
 
 url = "https://www.vinbudin.is/heim/vorur/vorur.aspx/?category=beer&order=price%20desc"
@@ -10,12 +11,12 @@ url = "https://www.vinbudin.is/heim/vorur/vorur.aspx/?category=beer&order=price%
 
 # create a new Firefox session
 driver = webdriver.Firefox()
-driver.implicitly_wait(30)
+driver.implicitly_wait(50)
 driver.get(url)
 
 next_button = driver.find_elements_by_class_name("next")
 allBeers = []
-for i in range(20):
+for i in range(22):
     soup=BeautifulSoup(driver.page_source, 'html')
     for product in soup.find_all('li', class_="product"):
         title_a = product.find('a', class_="title")
@@ -36,7 +37,7 @@ for i in range(20):
             taste = ""
 
         beer = {
-        "title": title,
+        "name": title,
         "price":price,
         "volume": volume,
         "alcohol": alcohol,
@@ -47,13 +48,14 @@ for i in range(20):
 
         allBeers.append(beer)
 
-    print(next_button)
     next_button[0].click()
     #fer eftir internet tengingu hvad tharf ad sleepa lengi
-    sleep(0.4)
+    sleep(1)
 
+today = date.today()
+d4 = today.strftime("%d-%m-%Y")
 
-with open('data2.json', 'r+') as outfile:
+with open('data-{}.json'.format(d4), 'w') as outfile:
     json.dump(allBeers, outfile,ensure_ascii=False)
 
 
