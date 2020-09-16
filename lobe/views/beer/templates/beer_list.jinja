@@ -1,0 +1,19 @@
+{% extends "_list.jinja" %}
+{% block title %}Allir bjórar{% endblock %}
+{% block total %}{{beer_list.total}}{% endblock %}
+{% block buttons %}
+    
+{% endblock %}
+{% block table %}
+    {% for b in beer_list %}
+        <span>b.name</span>
+    {% endfor %}
+{% endblock %}
+
+{% block pagination %}
+   
+{% endblock %}
+
+{% block no_results %}
+    
+{% endblock %}
