@@ -83,12 +83,15 @@ class AddBeersFromJson(Command):
         with open('scraper/data-16-09-2020.json') as json_file:
             data = json.load(json_file)
             for p in data:
-                beer = Beer()
-                beer.name = p['name']
+                beer = Beer.query.filter_by(name=p['name']).first()
+                if beer is None:
+                    beer = Beer()
+                    beer.name = p['name']
                 beer.price = int(p['price'].replace('.', '').replace(' kr', ''))
                 beer.alcohol = float(p['alcohol'].replace('%', ''))
                 beer.beer_type = p['taste']
                 beer.volume = int(p['volume'].replace(' ml', ''))
+                beer.product_number = int(p['product_number'])
                 db.session.add(beer)
         db.session.commit()
                 

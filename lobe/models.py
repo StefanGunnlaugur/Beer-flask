@@ -51,6 +51,18 @@ user_beer = db.Table(
     db.Column('beer_id', db.Integer(), db.ForeignKey('beer.id'))
 )
 
+user_beernight_memeber = db.Table(
+    'user_beernight_memeber',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('beernight_id', db.Integer(), db.ForeignKey('beernight.id'))
+)
+
+user_beernight_admin = db.Table(
+    'user_beernight_admin',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('beernight_id', db.Integer(), db.ForeignKey('beernight.id'))
+)
+
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
@@ -82,7 +94,12 @@ class User(db.Model, UserMixin):
         backref=db.backref('users', lazy='dynamic'))
     beers = db.relationship("Beer",
                     secondary=user_beer)
-
+    beernights_member = db.relationship("Beernight",
+                    secondary=user_beernight_memeber,
+                    back_populates="members")
+    beernights_admin = db.relationship("Beernight",
+                    secondary=user_beernight_admin,
+                    back_populates="admins")
 
     def get_url(self):
         return url_for('user.user_detail', id=self.id)
@@ -127,6 +144,7 @@ class Beer(BaseModel, db.Model):
     manufacturer = db.Column(db.String(255))
     description = db.Column(db.String(500))
     beer_type = db.Column(db.String(255))
+    product_number = db.Column(db.Integer)
     
     ratings = db.relationship(
         "BeerRating", lazy="joined", backref='beer',
@@ -216,9 +234,13 @@ class BeerComment(BaseModel, db.Model):
     id = db.Column(
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())    
-    comment = db.Column(db.String(255))
+    text = db.Column(db.String(255))
     beer_id = db.Column(db.Integer, db.ForeignKey("beer.id"))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    parent_comment_id = db.Column(db.Integer, db.ForeignKey('beerComment.id'))
+    replys = db.relationship("BeerComment",
+                backref=db.backref('parent_comment', remote_side=[id])
+            )
 
     @property
     def get_user(self):
@@ -227,6 +249,11 @@ class BeerComment(BaseModel, db.Model):
     @property
     def get_beer(self):
         return Beer.query.get(self.beer_id)
+    
+    @property
+    def get_parent_comment(self):
+        return BeerComment.query.get(self.parent_comment_id)
+
 
 
 
@@ -236,9 +263,17 @@ class Beernight(BaseModel, db.Model):
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     uuid = db.Column(db.String, default=str(uuid.uuid4()))
+    name = db.Column(db.String(255))
+    admins = db.relationship(
+        "User",
+        secondary=user_beernight_admin,
+        back_populates="beernights_admin")
+    members = db.relationship(
+        "User",
+        secondary=user_beernight_memeber,
+        back_populates="beernights_member")
     beers = db.relationship(
-        "BeernightBeer", lazy='joined', backref="beernight",
-        cascade='all, delete, delete-orphan')
+        "BeernightBeer", lazy='joined', backref="beernight")
 
     def getAllRatings(self):
         ratings = []
@@ -271,6 +306,11 @@ class Beernight(BaseModel, db.Model):
     def edit_url(self):
         return url_for('beer.beer_edit', id=self.id)
 
+user_beernight = db.Table(
+    'user_beernight',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('beernight_id', db.Integer(), db.ForeignKey('beernight.id'))
+)
 
 class BeernightBeer(BaseModel, db.Model):
     __tablename__ = 'beernightBeer'
@@ -278,7 +318,6 @@ class BeernightBeer(BaseModel, db.Model):
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     beernight_id = db.Column(db.Integer, db.ForeignKey('beernight.id'))
     orginal_beer_id = db.Column(db.Integer, db.ForeignKey("beer.id"))
-    
     ratings = db.relationship(
         "BeernightRating", lazy="joined", backref='beernightBeer',
         cascade='all, delete, delete-orphan')

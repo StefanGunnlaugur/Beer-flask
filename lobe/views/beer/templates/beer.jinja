@@ -1,28 +1,211 @@
-{% extends "_list.jinja" %}
-{% block title %}{{beer.id}}{% endblock %}
+{% extends "__base.jinja" %}
 
-{% block header_content %}
+{% block body %}
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+			<symbol id="star"><g transform="scale(0.03125 0.03125)"><path d="M896 384l-313.5-40.781-134.5-279.219-134.531 279.219-313.469 40.781 230.469 208.875-59.469 303.063 277-148.812 277.062 148.812-59.562-303.063 230.5-208.875z" /></g></symbol>
+			<symbol viewBox="0 0 18 18" id="no_rating"><g transform="scale(0.017578125 0.017578125)"><path d="M512 56.889c-251.362 0-455.111 203.749-455.111 455.111s203.749 455.111 455.111 455.111 455.111-203.749 455.111-455.111-203.749-455.111-455.111-455.111zM170.667 512c0-73.639 23.666-141.694 63.472-197.527l475.388 475.388c-55.833 39.806-123.888 63.472-197.527 63.472-188.222 0-341.333-153.111-341.333-341.333zM789.861 709.527l-475.388-475.388c55.833-39.806 123.888-63.472 197.527-63.472 188.222 0 341.333 153.111 341.333 341.333 0 73.639-23.666 141.694-63.472 197.527z" /></g></symbol>
+	</svg>
+    <link rel="stylesheet" href="{{ url_for("static", filename = 'css/radio--rating.css') }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename = 'css/heartbox-fav.css') }}">
+    <div class="beer-containter col">
+        <div class="beer-header mb-10">
+            <p class="h2">{{beer.name}}</p>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                {% if beer.product_number %}
+                    <img class='img-responsive mh-100' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                {% else %}
+                    <img class='img-responsive mh-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
+                {% endif %}
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-4">
+                        <div style="margin: 20px 0px">
+                            <span>Styrkur: {{beer.alcohol}}</span>
+                        </div>
+                        <div style="margin: 20px 0px">
+                            <span>Einkunn: {{beer.average_rating}}</span>
+                        </div>
+                        <div class="my-20" style="margin: 20px 0px">
+                            <span>Magn: {{beer.volume}}ml</span>
+                        </div>
+                        <div class="my-20" style="margin: 20px 0px">
+                            <span>Verð: {{beer.price}}kr.</span>
+                        </div>
+                        <div class="my-20" style="margin: 20px 0px">
+                            <span>Tegund: {{beer.beer_type}}</span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        {% if current_user %}
+                            <div style="margin: 20px 0px">
+                                <!-- https://scottaohara.github.io/a11y_styled_form_controls/src/radio-button--rating/ -->
+                                <form action="#" method="post">
+                                    <fieldset class="r-radios">        
+                                        <input type="radio" name="r_input" id="r_input_1">
+                                        <label for="r_input_1" class="r-radio">
+                                            <svg aria-hidden="true" focusable="false">
+                                                <use xlink:href="#star"/>
+                                            </svg>
+                                            <span role="presentation">1 Stjarna</span>
+                                        </label>
 
-{% endblock %}
+                                        <input type="radio" name="r_input" id="r_input_2">
+                                        <label for="r_input_2" class="r-radio">
+                                            <svg aria-hidden="true" focusable="false">
+                                                <use xlink:href="#star"/>
+                                            </svg>
+                                            <span role="presentation">2 Stjarna</span>
+                                        </label>
 
-{%block buttons %}
-   
-{% endblock %}
+                                        <input type="radio" name="r_input" id="r_input_3">
+                                        <label for="r_input_3" class="r-radio">
+                                            <svg aria-hidden="true" focusable="false">
+                                                <use xlink:href="#star"/>
+                                            </svg>
+                                            <span role="presentation">3 Stjarna</span>
+                                        </label>
 
-{% block table %}
+                                        <input type="radio" name="r_input" id="r_input_4">
+                                        <label for="r_input_4" class="r-radio">
+                                            <svg aria-hidden="true" focusable="false">
+                                                <use xlink:href="#star"/>
+                                            </svg>
+                                            <span role="presentation">4 Stjarna</span>
+                                        </label>
 
-{% endblock %}
+                                        <input type="radio" name="r_input" id="r_input_5">
+                                        <label for="r_input_5" class="r-radio">
+                                            <svg aria-hidden="true" focusable="false">
+                                                <use xlink:href="#star"/>
+                                            </svg>
+                                            <span role="presentation">5 Stjarna</span>
+                                        </label>
+                                    </fieldset>
+                                </form>
+                            </div>
 
-{% block no_results %}
 
-    
-{% endblock %}
 
-{% block modals %}
-    
-
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Setja bjór í bjórkvöld
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% if not current_user.beernights_admin%}
+                                    <a class="dropdown-item disabled" href="#">Ekkert bjórkvöld í boði</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Búa til bjórkvöld</a>
+                                    
+                                    {% else %}
+                                    {% for b in current_user.beernights_admin %}
+                                        <a class="dropdown-item" href="#">b.name</a>
+                                    {% endfor%}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Búa til bjórkvöld</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div style="margin: 20px 0px">
+                                 <div class="heartbox"> <input type="checkbox" class="checkbox" id="checkbox" />
+                                    <label for="checkbox"> 
+                                        <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
+                                            <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
+                                                <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2" />
+                                                <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
+                                                <g id="heartgroup7" opacity="0" transform="translate(7 6)">
+                                                    <circle id="heart1" fill="#9CD8C3" cx="2" cy="6" r="2" />
+                                                    <circle id="heart2" fill="#8CE8C3" cx="5" cy="2" r="2" />
+                                                </g>
+                                                <g id="heartgroup6" opacity="0" transform="translate(0 28)">
+                                                    <circle id="heart1" fill="#CC8EF5" cx="2" cy="7" r="2" />
+                                                    <circle id="heart2" fill="#91D2FA" cx="3" cy="2" r="2" />
+                                                </g>
+                                                <g id="heartgroup3" opacity="0" transform="translate(52 28)">
+                                                    <circle id="heart2" fill="#9CD8C3" cx="2" cy="7" r="2" />
+                                                    <circle id="heart1" fill="#8CE8C3" cx="4" cy="2" r="2" />
+                                                </g>
+                                                <g id="heartgroup2" opacity="0" transform="translate(44 6)">
+                                                    <circle id="heart2" fill="#CC8EF5" cx="5" cy="6" r="2" />
+                                                    <circle id="heart1" fill="#CC8EF5" cx="2" cy="2" r="2" />
+                                                </g>
+                                                <g id="heartgroup5" opacity="0" transform="translate(14 50)">
+                                                    <circle id="heart1" fill="#91D2FA" cx="6" cy="5" r="2" />
+                                                    <circle id="heart2" fill="#91D2FA" cx="2" cy="2" r="2" />
+                                                </g>
+                                                <g id="heartgroup4" opacity="0" transform="translate(35 50)">
+                                                    <circle id="heart1" fill="#F48EA7" cx="6" cy="5" r="2" />
+                                                    <circle id="heart2" fill="#F48EA7" cx="2" cy="2" r="2" />
+                                                </g>
+                                                <g id="heartgroup1" opacity="0" transform="translate(24)">
+                                                    <circle id="heart1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
+                                                    <circle id="heart2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'comment_section.jinja' %}
 {% endblock %}
 
 {% block scripts %}
+    {{super()}}
+    <script type='text/javascript'>
+        var postRatingsRoute = "{{url_for('beer.post_beer_rating', id=beer.id)}}";
+        var beer = {{beer}};
+    </script>
+    <script>
+
+    const finishButton = document.querySelector('button#send');
+
+
+    $('[data-toggle="collapse"]').on('click', function() {
+    var $this = $(this),
+            $parent = typeof $this.data('parent')!== 'undefined' ? $($this.data('parent')) : undefined;
+    if($parent === undefined) { /* Just toggle my  */
+        $this.find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
+        return true;
+    }
+
+    /* Open element will be close if parent !== undefined */
+    var currentIcon = $this.find('.glyphicon');
+    currentIcon.toggleClass('glyphicon-plus glyphicon-minus');
+    $parent.find('.glyphicon').not(currentIcon).removeClass('glyphicon-minus').addClass('glyphicon-plus');
+
+    });
+
+    $(".beer-rating-button").on('change', function(){
+        var id = this.name.split('mos-')[1];
+        updateUI()
+        updateMOS(this)
+    });
+
+    function postBeerRating(form) {
+            //console.log(form)
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e) {
+                if(this.readyState === XMLHttpRequest.DONE) {
+                    if(xhr.status == '200'){
+                        var response = JSON.parse(xhr.responseText);
+                        //console.log(response);
+                    } else{
+                        promptError("Villa koma upp:", xhr.responseText, "");
+                    }
+                }
+            }
+            let formData = new FormData(form);
+            xhr.open("POST", form.action, true);
+            xhr.send(formData);
+        }
+    </script>
+
     
 {% endblock %}

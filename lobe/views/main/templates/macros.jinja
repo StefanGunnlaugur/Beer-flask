@@ -81,3 +81,31 @@
     font-family: '{{font.font_family}}', {{font.font_type}};
 {% endmacro %}
 
+
+{% macro beer_line(beer, current_user)%}
+    <div class="beer-line row" style='height: 100px'>
+        <div class="beer-line-image col-2 bg-white mh-100 text-center">
+            {% if beer.product_number %}
+                <img class='img-responsive mh-100' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+            {% else %}
+                <img class='img-responsive mh-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
+            {% endif %}
+        </div>
+        <div class="beer-line-info col bg-primary">
+            <div class="row">
+                <a class="h4" href='{{url_for("beer.beer_detail", id=beer.id)}}'>{{beer.name}}</a>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{beer.beer_type}}</p>
+                </div>
+                <div class="col">
+                    <p>{{beer.alcohol}}%</p>
+                </div>
+                <div class="col">
+                    <p>{{beer.volume}}ml</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

@@ -4,14 +4,19 @@
 {% block buttons %}
     
 {% endblock %}
-{% block table %}
-    
-    {% if beer_list | length > 0%}
-        {% for b in beer_list %}
-            <p>{{b.name}}</p>
-        {% endfor %}
-    {% endif %}
+{% block styles %}
+{% endblock %}
 
+{% block table %}
+    <input type="text" id="beerFilterInput" onkeyup="filterFunction()" placeholder="Leitaðu að bjór">
+    <ul id="beerListUL">
+        {% for b in beer_list %}
+            <li class="my-2">
+                {{macros.beer_line(b, current_user)}}
+            </li>
+            <!--<li><a href="#">{{b.name}}</a></li>-->
+        {% endfor %}
+    </ul>
 {% endblock %}
 
 {% block pagination %}
@@ -20,4 +25,25 @@
 
 {% block no_results %}
     
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function filterFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("beerFilterInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("beerListUL");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 {% endblock %}

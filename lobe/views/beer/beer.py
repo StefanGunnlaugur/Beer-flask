@@ -24,6 +24,7 @@ beer = Blueprint(
 @roles_accepted('admin')
 def beer_list():
     beer_list = Beer.query.all()
+    #print(beer_list)
     #page = int(request.args.get('page', 1))
     #beer_list = Beer.query.order_by(
     #        resolve_order(
@@ -42,7 +43,7 @@ def beer_list():
 def beer_detail(id):
     beer = Beer.query.get(id)
     return render_template(
-        'mos.jinja',
+        'beer.jinja',
         beer=beer,
         section='beer')
 
@@ -64,3 +65,20 @@ def beer_edit(id):
         errorMessage = "<br>".join(list("{}: {}".format(
             key, ", ".join(value)) for key, value in form.errors.items()))
         return Response(errorMessage, status=500)
+
+
+@beer.route('/beer/post_beer_rating/<int:id>', methods=['POST'])
+@login_required
+def post_beer_rating(id):
+    try:
+        beer_id = save_Beer_ratings(request.form, request.files)
+    except Exception as error:
+        flash(
+            "Villa kom upp. Hafið samband við kerfisstjóra",
+            category="danger")
+        app.logger.error("Error posting rating: {}\n{}".format(
+            error, traceback.format_exc()))
+        return Response(str(error), status=500)
+    if beer_id is None:
+        flash("Ekki gekk að senda einkunn", category='warning')
+    return url_for('beer_detail', id=id)
