@@ -4,17 +4,13 @@
 {% block buttons %}
     {% if current_user.is_admin() %}
 
-        <a href='{{url_for("user.user_create")}}' class='btn btn-success float-right dropdown-toggle' data-toggle='dropdown''>
+        <a href='{{url_for("user.user_create")}}' class='btn btn-success float-right dropdown-toggle' data-toggle='dropdown'>
             Búa til
         </a>
         <div class='dropdown-menu'>
             <a href='{{url_for("user.user_create")}}' class='dropdown-item'>
                 {{macros.btn_icon('plus', 'r')}}
                 Búa til notanda
-            </a>
-            <a href='{{url_for("user.verifier_create")}}' class='dropdown-item'>
-                {{macros.btn_icon('plus', 'r')}}
-                Búa til greini
             </a>
         </div>
     {% endif %}

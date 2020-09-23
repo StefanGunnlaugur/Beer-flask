@@ -17,6 +17,7 @@ from lobe.filters import format_date
 from lobe.views.main import main
 from lobe.views.user import user
 from lobe.views.beer import beer
+from lobe.views.beernight import beernight
 
 
 
@@ -48,6 +49,7 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(user)
     app.register_blueprint(beer)
+    app.register_blueprint(beernight)
 
     app.executor = Executor(app)
     app.user_datastore = user_datastore

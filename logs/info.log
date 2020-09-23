@@ -1,0 +1,6 @@
+[2020-09-18 00:07:57,065] ERROR in beer: Error creating a verification : name 'add_beer_favourite' is not defined
+Traceback (most recent call last):
+  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/beer/beer.py", line 88, in beer_favourite
+    rating = add_beer_favourite(current_user, beer, fav_value)
+NameError: name 'add_beer_favourite' is not defined
+

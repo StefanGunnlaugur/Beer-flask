@@ -15,7 +15,7 @@
         {% endif %}
         {% if not current_user.is_anonymous and current_user.is_admin() %}
             <li class="nav-item {% if section == 'mos' %}active{% endif %}">
-                <a class="nav-link {% if section == 'mos' %}text-success{% endif %}" href="{{url_for('user.user_page', id=current_user.id)}}">Mín síða</a>
+                <a class="nav-link {% if section == 'mos' %}text-success{% endif %}" href="{{url_for('beernight.public_beernights')}}">Bjórkvöld</a>
             </li>
         {% endif %}
         {% if not current_user.is_anonymous %}
@@ -25,7 +25,7 @@
                 {{macros.btn_icon('user-circle', '')}}
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{url_for('user.user_detail',id=current_user.id)}}">Mín síða</a>
+                    <a class="dropdown-item" href="{{url_for('user.user_page',id=current_user.id)}}">Mín síða</a>
                     <a class="dropdown-item" href="{{url_for('security.logout') }}">Skrá út</a>
                 </div>
             </li>

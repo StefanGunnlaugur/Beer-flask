@@ -138,36 +138,6 @@ def user_create():
         section='user')
 
 
-@user.route('/users/create_verifier', methods=['GET', 'POST'])
-@login_required
-@roles_accepted('admin')
-def verifier_create():
-    form = VerifierRegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
-        try:
-            new_user = app.user_datastore.create_user(
-                name=form.name.data,
-                email=form.email.data,
-                password=hash_password(form.password.data),
-                roles=['Greinir'])
-            form.populate_obj(new_user)
-            db.session.commit()
-            flash("Nýr greinir var búinn til", category='success')
-            return redirect(url_for('user.user_list'))
-
-        except Exception as error:
-            app.logger.error('Error creating a user : {}\n{}'.format(
-                error, traceback.format_exc()))
-            flash(
-                "Villa kom upp við að búa til nýjan greini",
-                category='warning')
-    return render_template(
-        'forms/model.jinja',
-        form=form,
-        type='create',
-        action=url_for('user.verifier_create'),
-        section='user')
-
 
 @user.route('/users/<int:id>/delete/')
 @login_required

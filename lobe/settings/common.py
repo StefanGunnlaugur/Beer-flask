@@ -3,17 +3,6 @@ import os
 APP_ROOT = os.path.abspath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)), os.pardir))
 
-# these should all have a trailing slash
-DATA_BASE_DIR = os.path.join(APP_ROOT, os.pardir, 'data/')
-TOKEN_DIR = os.path.join(DATA_BASE_DIR, 'tokens/')
-CUSTOM_TOKEN_DIR = os.path.join(DATA_BASE_DIR, 'custom_tokens/')
-RECORD_DIR = os.path.join(DATA_BASE_DIR, 'records/')
-CUSTOM_RECORDING_DIR = os.path.join(DATA_BASE_DIR, 'custom_recordings/')
-VIDEO_DIR = os.path.join(DATA_BASE_DIR, 'videos/')
-ZIP_DIR = os.path.join(DATA_BASE_DIR, 'zips/')
-TEMP_DIR = os.path.join(DATA_BASE_DIR, 'temp/')
-WAV_AUDIO_DIR = os.path.join(DATA_BASE_DIR, 'wav_audio/')
-WAV_CUSTOM_AUDIO_DIR = os.path.join(DATA_BASE_DIR, 'wav_custom_audio/')
 
 # Path to the logging file
 LOG_PATH = os.path.join(APP_ROOT, os.pardir, 'logs', 'info.log')
@@ -22,7 +11,7 @@ LOG_PATH = os.path.join(APP_ROOT, os.pardir, 'logs', 'info.log')
 OTHER_DIR = os.path.join(APP_ROOT, os.pardir, 'other')
 
 BEER_PAGINATION = 500
-
+USER_PAGINATION = 10
 
 
 SESSION_SZ = 50

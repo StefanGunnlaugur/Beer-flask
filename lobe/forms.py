@@ -4,7 +4,7 @@ from flask_security.forms import LoginForm, RegisterForm
 from flask_wtf import RecaptchaField, FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import (Form, HiddenField, MultipleFileField, SelectMultipleField,
-                     SelectField, TextField, BooleanField, validators,
+                     SelectField, TextField, BooleanField, validators, TextAreaField,
                      ValidationError, FloatField, widgets, StringField)
 
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
@@ -14,7 +14,7 @@ from wtforms.validators import InputRequired
 from wtforms_alchemy import ModelForm
 from wtforms_components import IntegerField
 
-from lobe.models import (Role, User, Beer, db)
+from lobe.models import (Role, User, Beer, db, Beernight)
 
 
 class MultiCheckboxField(SelectMultipleField):
@@ -77,6 +77,10 @@ class UserEditForm(Form):
             ('Annað', 'Annað')])
     age = IntegerField('Aldur')
 
+class BeernightForm(ModelForm):
+    class Meta:
+        model = Beernight
+        exclude = ['uuid']
 
 
 

@@ -11,9 +11,10 @@ from flask import current_app as app
 from flask_security import login_required, roles_accepted, current_user
 from sqlalchemy.exc import IntegrityError
 
-from lobe.models import (User, db, Beer)
-from lobe.db import (resolve_order)
-from lobe.forms import (BeerEditForm)
+from lobe.models import (User, db, Beer, BeerRating, BeerComment)
+from lobe.db import (resolve_order, add_beer_rating, add_beer_comment, 
+                    add_beer_favourite, make_beernight)
+from lobe.forms import (BeerEditForm, BeernightForm)
 
 beer = Blueprint(
     'beer', __name__, template_folder='templates')
@@ -41,44 +42,106 @@ def beer_list():
 @login_required
 @roles_accepted('admin')
 def beer_detail(id):
+    user = current_user
     beer = Beer.query.get(id)
+    comments = BeerComment.query\
+        .filter(BeerComment.beer_id == id) \
+        .filter(BeerComment.parent_comment_id == None).all()
+    print(comments)
+    form = BeernightForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            try:
+                beernight = make_beernight(form, beer, user)
+                if beernight:
+                    flash("Tókst að búa til bjórkvöld {}.".format(
+                                beernight.name),
+                                category="success")
+                else:
+                    flash(
+                        "Ekki tókst að hlaða búa til bjórkvöld.",
+                        category="warning")
+            except Exception as error:
+                print(error)
+                flash(
+                    "Ekki tókst að hlaða búa til bjórkvöld.",
+                    category="warning")
+        else:
+            flash(
+                "Ekki tókst að hlaða búa til bjórkvöld.",
+                category="warning")
+        return redirect(url_for('beer.beer_detail', id=id))
+
+    rating = 'null'
+    liked = 'null'
+    if user:
+        beer_ratings = BeerRating.query\
+        .filter(BeerRating.beer_id == beer.id) \
+        .filter(BeerRating.user_id == user.id).first()
+        if beer_ratings:
+            rating = beer_ratings.rating
+        liked_beers = user.beers
+        for i in liked_beers:
+            if i.id == id:
+                liked = 'true'
     return render_template(
         'beer.jinja',
         beer=beer,
+        rating=rating,
+        liked=liked,
+        beernight_form = form,
         section='beer')
 
 
-@beer.route('/beer/<int:id>/edit', methods=['POST'])
+@beer.route('/beer/<int:id>/comment', methods=['POST'])
 @login_required
-@roles_accepted('admin')
-def beer_edit(id):
+@roles_accepted('admin', 'Notandi')
+def beer_comment(id):
     try:
         beer = Beer.query.get(id)
-        form = BeerEditForm(request.form, obj=instance)
-        form.populate_obj(beer)
-        db.session.commit()
+        input_comment = request.form.get('text')
+        parent_id = request.form.get('parent')
+        if(parent_id):
+            comment = add_beer_comment(current_user.id, beer, input_comment, parent_id)
+        else:
+            comment = add_beer_comment(current_user.id, beer, input_comment)
+        print(url_for('beer.beer_detail', id=id))
+        return Response(url_for('beer.beer_detail', id=id), status=200)
+    except Exception as error:
+        flash('Ekki tókst að senda athugasemd',
+                    category="warning")
+        app.logger.error('Error creating a verification : {}\n{}'.format(
+            error, traceback.format_exc()))
+        return Response(error, status=500)
+
+@beer.route('/beer/<int:id>/rate', methods=['POST'])
+@login_required
+@roles_accepted('admin', 'Notandi')
+def beer_rate(id):
+    try:
+        beer = Beer.query.get(id)
+        input_rating = request.form.get('value')
+        rating = add_beer_rating(current_user.id, beer, input_rating)
         response = {}
         return Response(json.dumps(response), status=200)
     except Exception as error:
         app.logger.error('Error creating a verification : {}\n{}'.format(
             error, traceback.format_exc()))
-        errorMessage = "<br>".join(list("{}: {}".format(
-            key, ", ".join(value)) for key, value in form.errors.items()))
-        return Response(errorMessage, status=500)
+        return Response(error, status=500)
 
-
-@beer.route('/beer/post_beer_rating/<int:id>', methods=['POST'])
+@beer.route('/beer/<int:id>/favourite', methods=['POST'])
 @login_required
-def post_beer_rating(id):
+@roles_accepted('admin', 'Notandi')
+def beer_favourite(id):
     try:
-        beer_id = save_Beer_ratings(request.form, request.files)
+        beer = Beer.query.get(id)
+        fav_value = request.form.get('value')
+        print(fav_value)
+        rating = add_beer_favourite(current_user, beer, fav_value)
+        response = {}
+        return Response(json.dumps(response), status=200)
     except Exception as error:
-        flash(
-            "Villa kom upp. Hafið samband við kerfisstjóra",
-            category="danger")
-        app.logger.error("Error posting rating: {}\n{}".format(
+        app.logger.error('Error creating a verification : {}\n{}'.format(
             error, traceback.format_exc()))
-        return Response(str(error), status=500)
-    if beer_id is None:
-        flash("Ekki gekk að senda einkunn", category='warning')
-    return url_for('beer_detail', id=id)
+        return Response(error, status=500)
+

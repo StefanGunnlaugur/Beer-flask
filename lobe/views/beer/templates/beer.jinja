@@ -42,9 +42,16 @@
                         {% if current_user %}
                             <div style="margin: 20px 0px">
                                 <!-- https://scottaohara.github.io/a11y_styled_form_controls/src/radio-button--rating/ -->
-                                <form action="#" method="post">
-                                    <fieldset class="r-radios">        
-                                        <input type="radio" name="r_input" id="r_input_1">
+                                <form class="beer-rating-form" id="ratingForm" action="{{beer.ajax_rate_action}}" method="POST">
+                                    <fieldset class="r-radios">
+                                        <input class="radio_star" type="radio" name="r_input" id="r_input_0" onchange="postBeerRating(value)" value="0" checked>
+                                        <label for="r_input_0" class="r-radio r-radio--none">
+                                            <svg aria-hidden="true" focusable="false">
+                                            <use xlink:href="#no_rating"/>
+                                            </svg>
+                                            <span>Engin einkunn</span>
+                                        </label>
+                                        <input class="radio_star" type="radio" name="r_input" id="r_input_1" onchange="postBeerRating(value)" value="1">
                                         <label for="r_input_1" class="r-radio">
                                             <svg aria-hidden="true" focusable="false">
                                                 <use xlink:href="#star"/>
@@ -52,7 +59,7 @@
                                             <span role="presentation">1 Stjarna</span>
                                         </label>
 
-                                        <input type="radio" name="r_input" id="r_input_2">
+                                        <input class="radio_star" type="radio" name="r_input" id="r_input_2" onchange="postBeerRating(value)" value="2">
                                         <label for="r_input_2" class="r-radio">
                                             <svg aria-hidden="true" focusable="false">
                                                 <use xlink:href="#star"/>
@@ -60,7 +67,7 @@
                                             <span role="presentation">2 Stjarna</span>
                                         </label>
 
-                                        <input type="radio" name="r_input" id="r_input_3">
+                                        <input class="radio_star" type="radio" name="r_input" id="r_input_3" onchange="postBeerRating(value)" value="3">
                                         <label for="r_input_3" class="r-radio">
                                             <svg aria-hidden="true" focusable="false">
                                                 <use xlink:href="#star"/>
@@ -68,7 +75,7 @@
                                             <span role="presentation">3 Stjarna</span>
                                         </label>
 
-                                        <input type="radio" name="r_input" id="r_input_4">
+                                        <input class="radio_star" type="radio" name="r_input" id="r_input_4" onchange="postBeerRating(value)" value="4">
                                         <label for="r_input_4" class="r-radio">
                                             <svg aria-hidden="true" focusable="false">
                                                 <use xlink:href="#star"/>
@@ -76,7 +83,7 @@
                                             <span role="presentation">4 Stjarna</span>
                                         </label>
 
-                                        <input type="radio" name="r_input" id="r_input_5">
+                                        <input class="radio_star" type="radio" name="r_input" id="r_input_5" onchange="postBeerRating(value)" value="5">
                                         <label for="r_input_5" class="r-radio">
                                             <svg aria-hidden="true" focusable="false">
                                                 <use xlink:href="#star"/>
@@ -87,7 +94,7 @@
                                 </form>
                             </div>
 
-
+                            {% include 'beer_like_heart.jinja' %}
 
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -95,57 +102,23 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {% if not current_user.beernights_admin%}
-                                    <a class="dropdown-item disabled" href="#">Ekkert bjórkvöld í boði</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Búa til bjórkvöld</a>
-                                    
+                                        <a class="dropdown-item disabled" href="#">Ekkert bjórkvöld í boði</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
+                                            {{macros.btn_icon('plus', 'r')}}
+                                            Búa til bjórkvöld
+                                        </a>                                    
                                     {% else %}
-                                    {% for b in current_user.beernights_admin %}
-                                        <a class="dropdown-item" href="#">b.name</a>
-                                    {% endfor%}
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Búa til bjórkvöld</a>
+                                        {% for b in current_user.beernights_admin %}
+                                            <a class="dropdown-item" href="#">{{b.name}}</a>
+                                        {% endfor%}
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
+                                            {{macros.btn_icon('plus', 'r')}}
+                                            Búa til bjórkvöld
+                                        </a>        
                                     {% endif %}
                                 </div>
-                            </div>
-                            <div style="margin: 20px 0px">
-                                 <div class="heartbox"> <input type="checkbox" class="checkbox" id="checkbox" />
-                                    <label for="checkbox"> 
-                                        <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-                                            <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
-                                                <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2" />
-                                                <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
-                                                <g id="heartgroup7" opacity="0" transform="translate(7 6)">
-                                                    <circle id="heart1" fill="#9CD8C3" cx="2" cy="6" r="2" />
-                                                    <circle id="heart2" fill="#8CE8C3" cx="5" cy="2" r="2" />
-                                                </g>
-                                                <g id="heartgroup6" opacity="0" transform="translate(0 28)">
-                                                    <circle id="heart1" fill="#CC8EF5" cx="2" cy="7" r="2" />
-                                                    <circle id="heart2" fill="#91D2FA" cx="3" cy="2" r="2" />
-                                                </g>
-                                                <g id="heartgroup3" opacity="0" transform="translate(52 28)">
-                                                    <circle id="heart2" fill="#9CD8C3" cx="2" cy="7" r="2" />
-                                                    <circle id="heart1" fill="#8CE8C3" cx="4" cy="2" r="2" />
-                                                </g>
-                                                <g id="heartgroup2" opacity="0" transform="translate(44 6)">
-                                                    <circle id="heart2" fill="#CC8EF5" cx="5" cy="6" r="2" />
-                                                    <circle id="heart1" fill="#CC8EF5" cx="2" cy="2" r="2" />
-                                                </g>
-                                                <g id="heartgroup5" opacity="0" transform="translate(14 50)">
-                                                    <circle id="heart1" fill="#91D2FA" cx="6" cy="5" r="2" />
-                                                    <circle id="heart2" fill="#91D2FA" cx="2" cy="2" r="2" />
-                                                </g>
-                                                <g id="heartgroup4" opacity="0" transform="translate(35 50)">
-                                                    <circle id="heart1" fill="#F48EA7" cx="6" cy="5" r="2" />
-                                                    <circle id="heart2" fill="#F48EA7" cx="2" cy="2" r="2" />
-                                                </g>
-                                                <g id="heartgroup1" opacity="0" transform="translate(24)">
-                                                    <circle id="heart1" fill="#9FC7FA" cx="2.5" cy="3" r="2" />
-                                                    <circle id="heart2" fill="#9FC7FA" cx="7.5" cy="2" r="2" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </label>
                             </div>
                         {% endif %}
                     </div>
@@ -156,15 +129,72 @@
     {% include 'comment_section.jinja' %}
 {% endblock %}
 
+{% block modals %}
+    <div class="modal fade" id='makeBeernightModal' tabindex="-1">
+        <form method='POST' enctype="multipart/form-data">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Búa til nýtt bjórkvöld</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% with form=beernight_form %}
+                        {% include 'forms/_form.jinja' %}
+                    {% endwith %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+                    <button class='btn btn-primary' type='submit'>
+                        Klára
+                        <span class='ml-1'><i class='fa fa-check'></i></span>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock%}
+
 {% block scripts %}
     {{super()}}
     <script type='text/javascript'>
-        var postRatingsRoute = "{{url_for('beer.post_beer_rating', id=beer.id)}}";
-        var beer = {{beer}};
+        var rating = {{rating}};
+        var liked = {{liked}};
+        var favourite_action = "{{beer.ajax_favourite_action}}";
     </script>
     <script>
+    window.onload = function(){
+            setUI()
+        }
 
-    const finishButton = document.querySelector('button#send');
+    function setUI(){
+        setStars();
+        setHeart();
+    }
+
+    function setStars(){
+        var inputs = document.getElementsByClassName("radio_star");
+        if(!rating){
+            inputs[0].checked = true
+        }
+        else{
+            inputs[rating].checked = true
+        }
+    }
+
+    function setHeart(){
+        var heart = $(".heart_checkbox")
+
+        if(liked){
+            heart.prop('checked', true);
+        }
+        else{
+            heart.prop('checked', false);
+        }
+    }
 
 
     $('[data-toggle="collapse"]').on('click', function() {
@@ -181,31 +211,102 @@
     $parent.find('.glyphicon').not(currentIcon).removeClass('glyphicon-minus').addClass('glyphicon-plus');
 
     });
+    function allLetter(inputtxt){
+    var letters = /^[A-Za-z]+$/;
+    if(inputtxt.match(letters))
+        {
+        return true;
+        }
+    else
+        {
+        alert("message");
+        return false;
+        }
+    }
 
-    $(".beer-rating-button").on('change', function(){
-        var id = this.name.split('mos-')[1];
-        updateUI()
-        updateMOS(this)
+    $("#submit-comment-button").on('click', function(){
+        var text = $("#comment-input").val();
+        if(allLetter(text)){
+            var action = "{{beer.ajax_comment_action}}";
+            sendComment(text, false, action)
+        }
     });
 
-    function postBeerRating(form) {
-            //console.log(form)
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function(e) {
-                if(this.readyState === XMLHttpRequest.DONE) {
-                    if(xhr.status == '200'){
-                        var response = JSON.parse(xhr.responseText);
-                        //console.log(response);
-                    } else{
-                        promptError("Villa koma upp:", xhr.responseText, "");
-                    }
+    var oldVal = "";
+    $("#comment-input").on("change keyup paste", function() {
+        var currentVal = $(this).val();
+        if(currentVal == oldVal) {
+            return; //check to prevent multiple simultaneous triggers
+        }
+
+        oldVal = currentVal;
+        //action to be performed on textarea changed
+        if(!$(this).val()){
+            $("#submit-comment-button").prop('disabled', true);
+        }
+        else{
+            $("#submit-comment-button").prop('disabled', false);
+        }
+    });
+
+    function postBeerRating(value) {
+        var action = $("#ratingForm").attr("action");
+        sendRequest(value, action)
+    }
+
+    function sendRequest(value, action) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(e) {
+            if(this.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status == '200'){
+                    var response = JSON.parse(xhr.responseText);
+                } else{
+                    promptError("Villa koma upp:", xhr.responseText, "");
                 }
             }
-            let formData = new FormData(form);
-            xhr.open("POST", form.action, true);
-            xhr.send(formData);
         }
+        let formData = new FormData();
+        formData.append("value", value);
+        xhr.open("POST", action, true);
+        xhr.send(formData);
+    }
+
+    $('.heart_checkbox').on('click', function() {
+        var heart = $(this)
+        if(heart.is(":checked")){
+            sendRequest('True', favourite_action)
+        }  
+        else{
+            sendRequest('False', favourite_action)
+        }
+    });
+
+    function sendComment(text, parent_id, action) {
+        console.log('hehe')
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(e) {
+            if(this.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status == '200'){
+                    var beer_url = xhr.responseText;
+                    window.onbeforeunload = null;
+                    window.location = beer_url;
+                } else{
+                    promptError("Villa koma upp:", xhr.responseText, "");
+                }
+            }
+        }
+        let formData = new FormData();
+        formData.append("text", text);
+        if(parent_id){
+            formData.append("parent", parent_id);
+        }
+        xhr.open("POST", action, true);
+        xhr.send(formData);
+    }
+
     </script>
+
+    
 
     
 {% endblock %}
