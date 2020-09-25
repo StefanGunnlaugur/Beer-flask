@@ -25,7 +25,7 @@
                 {{macros.btn_icon('user-circle', '')}}
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{url_for('user.user_page',id=current_user.id)}}">Mín síða</a>
+                    <a class="dropdown-item" href="{{url_for('user.current_user_detail')}}">Mín síða</a>
                     <a class="dropdown-item" href="{{url_for('security.logout') }}">Skrá út</a>
                 </div>
             </li>

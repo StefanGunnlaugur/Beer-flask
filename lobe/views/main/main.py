@@ -17,7 +17,7 @@ main = Blueprint(
 @login_required
 def index():
     if current_user.has_role('Notandi'):
-        return redirect(url_for('user_page'))
+        return redirect(url_for('current_user_detail'))
     return redirect(url_for('beer.beer_list'))
 
 

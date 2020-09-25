@@ -81,6 +81,9 @@ class User(db.Model, UserMixin):
     email = db.Column(
         db.String(255),
         unique=True)
+    avatar = db.Column(db.String(200))
+    active = db.Column(db.Boolean, default=False)
+    tokens = db.Column(db.Text)
     password = db.Column(db.String(255))
     sex = db.Column(db.String(255))
     age = db.Column(db.Integer)
@@ -168,6 +171,16 @@ class Beer(BaseModel, db.Model):
             user_ids.append(i.user_id)
         user_ids = list(set(user_ids))
         return user_ids
+    
+    @hybrid_property
+    def bang_for_buck(self):
+        bfb = (self.volume * (self.alcohol))/self.price
+        return round(bfb,2)
+    
+    @bang_for_buck.expression
+    def bang_for_buck(cls):
+        bfb = (cls.volume * (cls.alcohol))/cls.price
+        return bfb
 
     @property
     def beernight(self):
@@ -255,10 +268,15 @@ class BeerComment(BaseModel, db.Model):
     beer = db.relationship("Beer", back_populates="comments")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     parent_comment_id = db.Column(db.Integer, db.ForeignKey('beerComment.id'))
-    replys = db.relationship("BeerComment",
-                backref=db.backref('parent_comment', single_parent=True, remote_side=[id],
+    replies = db.relationship("BeerComment",
                 cascade='all, delete, delete-orphan')
-            )
+    likes = db.relationship(
+        "CommentLike", lazy="joined", back_populates='comment',
+        cascade='all, delete, delete-orphan')
+    reports = db.relationship(
+        "CommentReport", lazy="joined", back_populates='comment',
+        cascade='all, delete, delete-orphan')
+    
     def __init__(self, user_id, beer, text, parent_comment_id=None):
         self.user_id = user_id
         self.beer = beer
@@ -267,7 +285,7 @@ class BeerComment(BaseModel, db.Model):
             self.parent_comment_id = parent_comment_id
 
     @property
-    def get_user(self):
+    def user(self):
         return User.query.get(self.user_id)
 
     @property
@@ -275,9 +293,63 @@ class BeerComment(BaseModel, db.Model):
         return Beer.query.get(self.beer_id)
     
     @property
+    def num_likes(self):
+        return len(self.likes)
+
+    @property
     def get_parent_comment(self):
         return BeerComment.query.get(self.parent_comment_id)
 
+    def is_liked_by_user(self, user_id):
+        like = CommentLike.query\
+            .filter(CommentLike.comment_id == self.id) \
+            .filter(CommentLike.user_id == user_id).all()
+        if like:
+            return True
+        return False
+    
+
+
+class CommentLike(BaseModel, db.Model):
+    __tablename__ = 'commentLike'
+    __table_args__ = (
+        db.UniqueConstraint('comment_id', 'user_id'),
+      )
+    id = db.Column(
+        db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    comment_id = db.Column(db.Integer, db.ForeignKey("beerComment.id"))
+    comment = db.relationship("BeerComment", back_populates="likes")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, user_id, comment_id):
+        self.user_id = user_id
+        self.comment_id = comment_id
+
+    @property
+    def user(self):
+        return User.query.get(self.user_id)
+
+
+class CommentReport(BaseModel, db.Model):
+    __tablename__ = 'commentReport'
+    __table_args__ = (
+        db.UniqueConstraint('comment_id', 'user_id'),
+      )
+    id = db.Column(
+        db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    comment_id = db.Column(db.Integer, db.ForeignKey("beerComment.id"))
+    comment = db.relationship("BeerComment", back_populates="reports")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, user_id, comment_id):
+        self.user_id = user_id
+        self.comment_id = comment_id
+
+    @property
+    def user(self):
+        return User.query.get(self.user_id)
 
 
 
@@ -287,7 +359,9 @@ class Beernight(BaseModel, db.Model):
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     uuid = db.Column(db.String, default=str(uuid.uuid4()))
-    is_public = db.Column(db.Boolean, default=False)
+    is_public = db.Column(db.Boolean, default=False, info={
+        'label': 'Sýnilegur öllum',
+    })
     ratings = db.relationship(
         "BeernightRating", lazy="joined", back_populates='beernight',
         cascade='all, delete, delete-orphan')
@@ -313,6 +387,12 @@ class Beernight(BaseModel, db.Model):
             for r in m.ratings:
                 ratings.append(r)
         return ratings
+    
+    def is_user_admin(self, user_id):
+        for i in self.admins:
+            if i.id == user_id:
+                return True
+        return False
 
     def getAllUserRatings(self, user_id):
         ratings = []
@@ -331,12 +411,39 @@ class Beernight(BaseModel, db.Model):
         return user_ids
 
     @property
+    def num_beers(self):
+        return len(self.beers)
+
+    @property
     def printable_id(self):
-        return "Bjór-{:04d}".format(self.id)
+        return "Bjórkvöld-{:04d}".format(self.name)
 
     @property
     def edit_url(self):
         return url_for('beer.beer_edit', id=self.id)
+    
+    @property
+    def average_rating(self):
+        if(len(self.ratings) > 0):
+            total_ratings = 0
+            for i in self.ratings:
+                total_ratings += i.rating
+            total_ratings = total_ratings/len(self.ratings)
+            return round(total_ratings, 2)
+        else:
+            return "-"
+
+    @property
+    def std_of_ratings(self):
+        ratings = [r.rating for r in self.ratings]
+        if len(ratings) == 0:
+            return "-"
+        ratings = np.array(ratings)
+        return round(np.std(ratings), 2)
+
+    @property
+    def number_of_ratings(self):
+        return len(self.ratings)
 
 user_beernight = db.Table(
     'user_beernight',
@@ -382,13 +489,13 @@ class BeernightBeer(BaseModel, db.Model):
     orginal_beer_id = db.Column(db.Integer, db.ForeignKey("beer.id"))
     orginal_beer = db.relationship("Beer")
     ratings = db.relationship(
-        "BeernightbeerRating", lazy="joined", backref='beernightBeer',
+        "BeernightbeerRating", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
     comments = db.relationship(
         "BeernightbeerComment", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
     def __init__(self, beer):
-        orginal_beer = beer
+        self.orginal_beer = beer
 
     def getUserRating(self, user_id):
         for r in self.ratings:
@@ -414,16 +521,31 @@ class BeernightBeer(BaseModel, db.Model):
         
 
     @property
-    def ajax_edit_action(self):
-        return url_for('beer.beer_edit', id=self.id)
+    def ajax_rate_action(self):
+        return url_for('beer.beernight_beer_rate', id=self.id)
 
-    @property
-    def average_rating(self):
-        if(len(self.ratings) > 0):
+    def get_category_len(self, cat):
+        counter = 0
+        for i in self.ratings:
+            if getattr(i, cat):
+                counter += 1
+        return counter
+    
+    def get_user_rating(self, user_id):
+        for i in self.ratings:
+            if i.user_id == user_id:
+                return i
+        return None
+
+    def average_cat_rating(self, cat):
+        len_rat = self.get_category_len(cat)
+        if(len_rat > 0):
             total_ratings = 0
             for i in self.ratings:
-                total_ratings += i.rating
-            total_ratings = total_ratings/len(self.ratings)
+                cat_rat = getattr(i, cat)
+                if cat_rat:
+                    total_ratings += cat_rat
+            total_ratings = total_ratings/len_rat
             return round(total_ratings, 2)
         else:
             return "-"
@@ -450,13 +572,41 @@ class BeernightbeerRating(BaseModel, db.Model):
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     rating = db.Column(db.Integer, default=0, info={
-        'label': 'Einkunn',
+        'label': 'Geðþáttaeinkunn',
         'min': 0,
         'max': 5,
     })
+    taste = db.Column(db.Integer, default=0, info={
+        'label': 'Bragð',
+        'min': 0,
+        'max': 5,
+    })
+    smell = db.Column(db.Integer, default=0, info={
+        'label': 'Lykt',
+        'min': 0,
+        'max': 5,
+    })
+    feel = db.Column(db.Integer, default=0, info={
+        'label': 'Áferð',
+        'min': 0,
+        'max': 5,
+    })
+    sight = db.Column(db.Integer, default=0, info={
+        'label': 'Ásýnd',
+        'min': 0,
+        'max': 5,
+    })
+    
     beer_id = db.Column(db.Integer, db.ForeignKey("beernightBeer.id"))
     beer = db.relationship("BeernightBeer", back_populates="ratings")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+    def __init__(self, user_id, beer):
+        self.user_id = user_id
+        self.beer = beer
+    
+    def get_category_len(self, cat):
+        return len(getattr(self, cat))
 
     @property
     def get_user(self):
@@ -465,6 +615,7 @@ class BeernightbeerRating(BaseModel, db.Model):
     @property
     def get_beer(self):
         return Beer.query.get(self.beer_id)
+
 
 
 class BeernightbeerComment(BaseModel, db.Model):
@@ -481,10 +632,10 @@ class BeernightbeerComment(BaseModel, db.Model):
                 backref=db.backref('parent_comment', single_parent=True, remote_side=[id],
                 cascade='all, delete, delete-orphan')
             )
-    def __init__(self, user_id, beer, rating):
+    def __init__(self, user_id, beer, text):
         self.user_id = user_id
         self.beer = beer
-        self.text = rating
+        self.text = text
 
     @property
     def get_user(self):

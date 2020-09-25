@@ -1,6 +1,26 @@
-[2020-09-18 00:07:57,065] ERROR in beer: Error creating a verification : name 'add_beer_favourite' is not defined
+[2020-09-24 23:19:14,736] ERROR in beer: Error creating a verification : maximum recursion depth exceeded while calling a Python object
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/beer/beer.py", line 88, in beer_favourite
-    rating = add_beer_favourite(current_user, beer, fav_value)
-NameError: name 'add_beer_favourite' is not defined
+  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/beer/beer.py", line 223, in add_beer_to_beernight
+    beernight = add_beer_to_beernight(id, beernight_id)
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask_security/decorators.py", line 215, in decorated_view
+    if perm.can():
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask_principal.py", line 347, in can
+    return self.require().can()
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask_principal.py", line 193, in can
+    return self.identity.can(self.permission)
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask_principal.py", line 188, in identity
+    return g.identity
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/werkzeug/local.py", line 348, in __getattr__
+    return getattr(self._get_current_object(), name)
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/werkzeug/local.py", line 307, in _get_current_object
+    return self.__local()
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask/globals.py", line 43, in _lookup_app_object
+    top = _app_ctx_stack.top
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/werkzeug/local.py", line 169, in top
+    return self._local.stack[-1]
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/werkzeug/local.py", line 72, in __getattr__
+    return self.__storage__[self.__ident_func__()][name]
+RecursionError: maximum recursion depth exceeded while calling a Python object
 

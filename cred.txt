@@ -1,0 +1,4 @@
+your client id:
+650289903160-ajch8e2nn95ro1heod5oide8giothkpi.apps.googleusercontent.com
+your client secret:
+PGWHtFUXtjYxabbrLnyIw-Xn

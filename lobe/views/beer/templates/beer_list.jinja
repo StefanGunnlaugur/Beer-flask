@@ -9,6 +9,21 @@
 
 {% block table %}
     <input type="text" id="beerFilterInput" onkeyup="filterFunction()" placeholder="Leitaðu að bjór">
+
+    <div class="wrapper">
+        <div style="color: #303030; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-users" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
+            <p class="py-2 text-info"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Leitarsíur</p>
+        </div>
+        <div class="collapse" id="collapse-users">
+            <button class="btn btn-info">Stafrófsröð {{macros.sort_th_a('name')}}</button>
+            <button class="btn btn-info">Alkóhól {{macros.sort_th_a('alcohol')}}</button>
+            <button class="btn btn-info">Verð {{macros.sort_th_a('price')}}</button>
+            <button class="btn btn-info">Stærð {{macros.sort_th_a('volume')}}</button>
+            <button class="btn btn-info">Mest áfengi á krónu {{macros.sort_th_a('bang_for_buck')}}</button>
+        </div>
+        
+    </div>
+
     <ul id="beerListUL">
         {% for b in beer_list %}
             <li class="my-2">
@@ -28,6 +43,7 @@
 {% endblock %}
 
 {% block scripts %}
+    {{super()}}
     <script>
         function filterFunction() {
             var input, filter, ul, li, a, i, txtValue;
@@ -45,5 +61,24 @@
                 }
             }
         }
+
+        $(document).ready(function () {
+            $('.collapse')
+                .on('shown.bs.collapse', function() {
+                    $(this)
+                        .parent()
+                        .find(".fa-plus")
+                        .removeClass("fa-plus")
+                        .addClass("fa-minus");
+                })
+                .on('hidden.bs.collapse', function() {
+                    $(this)
+                        .parent()
+                        .find(".fa-minus")
+                        .removeClass("fa-minus")
+                        .addClass("fa-plus");
+                });
+        });
+
     </script>
 {% endblock %}

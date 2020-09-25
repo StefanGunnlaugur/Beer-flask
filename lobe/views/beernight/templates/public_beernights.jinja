@@ -1,3 +1,21 @@
 {% extends "__base.jinja" %}
+{% block body %}
 
-<p>Public beernights</p>
+
+<div class='row'>
+        <div class='col-12'>
+            <h1 class='font-weight-bold'>Opin bjórkvöld</h1>
+        </div>
+    </div>
+    <div class="lists">
+        <ul id="beerListUL">
+            {% for b in beernights %}
+                <li class="my-2">
+                    {{macros.beernight_line(b, current_user)}}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+       
+{% endblock%}
+

@@ -2,7 +2,7 @@ import traceback
 
 from flask import redirect, flash, url_for, request, render_template, Blueprint
 from flask import current_app as app
-from flask_security import login_required, roles_accepted
+from flask_security import login_required, roles_accepted, current_user
 from flask_security.utils import hash_password
 
 from sqlalchemy import or_
@@ -31,27 +31,30 @@ def user_list():
         section='user')
 
 
-@user.route('/users/<int:id>/')
+@user.route('/user/<int:id>/')
 @login_required
-@roles_accepted('admin', 'Notandi')
+@roles_accepted('admin')
 def user_detail(id):
-    page = int(request.args.get('page', 1))
     user = User.query.get(id)
     return render_template(
         "user.jinja",
         user=user,
         section='user')
 
-@user.route('/users/<int:id>/')
+@user.route('/heimasida/')
 @login_required
 @roles_accepted('admin', 'Notandi')
-def user_page(id):
-    page = int(request.args.get('page', 1))
-    user = User.query.get(id)
+def current_user_detail():
+    user = current_user
+
     return render_template(
         "user.jinja",
+        fav_beers = user.beers,
+        beernights_member = user.beernights_member,
+        beernights_admin = user.beernights_admin,
         user=user,
         section='user')
+
 
 
 @user.route('/users/<int:id>/edit/', methods=['GET', 'POST'])

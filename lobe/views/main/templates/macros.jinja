@@ -100,12 +100,242 @@
                     <p>{{beer.beer_type}}</p>
                 </div>
                 <div class="col">
+                    <p>{{beer.price}}kr</p>
+                </div>
+                <div class="col">
                     <p>{{beer.alcohol}}%</p>
                 </div>
                 <div class="col">
                     <p>{{beer.volume}}ml</p>
                 </div>
+                <div class="col">
+                    <p>{{beer.bang_for_buck}}(alc*ml)\kr</p>
+                </div>
             </div>
         </div>
     </div>
+{% endmacro %}
+
+{% macro beernight_line(beernight, current_user)%}
+    <div class="beer-line row" style='height: 100px'>
+        <div class="beer-line-image col-2 bg-white mh-100 text-center">
+            <img class='img-responsive mh-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beernight.name }} />
+        </div>
+        <div class="beer-line-info col bg-primary">
+            <div class="row">
+                <a class="h4" href='{{url_for("beer.beernight_detail", id=beernight.id)}}'>{{beernight.name}}</a>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{beernight.num_beers}}</p>
+                </div>
+                <div class="col">
+                    <p>{{beernight.created_at | datetime(format='low')}}</p>
+                </div>
+                <div class="col">
+                    <p>{{beernight.average_rating}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro beernight_beer_line(beer, org_beer, beernight, rating, current_user)%}
+    <div class="line-container">
+        <div class="info-content row">
+            <div class="beer-line row col" style='height: 100px' data-toggle="collapse" data-target="#collapse-beer-{{beer.id}}" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
+                <div class="beer-line-image col-2 bg-white mh-100 text-center">
+                    {% if org_beer.product_number %}
+                        <img class='img-responsive mh-100' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{org_beer.product_number}}_r.jpg" alt={{ org_beer.name }} alt={{ org_beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                    {% else %}
+                        <img class='img-responsive mh-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ org_beer.name }} />
+                    {% endif %}
+                </div>
+                <div class="beer-line-info col bg-primary">
+                    <div class="row">
+                        <a class="h4" href='{{url_for("beer.beer_detail", id=org_beer.id)}}'>{{org_beer.name}}</a>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{org_beer.beer_type}}</p>
+                        </div>
+                        <div class="col">
+                            <p>{{org_beer.price}}kr</p>
+                        </div>
+                        <div class="col">
+                            <p>{{org_beer.alcohol}}%</p>
+                        </div>
+                        <div class="col">
+                            <p>{{org_beer.volume}}ml</p>
+                        </div>
+                        <div class="col">
+                            <p>{{org_beer.bang_for_buck}}(alc*ml)\kr</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if beernight.is_user_admin(current_user.id)%}
+                <div class="col-2 w-100 h-100 text-center">
+                    <a id="deleteButton" href='{{url_for("beer.delete_beer_from_beernight", id=beer.id, beernight_id=beernight.id)}}' class="btn btn-secondary btn-sm text-danger h-100" type="button">
+                        {{btn_icon('trash', 'r')}}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="collapse" id="collapse-beer-{{beer.id}}">
+            <div class="star-line col">
+                <p>Ásýnd</p>
+                <div class="row">
+                    <div class="col-2 h-100 d-flex justify-content-center align-items-center">
+                        <span class="h2">{{beer.average_cat_rating('sight')}}<span>
+                    </div>
+                    <div class="col">
+                        {% if rating %}
+                            {{star_rating(beer,'sight', rating.sight)}}
+                        {% else %}
+                            {{star_rating(beer,'sight', 0)}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="star-line col">
+                <p>Lykt</p>
+                <div class="row">
+                    <div class="col-2 h-100 d-flex justify-content-center align-items-center">
+                        <span class="h2">{{beer.average_cat_rating('smell')}}<span>
+                    </div>
+                    <div class="col">
+                        {% if rating %}
+                            {{star_rating(beer,'smell', rating.smell)}}
+                        {% else %}
+                            {{star_rating(beer,'sight', 0)}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="star-line col">
+                <p>Bragð</p>
+                <div class="row">
+                    <div class="col-2 h-100 d-flex justify-content-center align-items-center">
+                        <span class="h2">{{beer.average_cat_rating('taste')}}<span>
+                    </div>
+                    <div class="col">
+                        {% if rating %}
+                            {{star_rating(beer,'taste', rating.taste)}}
+                        {% else %}
+                            {{star_rating(beer,'sight', 0)}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="star-line col">
+                <p>Áferð</p>
+                <div class="row">
+                    <div class="col-2 h-100 d-flex justify-content-center align-items-center" >
+                        <span class="h2">{{beer.average_cat_rating('feel')}}<span>
+                    </div>
+                    <div class="col">
+                        {% if rating %}
+                            {{star_rating(beer,'feel', rating.feel)}}
+                        {% else %}
+                            {{star_rating(beer,'sight', 0)}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="star-line col">
+                <p>Geðþáttaákvörðun</p>
+                <div class="row">
+                    <div class="col-2 h-100 d-flex justify-content-center align-items-center">
+                        <span class="h2">{{beer.average_cat_rating('rating')}}<span>
+                    </div>
+                    <div class="col">
+                        {% if rating %}
+                            {{star_rating(beer,'rating', rating.rating)}}
+                        {% else %}
+                            {{star_rating(beer,'sight', 0)}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endmacro %}
+
+{% macro star_rating(beer, type, rating)%}
+<div style="margin: 20px 0px">
+    <!-- https://scottaohara.github.io/a11y_styled_form_controls/src/radio-button--rating/ -->
+    <form class="beer-rating-form" id="ratingForm-{{type}}_{{beer.id}}" action="{{beer.ajax_rate_action}}" method="POST">
+        <fieldset class="r-radios">
+            {% if rating < 1 or not rating %}
+                <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_0_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="0" checked>
+            {% else%}
+                <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_0_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="0">
+            {% endif %}
+            <label for="r_input_0_{{type}}_{{beer.id}}" class="r-radio r-radio--none">
+                <svg aria-hidden="true" focusable="false">
+                <use xlink:href="#no_rating"/>
+                </svg>
+                <span>Engin einkunn</span>
+            </label>
+            {% if rating == 1%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_1_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="1" checked>
+            {% else%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_1_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="1">
+            {% endif %}
+            <label for="r_input_1_{{type}}_{{beer.id}}" class="r-radio">
+                <svg aria-hidden="true" focusable="false">
+                    <use xlink:href="#star"/>
+                </svg>
+                <span role="presentation">1 stjarna</span>
+            </label>
+            {% if rating == 2%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_2_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="2" checked>
+            {% else%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_2_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="2">
+            {% endif %}
+            <label for="r_input_2_{{type}}_{{beer.id}}" class="r-radio">
+                <svg aria-hidden="true" focusable="false">
+                    <use xlink:href="#star"/>
+                </svg>
+                <span role="presentation">2 stjörnur</span>
+            </label>
+            {% if rating == 3%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_3_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="3" checked>
+            {% else%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_3_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="3">
+            {% endif %}
+            <label for="r_input_3_{{type}}_{{beer.id}}" class="r-radio">
+                <svg aria-hidden="true" focusable="false">
+                    <use xlink:href="#star"/>
+                </svg>
+                <span role="presentation">3 stjörnur</span>
+            </label>
+            {% if rating == 4%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_4_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="4" checked>
+            {% else%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_4_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="4">
+            {% endif %}
+            <label for="r_input_4_{{type}}_{{beer.id}}" class="r-radio">
+                <svg aria-hidden="true" focusable="false">
+                    <use xlink:href="#star"/>
+                </svg>
+                <span role="presentation">4 stjörnur</span>
+            </label>
+            {% if rating == 5%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_5_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="5" checked>
+            {% else%}
+            <input class="radio_star" type="radio" name="r_input_{{type}}_{{beer.id}}" id="r_input_5_{{type}}_{{beer.id}}" onchange="postBeerRating(value,'{{type}}', '{{beer.id}}')" value="5">
+            {% endif %}
+            <label for="r_input_5_{{type}}_{{beer.id}}" class="r-radio">
+                <svg aria-hidden="true" focusable="false">
+                    <use xlink:href="#star"/>
+                </svg>
+                <span role="presentation">5 stjörnur</span>
+            </label>
+        </fieldset>
+    </form>
+</div>
 {% endmacro %}

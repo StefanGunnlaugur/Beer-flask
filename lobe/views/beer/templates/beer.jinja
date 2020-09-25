@@ -12,11 +12,11 @@
             <p class="h2">{{beer.name}}</p>
         </div>
         <div class="row">
-            <div class="col text-center">
+            <div class="col-4 text-center">
                 {% if beer.product_number %}
-                    <img class='img-responsive mh-100' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                    <img class='img-responsive mh-100 mw-100' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
                 {% else %}
-                    <img class='img-responsive mh-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
+                    <img class='img-responsive mh-100 mw-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
                 {% endif %}
             </div>
             <div class="col-8">
@@ -102,7 +102,7 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {% if not current_user.beernights_admin%}
-                                        <a class="dropdown-item disabled" href="#">Ekkert bjórkvöld í boði</a>
+                                        <a class="dropdown-item disabled">Ekkert bjórkvöld í boði</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
                                             {{macros.btn_icon('plus', 'r')}}
@@ -110,7 +110,7 @@
                                         </a>                                    
                                     {% else %}
                                         {% for b in current_user.beernights_admin %}
-                                            <a class="dropdown-item" href="#">{{b.name}}</a>
+                                            <a class="dropdown-item" href='{{url_for("beer.add_beer_to_beernight", id=beer.id, beernight_id=b.id)}}'>{{b.name}}</a>
                                         {% endfor%}
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
@@ -219,8 +219,7 @@
         }
     else
         {
-        alert("message");
-        return false;
+        return true;
         }
     }
 
@@ -232,7 +231,34 @@
         }
     });
 
+    function postReply(parent_id){
+        var text = $("#comment-input-"+parent_id).val();
+        if(allLetter(text)){
+            var action = "{{beer.ajax_comment_action}}";
+            sendComment(text, parent_id, action)
+        }
+    }
+
     var oldVal = "";
+    $(".replay-text").on("change keyup paste", function() {
+        var currentVal = $(this).val();
+        if(currentVal == oldVal) {
+            return; //check to prevent multiple simultaneous triggers
+        }
+
+        oldVal = currentVal;
+        var id = $(this).attr('id').split('comment-input-')[1];
+        console.log(id)
+        //action to be performed on textarea changed
+        if(!$(this).val()){
+            $("#submit-comment-button-" + id).prop('disabled', true);
+        }
+        else{
+            $("#submit-comment-button-" + id).prop('disabled', false);
+        }
+    });
+
+
     $("#comment-input").on("change keyup paste", function() {
         var currentVal = $(this).val();
         if(currentVal == oldVal) {
@@ -255,6 +281,7 @@
     }
 
     function sendRequest(value, action) {
+        console.log(action)
         var xhr = new XMLHttpRequest();
         xhr.onload = function(e) {
             if(this.readyState === XMLHttpRequest.DONE) {
@@ -281,8 +308,9 @@
         }
     });
 
+
+
     function sendComment(text, parent_id, action) {
-        console.log('hehe')
         var xhr = new XMLHttpRequest();
         xhr.onload = function(e) {
             if(this.readyState === XMLHttpRequest.DONE) {
@@ -300,6 +328,28 @@
         if(parent_id){
             formData.append("parent", parent_id);
         }
+        xhr.open("POST", action, true);
+        xhr.send(formData);
+    }
+
+    function likeComment(comment_id, action){
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(e) {
+            if(this.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status == '200'){
+                    var ans = xhr.responseText;
+                    if(ans == 'like'){
+                         $('#comment-like-heart-' + comment_id).css("color", "red");
+                    }else{
+                         $('#comment-like-heart-' + comment_id).css("color", "gray");
+                    }
+                } else{
+                    promptError("Villa koma upp:", xhr.responseText, "");
+                }
+            }
+        }
+        let formData = new FormData();
+        formData.append("value", comment_id);
         xhr.open("POST", action, true);
         xhr.send(formData);
     }

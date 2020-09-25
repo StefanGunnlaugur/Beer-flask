@@ -30,6 +30,57 @@
             {% endif %}
         </div>
     </div>
+    <div class="lists">
+        <div class="wrapper">
+            <div style="background-color: #303030; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-beernights-admin" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
+                <p class="py-2 text-success"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Bjórkvöldin mín</p>
+            </div>
+            <div class="collapse" id="collapse-beernights-admin">
+                {% if beernights_admin|length > 0 %}
+                        <ul id="beerListUL">
+                            {% for b in beernights_admin %}
+                                <li class="my-2">
+                                    {{macros.beernight_line(b, current_user)}}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="wrapper">
+            <div style="background-color: #303030; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-beernights-member" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
+                <p class="py-2 text-success"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Bjórkvöld sem gestur</p>
+            </div>
+            <div class="collapse" id="collapse-beernights-member">
+                {% if beernights_member|length > 0 %}
+                        <ul id="beerListUL">
+                            {% for b in beernights_member %}
+                                <li class="my-2">
+                                    {{macros.beernight_line(b, current_user)}}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="wrapper" style="margin-top: 10px;">
+            <div style="background-color: #303030; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-beers" aria-expanded="false" aria-controls="collapse-ratings" style="cursor: pointer;">
+                <p class="py-2 text-success"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Uppáhalds bjórar</p>
+            </div>
+            <div class="collapse" id="collapse-beers">
+                {% if fav_beers|length > 0 %}
+                    <ul id="beerListUL">
+                            {% for b in fav_beers %}
+                                <li class="my-2">
+                                    {{macros.beer_line(b, current_user)}}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
    
 {% endblock %}
 
