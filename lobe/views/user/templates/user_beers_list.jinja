@@ -1,0 +1,26 @@
+{% extends "_list.jinja" %}
+{% block title %}Allir uppáhalds bjórar{% endblock %}
+{% block total %}{{beers.total}}{% endblock %}
+{% block buttons %}
+
+{% endblock %}
+{% block table %}
+    {% if beers.total > 0 %}
+        {% with beers=beers.items %}
+            {% include 'user_beers_table.jinja'%}
+        {% endwith %}
+    {% endif %}
+{% endblock %}
+
+{% block pagination %}
+    {% if beers.total > 0 %}
+        {{macros.pagination(beers, url_for('user.fav_beer_list'))}}
+    {% endif %}
+{% endblock %}
+
+{% block no_results %}
+    {% if beers.total == 0 %}
+        {{macros.no_results("Engir bjórar",
+            "Til að sjá bjóra þarf fyrst að hjarta þá.")}}
+    {% endif %}
+{% endblock %}

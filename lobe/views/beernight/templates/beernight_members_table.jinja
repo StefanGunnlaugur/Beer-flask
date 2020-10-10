@@ -1,0 +1,42 @@
+<table class='table'>
+    <thead>
+        <th>
+            Nafn þátttakenda
+        </th>
+        <th>
+            Fjöldi bjóra gefið einkunn
+        </th>
+        <th>
+            Ásýnd
+        </th>
+        <th>
+            Lykt
+        </th>
+         <th>
+            Bragð
+        </th>
+        <th>
+            Áferð
+        </th>
+        <th>
+            Geðþáttaákvörðun
+        </th>
+        <th>
+            Heildareinkunn
+        </th>
+    </thead>
+    <tbody>
+        {% for m in beernight.members %}
+            <tr>
+                <td>{{m.name}}</td>
+                <td>{{beernight.number_of_ratings_per_user(m.id)}}</td>
+                <td>{{beernight.get_mean_cat_user_rating(m.id, 'sight')}}</td>
+                <td>{{beernight.get_mean_cat_user_rating(m.id, 'smell')}}</td>
+                <td>{{beernight.get_mean_cat_user_rating(m.id, 'taste')}}</td>
+                <td>{{beernight.get_mean_cat_user_rating(m.id, 'feel')}}</td>
+                <td>{{beernight.get_mean_cat_user_rating(m.id, 'rating')}}</td>
+                <td>{{beernight.get_mean_user_rating(m.id)}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

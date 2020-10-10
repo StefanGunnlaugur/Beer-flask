@@ -1,0 +1,25 @@
+{% extends "_list.jinja" %}
+{% block title %}Öll boðin mín{% endblock %}
+{% block total %}{{invites.total}}{% endblock %}
+{% block buttons %}
+{% endblock %}
+{% block table %}
+    {% if invites.total > 0 %}
+        {% with invites=invites.items %}
+            {% include 'user_invite_table.jinja'%}
+        {% endwith %}
+    {% endif %}
+{% endblock %}
+
+{% block pagination %}
+    {% if invites.total > 0 %}
+        {{macros.pagination(invites, url_for('user.invites_list'))}}
+    {% endif %}
+{% endblock %}
+
+{% block no_results %}
+    {% if invites.total == 0 %}
+        {{macros.no_results("Engin boð",
+            "Til að sjá boð þarf fyrst að bjóða þér í bjórkvöld.")}}
+    {% endif %}
+{% endblock %}

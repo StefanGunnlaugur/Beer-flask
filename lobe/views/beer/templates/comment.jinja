@@ -2,15 +2,17 @@
     <!-- first comment -->
 
     <div class="media-heading">
-        <button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#collapse-{{comment.id}}" aria-expanded="false" aria-controls="collapseExample"><span class="fas fa-plus" aria-hidden="true"></span></button> 
+         <span style="padding-left: 8px;" class="show-button" class="mb-2" data-toggle="collapse" data-target="#collapse-{{comment.id}}" aria-expanded="false" aria-controls="collapse-comment" style="cursor: pointer;">
+            <i class="fas fa-plus mr-2 fa-lg" aria-hidden="true"></i>
+        </span>
         <span class="badge badge-info">{{comment.num_likes}}</span> 
-        <div class="column">
-            <span class="column">{{comment.user.name}}</span> 
-            <span class="column">{{comment.created_at | datetime(format='low')}}</span>
+        <div class="col">
+            <span class="row">{{comment.user.name}}</span> 
+            <span class="row">{{comment.created_at | datetime(format='med-low')}}</span>
         </div>
     </div>
 
-    <div class="panel-collapse collapse in" id="collapse-{{comment.id}}">
+    <div class="panel-collapse collapse in ml-3" id="collapse-{{comment.id}}">
 
             <div class="media-left ml-2">
                 <div class="vote-wrap">
@@ -31,10 +33,10 @@
             <p>{{comment.text}}</p>
             {% if current_user%}
                 <div class="comment-meta">
-                    {% if comment.user_id == current_user%}
+                    {% if comment.user_id == current_user.id%}
                     <span><a href="{{url_for('beer.delete_comment', id=beer.id, comment_id=comment.id)}}">eyða</a></span>
                     {% endif %}
-                    <span><a class="report-button" onclick="sendRequest({{comment.id}}, '/beer/comment/report/')">tilkynna</a></span>
+                    <span><a href="{{url_for('beer.report_comment', id=comment.id)}}">tilkynna</a></span>
                     <span>
                         <a class="" role="button" data-toggle="collapse" data-target="#collapse-{{comment.id}}-reply" href="#replyCommentT" aria-expanded="false" aria-controls="collapseExample">svara</a>
                     </span>

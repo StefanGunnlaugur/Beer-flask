@@ -1,0 +1,33 @@
+<div class='table-responsive'>
+    <table class='table table-hover'>
+        <thead>
+            <th>
+                Frá
+            </th>
+            <th>
+                Bjórkvöld
+            </th>
+            <th>
+                Sent
+            </th>
+            <th>
+                
+            </th>
+        </thead>
+        <tbody>
+            {% for i in invites %}
+                <tr>
+                    <td>{{i.sender.name}}</td>
+                    <td>{{i.beernight.name}}</td>
+                    <td>{{i.created_at | datetime(format='med-low')}}</td>
+                    <td>
+                        <div class="col-4 d-flex align-items-center">
+                            <a id="accept-beernight-invite-button" class="btn btn-success mx-1" href='{{url_for("beernight.accept_beernight_invite", id=i.id)}}'>Samþykkja</a>
+                            <a id="decline-beernight-invite-button" class="btn btn-danger mx-1" href='{{url_for("beernight.decline_beernight_invite", id=i.id)}}'>Hafna</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

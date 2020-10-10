@@ -12,13 +12,14 @@ from tqdm import tqdm
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Command, Manager
 from flask_security.utils import hash_password
+from flask_security import (Security, SQLAlchemyUserDatastore)
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from termcolor import colored
 
 from lobe import app
-from lobe.models import (User, Role, db, Beer)
+from lobe.models import (User, Role, db, Beer, Beernight)
 
 
 migrate = Migrate(app, db)
@@ -50,7 +51,37 @@ class AddDefaultRoles(Command):
 
         db.session.commit()
 
+class AddUserRole(Command):
+    def run(self):
+        users = User.query.all()
+        role = Role.query.filter(Role.name == 'admin').first()
+        user = User.query.filter(User.email == 'stefangunnlaugur@gmail.com').first()
+        user.roles.append(role)
+        db.session.commit()
 
+class AddBeerColumns(Command):
+    def run(self):
+        beers = Beer.query.all()
+        for b in beers:
+            b.economic_score = b.bang_for_buck
+            b.book_score = b.calculateBook
+        db.session.commit()
+
+class AddBeernightColumns(Command):
+    def run(self):
+        beernights = Beernight.query.all()
+        for b in beernights:
+            b.is_featured = False
+        db.session.commit()
+
+class DeleteUser(Command):
+    def run(self):
+        users = User.query.all()
+        for u in users:
+            if u.email != 'stefangunnlaugur@gmail.com':
+                print(u)
+                app.user_datastore.delete_user(user=u)
+        db.session.commit()
 
 class AddUser(Command):
     def run(self):
@@ -93,6 +124,7 @@ class AddBeersFromJson(Command):
                 beer.volume = int(p['volume'].replace(' ml', ''))
                 beer.product_number = int(p['product_number'])
                 db.session.add(beer)
+                beer.economic_score = beer.bang_for_buck
         db.session.commit()
                 
 
@@ -130,10 +162,14 @@ class AddColumnDefaults(Command):
 
 manager.add_command('db', MigrateCommand)
 manager.add_command('add_user', AddUser)
+manager.add_command('add_role_to_user', AddUserRole)
+manager.add_command('delete_users', DeleteUser)
 manager.add_command('change_pass', changePass)
 manager.add_command('add_default_roles', AddDefaultRoles)
 manager.add_command('add_column_defaults', AddColumnDefaults)
 manager.add_command('add_beers_from_json', AddBeersFromJson)
+manager.add_command('add_beer_columns', AddBeerColumns)
+manager.add_command('add_beernight_columns', AddBeernightColumns)
 
 
 

@@ -1,14 +1,23 @@
 """Initialize Flask app."""
 import os
 import logging
+import json
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask
-from flask_security import (Security, SQLAlchemyUserDatastore)
+from flask import Flask, url_for, redirect, \
+    render_template, session, request, flash
+
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
+
+from flask_login import LoginManager, login_required, login_user, \
+    logout_user, current_user, UserMixin
+
+from requests_oauthlib import OAuth2Session
+from requests.exceptions import HTTPError
+
 from flask_executor import Executor
 
-
+from lobe.decorators import roles_accepted
 from lobe.forms import ExtendedLoginForm
 from lobe.models import User, Role
 from lobe.models import db as sqlalchemy_db
@@ -19,12 +28,15 @@ from lobe.views.user import user
 from lobe.views.beer import beer
 from lobe.views.beernight import beernight
 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 
 
 def create_app():
-    user_datastore = SQLAlchemyUserDatastore(sqlalchemy_db, User, Role)
+    #user_datastore = SQLAlchemyUserDatastore(sqlalchemy_db, User, Role)
     app = Flask(__name__)
-
+    #app.config.from_object(config['dev'])
+    
     if os.getenv('SEMI_PROD', False):
         app.config.from_pyfile('{}.py'.format(os.path.join(
             'settings', 'semi_production')))
@@ -33,13 +45,12 @@ def create_app():
             'settings', os.getenv('FLASK_ENV', 'development'))))
     if 'REVERSE_PROXY_PATH' in app.config:
         ReverseProxyPrefixFix(app)
-
+    
     app.logger.setLevel(logging.DEBUG)
     app.logger.addHandler(create_logger(app.config['LOG_PATH']))
 
     sqlalchemy_db.init_app(app)
-    Security(app, user_datastore, login_form=ExtendedLoginForm)
-
+    #Security(app, user_datastore)
     # register filters
     app.jinja_env.filters['datetime'] = format_date
 
@@ -52,7 +63,7 @@ def create_app():
     app.register_blueprint(beernight)
 
     app.executor = Executor(app)
-    app.user_datastore = user_datastore
+    #app.user_datastore = user_datastore
 
     return app
 
@@ -76,3 +87,20 @@ def create_logger(log_path: str):
 
 
 app = create_app()
+
+
+#https://bitwiser.in/2015/09/09/add-google-login-in-flask.html
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+login_manager.session_protection = "strong"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+""" OAuth Session creation """
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    # do stuff
+    flash("Notanda hefur ekki heimild", category='danger')
+    return redirect(url_for('beer.beer_list'))

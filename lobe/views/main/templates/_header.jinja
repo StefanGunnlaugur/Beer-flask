@@ -1,41 +1,44 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{url_for('main.index')}}">Bjór fyrir mig</a>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color:{{config.COLORS.headerColor}};">
+    <a class="navbar-brand" href="{{url_for('beer.beer_list')}}">Skál</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
-        <li class="nav-item {% if section == 'collection' %}active{% endif %}">
-            <a class="nav-link" href="{{url_for('beer.beer_list')}}">Bjórar</a>
+        <li class="nav-item {% if section == 'beer' %}active{% endif %}">
+            <a class="nav-link {% if section == 'beer' %}text-light{% endif %}" href="{{url_for('beer.beer_list')}}">Bjórar</a>
         </li>
-        {% if not current_user.is_anonymous and current_user.is_admin() %}
-            <li class="nav-item {% if section == 'user' %}active{% endif %}">
-                <a class="nav-link {% if section == 'user' %}text-success{% endif %}" href="{{url_for('user.user_list')}}">Notendur</a>
-            </li>
-        {% endif %}
-        {% if not current_user.is_anonymous and current_user.is_admin() %}
-            <li class="nav-item {% if section == 'mos' %}active{% endif %}">
-                <a class="nav-link {% if section == 'mos' %}text-success{% endif %}" href="{{url_for('beernight.public_beernights')}}">Bjórkvöld</a>
-            </li>
-        {% endif %}
+        <li class="nav-item {% if section == 'beernight' %}active{% endif %}">
+            <a class="nav-link {% if section == 'beernight' %}text-light{% endif %}" href="{{url_for('beernight.public_beernights')}}">Bjórkvöld</a>
+        </li>
         {% if not current_user.is_anonymous %}
-            <li class="nav-item dropdown">
-                <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown">
-                <span>{{current_user.name}}</span>
-                {{macros.btn_icon('user-circle', '')}}
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{url_for('user.current_user_detail')}}">Mín síða</a>
-                    <a class="dropdown-item" href="{{url_for('security.logout') }}">Skrá út</a>
-                </div>
+            <li class="nav-item {% if section == 'user' %}active{% endif %}">
+                <a class="nav-link {% if section == 'user' %}text-light{% endif %}"  href="{{url_for('user.current_user_detail')}}">Mín síða</a>
             </li>
         {% endif %}
         <li class="nav-item dropdown {% if section == 'other' %}active{% endif %}">
-            <a class="nav-link {% if section == 'other' %}text-success{% endif %}" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown">
+            <a class="nav-link {% if section == 'other' %}text-light{% endif %}" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown">
             <span>Annað</span>
             {{macros.btn_icon('info-circle','')}}
             </a>
         </li>
+        {% if not current_user.is_anonymous and current_user.is_admin() %}
+            <li class="nav-item {% if section == 'admin' %}active{% endif %}">
+                <a class="nav-link {% if section == 'admin' %}text-light{% endif %}" href="{{url_for('user.admin_page')}}">Stjórnsíða</a>
+            </li>
+        {% endif %}
+        
     </ul>
+    <ul class="navbar-nav ml-auto">
+        {% if not current_user.is_anonymous %}
+            <li class="nav-item mr-auto">
+                <a class="nav-link" href="{{url_for('main.logout') }}">{{macros.btn_icon('sign-out-alt','')}} Skrá út</a>            
+            </li>
+        {% else %}
+            <li class="nav-item {% if section == 'user' %}active{% endif %}">
+                <a class="nav-link {% if section == 'user' %}text-light{% endif %}" href="{{url_for('main.login')}}">{{macros.btn_icon('sign-in-alt','')}} Skrá inn</a>
+            </li>
+        {% endif %}
+        </ul>
     </div>
 </nav>

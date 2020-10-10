@@ -23,10 +23,10 @@
                 <div class="row">
                     <div class="col-4">
                         <div style="margin: 20px 0px">
-                            <span>Styrkur: {{beer.alcohol}}</span>
+                            <span>Styrkur: {{beer.alcohol}}%</span>
                         </div>
                         <div style="margin: 20px 0px">
-                            <span>Einkunn: {{beer.average_rating}}</span>
+                            <span>{{macros.btn_icon('star', 'r')}}{{beer.average_rating}}</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
                             <span>Magn: {{beer.volume}}ml</span>
@@ -37,9 +37,15 @@
                         <div class="my-20" style="margin: 20px 0px">
                             <span>Tegund: {{beer.beer_type}}</span>
                         </div>
+                         <div class="my-20" style="margin: 20px 0px">
+                            <span>Book stuðull: {{beer.book_score|round(2)}}</span>
+                        </div>
+                        <div class="my-20" style="margin: 20px 0px">
+                            <span>Hagkvæmni stuðull: {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
+                        </div>
                     </div>
                     <div class="col">
-                        {% if current_user %}
+                        {% if not current_user.is_anonymous %}
                             <div style="margin: 20px 0px">
                                 <!-- https://scottaohara.github.io/a11y_styled_form_controls/src/radio-button--rating/ -->
                                 <form class="beer-rating-form" id="ratingForm" action="{{beer.ajax_rate_action}}" method="POST">
@@ -93,9 +99,7 @@
                                     </fieldset>
                                 </form>
                             </div>
-
                             {% include 'beer_like_heart.jinja' %}
-
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Setja bjór í bjórkvöld
@@ -110,7 +114,7 @@
                                         </a>                                    
                                     {% else %}
                                         {% for b in current_user.beernights_admin %}
-                                            <a class="dropdown-item" href='{{url_for("beer.add_beer_to_beernight", id=beer.id, beernight_id=b.id)}}'>{{b.name}}</a>
+                                            <a class="dropdown-item" href='{{url_for("beernight.add_beer_to_beernight", id=beer.id, beernight_id=b.id)}}'>{{b.name}}</a>
                                         {% endfor%}
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
@@ -166,194 +170,224 @@
         var favourite_action = "{{beer.ajax_favourite_action}}";
     </script>
     <script>
-    window.onload = function(){
-            setUI()
+        window.onload = function(){
+                setUI()
+            }
+
+        function setUI(){
+            setStars();
+            setHeart();
         }
 
-    function setUI(){
-        setStars();
-        setHeart();
-    }
-
-    function setStars(){
-        var inputs = document.getElementsByClassName("radio_star");
-        if(!rating){
-            inputs[0].checked = true
-        }
-        else{
-            inputs[rating].checked = true
-        }
-    }
-
-    function setHeart(){
-        var heart = $(".heart_checkbox")
-
-        if(liked){
-            heart.prop('checked', true);
-        }
-        else{
-            heart.prop('checked', false);
-        }
-    }
-
-
-    $('[data-toggle="collapse"]').on('click', function() {
-    var $this = $(this),
-            $parent = typeof $this.data('parent')!== 'undefined' ? $($this.data('parent')) : undefined;
-    if($parent === undefined) { /* Just toggle my  */
-        $this.find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
-        return true;
-    }
-
-    /* Open element will be close if parent !== undefined */
-    var currentIcon = $this.find('.glyphicon');
-    currentIcon.toggleClass('glyphicon-plus glyphicon-minus');
-    $parent.find('.glyphicon').not(currentIcon).removeClass('glyphicon-minus').addClass('glyphicon-plus');
-
-    });
-    function allLetter(inputtxt){
-    var letters = /^[A-Za-z]+$/;
-    if(inputtxt.match(letters))
-        {
-        return true;
-        }
-    else
-        {
-        return true;
-        }
-    }
-
-    $("#submit-comment-button").on('click', function(){
-        var text = $("#comment-input").val();
-        if(allLetter(text)){
-            var action = "{{beer.ajax_comment_action}}";
-            sendComment(text, false, action)
-        }
-    });
-
-    function postReply(parent_id){
-        var text = $("#comment-input-"+parent_id).val();
-        if(allLetter(text)){
-            var action = "{{beer.ajax_comment_action}}";
-            sendComment(text, parent_id, action)
-        }
-    }
-
-    var oldVal = "";
-    $(".replay-text").on("change keyup paste", function() {
-        var currentVal = $(this).val();
-        if(currentVal == oldVal) {
-            return; //check to prevent multiple simultaneous triggers
-        }
-
-        oldVal = currentVal;
-        var id = $(this).attr('id').split('comment-input-')[1];
-        console.log(id)
-        //action to be performed on textarea changed
-        if(!$(this).val()){
-            $("#submit-comment-button-" + id).prop('disabled', true);
-        }
-        else{
-            $("#submit-comment-button-" + id).prop('disabled', false);
-        }
-    });
-
-
-    $("#comment-input").on("change keyup paste", function() {
-        var currentVal = $(this).val();
-        if(currentVal == oldVal) {
-            return; //check to prevent multiple simultaneous triggers
-        }
-
-        oldVal = currentVal;
-        //action to be performed on textarea changed
-        if(!$(this).val()){
-            $("#submit-comment-button").prop('disabled', true);
-        }
-        else{
-            $("#submit-comment-button").prop('disabled', false);
-        }
-    });
-
-    function postBeerRating(value) {
-        var action = $("#ratingForm").attr("action");
-        sendRequest(value, action)
-    }
-
-    function sendRequest(value, action) {
-        console.log(action)
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function(e) {
-            if(this.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status == '200'){
-                    var response = JSON.parse(xhr.responseText);
-                } else{
-                    promptError("Villa koma upp:", xhr.responseText, "");
-                }
+        function setStars(){
+            var inputs = document.getElementsByClassName("radio_star");
+            if(!rating){
+                inputs[0].checked = true
+            }
+            else{
+                inputs[rating].checked = true
             }
         }
-        let formData = new FormData();
-        formData.append("value", value);
-        xhr.open("POST", action, true);
-        xhr.send(formData);
-    }
 
-    $('.heart_checkbox').on('click', function() {
-        var heart = $(this)
-        if(heart.is(":checked")){
-            sendRequest('True', favourite_action)
-        }  
-        else{
-            sendRequest('False', favourite_action)
-        }
-    });
+        function setHeart(){
+            var heart = $(".heart_checkbox")
 
-
-
-    function sendComment(text, parent_id, action) {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function(e) {
-            if(this.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status == '200'){
-                    var beer_url = xhr.responseText;
-                    window.onbeforeunload = null;
-                    window.location = beer_url;
-                } else{
-                    promptError("Villa koma upp:", xhr.responseText, "");
-                }
+            if(liked){
+                heart.prop('checked', true);
+            }
+            else{
+                heart.prop('checked', false);
             }
         }
-        let formData = new FormData();
-        formData.append("text", text);
-        if(parent_id){
-            formData.append("parent", parent_id);
-        }
-        xhr.open("POST", action, true);
-        xhr.send(formData);
-    }
 
-    function likeComment(comment_id, action){
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function(e) {
-            if(this.readyState === XMLHttpRequest.DONE) {
-                if(xhr.status == '200'){
-                    var ans = xhr.responseText;
-                    if(ans == 'like'){
-                         $('#comment-like-heart-' + comment_id).css("color", "red");
-                    }else{
-                         $('#comment-like-heart-' + comment_id).css("color", "gray");
+
+        $('[data-toggle="collapse"]').on('click', function() {
+        var $this = $(this),
+                $parent = typeof $this.data('parent')!== 'undefined' ? $($this.data('parent')) : undefined;
+        if($parent === undefined) { /* Just toggle my  */
+            $this.find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
+            return true;
+        }
+
+        /* Open element will be close if parent !== undefined */
+        var currentIcon = $this.find('.glyphicon');
+        currentIcon.toggleClass('glyphicon-plus glyphicon-minus');
+        $parent.find('.glyphicon').not(currentIcon).removeClass('glyphicon-minus').addClass('glyphicon-plus');
+
+        });
+        function allLetter(inputtxt){
+        var letters = /^[A-Za-z]+$/;
+        if(inputtxt.match(letters))
+            {
+            return true;
+            }
+        else
+            {
+            return true;
+            }
+        }
+
+        $("#submit-comment-button").on('click', function(){
+            var text = $("#comment-input").val();
+            if(allLetter(text)){
+                var action = "{{beer.ajax_comment_action}}";
+                sendComment(text, false, action)
+            }
+        });
+
+        function postReply(parent_id){
+            var text = $("#comment-input-"+parent_id).val();
+            if(allLetter(text)){
+                var action = "{{beer.ajax_comment_action}}";
+                sendComment(text, parent_id, action)
+            }
+        }
+
+        var oldVal = "";
+        $(".replay-text").on("change keyup paste", function() {
+            var currentVal = $(this).val();
+            if(currentVal == oldVal) {
+                return; //check to prevent multiple simultaneous triggers
+            }
+
+            oldVal = currentVal;
+            var id = $(this).attr('id').split('comment-input-')[1];
+            console.log(id)
+            //action to be performed on textarea changed
+            if(!$(this).val()){
+                $("#submit-comment-button-" + id).prop('disabled', true);
+            }
+            else{
+                $("#submit-comment-button-" + id).prop('disabled', false);
+            }
+        });
+
+
+        $("#comment-input").on("change keyup paste", function() {
+            var currentVal = $(this).val();
+            if(currentVal == oldVal) {
+                return; //check to prevent multiple simultaneous triggers
+            }
+
+            oldVal = currentVal;
+            //action to be performed on textarea changed
+            if(!$(this).val()){
+                $("#submit-comment-button").prop('disabled', true);
+            }
+            else{
+                $("#submit-comment-button").prop('disabled', false);
+            }
+        });
+
+        function postBeerRating(value) {
+            var action = $("#ratingForm").attr("action");
+            sendRequest(value, action)
+        }
+
+        function sendRequest(value, action) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e) {
+                if(this.readyState === XMLHttpRequest.DONE) {
+                    if(xhr.status == '200'){
+                        var response = JSON.parse(xhr.responseText);
+                        if('url' in response){
+                            var url = response['url'];
+                            window.onbeforeunload = null;
+                            window.location = url;
+                        }
+
+                    } else{
+                        promptError("Villa koma upp:", xhr.responseText, "");
                     }
-                } else{
-                    promptError("Villa koma upp:", xhr.responseText, "");
                 }
             }
+            let formData = new FormData();
+            formData.append("value", value);
+            xhr.open("POST", action, true);
+            xhr.send(formData);
         }
-        let formData = new FormData();
-        formData.append("value", comment_id);
-        xhr.open("POST", action, true);
-        xhr.send(formData);
-    }
 
+        $('.heart_checkbox').on('click', function() {
+            var heart = $(this)
+            if(heart.is(":checked")){
+                sendRequest('True', favourite_action)
+            }  
+            else{
+                sendRequest('False', favourite_action)
+            }
+        });
+
+
+
+        function sendComment(text, parent_id, action) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e) {
+                if(this.readyState === XMLHttpRequest.DONE) {
+                    if(xhr.status == '200'){
+                        var beer_url = xhr.responseText;
+                        window.onbeforeunload = null;
+                        window.location = beer_url;
+                    } else{
+                        promptError("Villa koma upp:", xhr.responseText, "");
+                    }
+                }
+            }
+            let formData = new FormData();
+            formData.append("text", text);
+            if(parent_id){
+                formData.append("parent", parent_id);
+            }
+            xhr.open("POST", action, true);
+            xhr.send(formData);
+        }
+
+        function likeComment(comment_id, action){
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e) {
+                if(this.readyState === XMLHttpRequest.DONE) {
+                    if(xhr.status == '200'){
+                        var ans = xhr.responseText;
+                        if(ans == 'like'){
+                            $('#comment-like-heart-' + comment_id).css("color", "red");
+                        }else{
+                            $('#comment-like-heart-' + comment_id).css("color", "gray");
+                        }
+                    } else{
+                        promptError("Villa koma upp:", xhr.responseText, "");
+                    }
+                }
+            }
+            let formData = new FormData();
+            formData.append("value", comment_id);
+            xhr.open("POST", action, true);
+            xhr.send(formData);
+        }
+
+        $(document).ready(function () {
+            $('.show-button')
+                .on('click', function() {
+                    var el = $(this)
+                                .parent()
+                                .parent()
+                                .find(".collapse")
+                                .first()
+                                .is('.collapse:not(.show)')
+                    if(el){
+                        $(this)
+                            .find(".fa-plus")
+                            .first()
+                            .removeClass("fa-plus")
+                            .addClass("fa-minus");
+                    }
+                    else{
+                        $(this)
+                            .find(".fa-minus")
+                            .first()
+                            .removeClass("fa-minus")
+                            .addClass("fa-plus");
+                    }
+                })
+        });
     </script>
 
     

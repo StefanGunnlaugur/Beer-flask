@@ -1,0 +1,49 @@
+<table class='table'>
+    <thead>
+        <th>
+            Bjór
+        </th>
+        <th>
+            Fjöldi einkunna
+        </th>
+        <th>
+            Ásýnd
+        </th>
+        <th>
+            Lykt
+        </th>
+         <th>
+            Bragð
+        </th>
+        <th>
+            Áferð
+        </th>
+        <th>
+            Geðþáttaákvörðun
+        </th>
+        <th>
+            Heildareinkunn
+        </th>
+    </thead>
+    <tbody>
+        {% for b in beernight.beers %}
+            <tr data-toggle="collapse" data-target="#collapse-{{b.id}}" aria-expanded="false" aria-controls="collapse-{{b.id}}" style="cursor: pointer;">
+                <td><a class="" href='{{url_for("beer.beer_detail", id=b.id)}}'>{% if b.orginal_beer %}{{b.orginal_beer.name}}{% else %}{{b.name}}{% endif %}</a></td>
+                <td>{{b.number_of_ratings}}</td>
+                <td>{% if b.average_cat_rating('sight') %}{{b.average_cat_rating('sight')}}{% else %}-{% endif %}</td>
+                <td>{% if b.average_cat_rating('smell') %}{{b.average_cat_rating('smell')}}{% else %}-{% endif %}</td>
+                <td>{% if b.average_cat_rating('taste') %}{{b.average_cat_rating('taste')}}{% else %}-{% endif %}</td>
+                <td>{% if b.average_cat_rating('feel') %}{{b.average_cat_rating('feel')}}{% else %}-{% endif %}</td>
+                <td>{% if b.average_cat_rating('rating') %}{{b.average_cat_rating('rating')}}{% else %}-{% endif %}</td>
+                <td>{% if b.get_mean_overall_rating %}{{b.get_mean_overall_rating}}{% else %}-{% endif %}</td>
+                
+                <div class="collapse" id="collapse-{{b.id}}">
+                    <span class="row">{% if b.orginal_beer %}{{b.orginal_beer.name}}{% else %}{{b.name}}{% endif %}</span>
+                    <span class="row">{% if b.orginal_beer %}{{b.orginal_beer.name}}{% else %}{{b.name}}{% endif %}</span>
+                    <span class="row">{% if b.orginal_beer %}{{b.orginal_beer.name}}{% else %}{{b.name}}{% endif %}</span>
+                </div>
+            </tr>
+            
+        {% endfor %}
+    </tbody>
+</table>

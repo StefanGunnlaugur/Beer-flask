@@ -1,0 +1,37 @@
+<div class='table-responsive'>
+    <table class='table table-hover'>
+        <thead>
+            <th>
+                Nafn
+                {{macros.sort_th_a('name')}}
+            </th>
+            <th>
+                Búið til
+            </th>
+            <th>
+                Sýnilegur öllum
+            </th>
+            <th>
+                Einkunn
+            </th>
+            <th>
+                Eignadi
+            </th>
+            <th>
+                Meðlimir
+            </th>
+        </thead>
+        <tbody>
+            {% for b in beernights %}
+                <tr>
+                    <td><a style="color: {{config.COLORS.warning}};" class="text-color-warning" href='{{url_for("beernight.beernight_detail", id=b.id)}}'>{{b.name}}</a></td>
+                    <td>{{b.created_at | datetime(format='med-low')}}</td>
+                    <td>{% if b.is_public %}Já{% else %}Nei{% endif %}</td>
+                    <td>{{b.average_rating}}</td>
+                    <td>{{b.creator.name}}</td>
+                    <td>{{b.members | length}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

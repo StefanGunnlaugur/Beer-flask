@@ -12,6 +12,8 @@ OTHER_DIR = os.path.join(APP_ROOT, os.pardir, 'other')
 
 BEER_PAGINATION = 500
 USER_PAGINATION = 10
+USER_TABLES_PAGINATION = 15
+
 
 
 SESSION_SZ = 50
@@ -21,7 +23,7 @@ RECAPTCHA_DATA_ATTRS = {'theme': 'dark'}
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-SECURITY_LOGIN_USER_TEMPLATE = 'login_user.jinja'
+#SECURITY_LOGIN_USER_TEMPLATE = 'login_user.jinja'
 
 # The default configuration id stored in database
 DEFAULT_CONFIGURATION_ID = 1
@@ -31,12 +33,37 @@ COLORS = {
     'rare': "#42a5f5",
     'epic': "#7e57c2",
     'legendary': "#ffc107",
+    'nice': "#56c256",
+    'perfect': "#c25656",
     'danger': "#ff4444",
     'primary': "#0275d8",
     'success': "#5cb85c",
     'info': "#5bc0de",
+    'white': "#ffffff",
     'warning': "#f0ad4e",
+    'warningDark': '#d38312',
     'diamond': "#ff4444",
+    'darkGrey': "#737373",
+    'siteBackgroundDark': '#46344e',
+    'siteBackground': '#f1f1f1',
+    'headerColor': '#f0ad4e',
+    'headerFadedColor': '#f9deb9',
+    'fontColor': '#000000',
+    'lineColor': '#ffffff',
+    'fourthColor': '#9b786f',
+    'publicBeernightColor': '#8b9c8b',
+    'publicHover': '#6f9b6f',
+    'navSelected': '#6f9b6f',
+
+    'adminColor': '#7474b4',
+    'adminHover': '#5959a6',
+    'memberColor': '#b47474',
+    'memberHover': '#a65959',
+    'inviteColor': '#9c9c8b',
+    'inviteHover': '#8a8a75',
+
+    'heartChecked': '#cc0000',
+    'heartUnChecked': '#6b6161',
 }
 
 

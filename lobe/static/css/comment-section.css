@@ -22,12 +22,11 @@
   
   .post-comments .media-heading {
     font-size: 12px;
-    color: grey;
   }
   
   .post-comments .comment-meta a {
     font-size: 12px;
-    color: grey;
+    color: #721c24;
     font-weight: bolder;
     margin-right: 5px;
   }

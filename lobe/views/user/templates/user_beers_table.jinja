@@ -1,0 +1,29 @@
+<div class='table-responsive'>
+    <table class='table'>
+        <thead>
+            <th>
+                Nafn
+                {{macros.sort_th_a('name')}}
+            </th>
+            <th>
+                Einkunn
+            </th>
+            <th>
+                Alkóhól
+            </th>
+            <th>
+                Verð
+            </th>
+        </thead>
+        <tbody>
+            {% for b in beers %}
+                <tr>
+                    <td><a href='{{url_for("beer.beer_detail", id=b.id)}}'>{{b.name}}</a></td>
+                    <td>{{b.average_rating}}</td>
+                    <td>{{b.alcohol}}</td>
+                    <td>{{b.price}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

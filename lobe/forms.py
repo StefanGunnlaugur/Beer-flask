@@ -14,7 +14,7 @@ from wtforms.validators import InputRequired
 from wtforms_alchemy import ModelForm
 from wtforms_components import IntegerField
 
-from lobe.models import (Role, User, Beer, db, Beernight)
+from lobe.models import (Role, User, Beer, db, Beernight, BeernightBeer)
 
 
 class MultiCheckboxField(SelectMultipleField):
@@ -80,7 +80,48 @@ class UserEditForm(Form):
 class BeernightForm(ModelForm):
     class Meta:
         model = Beernight
-        exclude = ['uuid']
+        exclude = ['uuid', 'is_featured']
+    category = SelectField(
+    'Flokkur',
+    choices=[
+        (None, ''),
+        ('Allskonar', 'Allskonar'),
+        ('Meðmæli', 'Meðmæli'),
+        ('Þemabjórar', 'Þemabjórar'),
+        ('Jól', 'Jól'),
+        ('Páskar', 'Páskar'),
+        ('Sumar', 'Sumar'),
+        ('Tilraun', 'Tilraun'),
+        ('Fyllirí', 'Fyllirí')
+        ])
+
+class CopyBeernightForm(ModelForm):
+    class Meta:
+        model = Beernight
+        exclude = ['uuid', 'is_public', 'is_featured', 'category']
 
 
+
+class BeernightbeerForm(ModelForm):
+    class Meta:
+        model = BeernightBeer
+        exclude = ['book_score', 'economic_score', 'product_number', 'is_custom_made']
+        validators = {
+                    'name': [InputRequired()],
+                    'alcohol': [InputRequired()],
+                    'volume': [InputRequired()],
+                    'beer_type': [InputRequired()],
+                      }
+
+
+class BeerForm(ModelForm):
+    class Meta:
+        model = Beer
+        exclude = ['book_score', 'economic_score', 'product_number']
+        validators = {
+                    'name': [InputRequired()],
+                    'alcohol': [InputRequired()],
+                    'volume': [InputRequired()],
+                    'beer_type': [InputRequired()],
+                      }
 

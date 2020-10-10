@@ -6,6 +6,7 @@ import json
 import subprocess
 import random
 import numpy as np
+import math
 from datetime import datetime, timedelta
 
 from flask import current_app as app
@@ -103,6 +104,43 @@ class User(db.Model, UserMixin):
     beernights_admin = db.relationship("Beernight",
                     secondary=user_beernight_admin,
                     back_populates="admins")
+                            
+    invitations = db.relationship(
+        "BeernightInvitation", primaryjoin="User.id==BeernightInvitation.receiver_id", back_populates='receiver',
+        cascade='all, delete, delete-orphan')
+
+    sent_invitations = db.relationship(
+        "BeernightInvitation", primaryjoin="User.id==BeernightInvitation.sender_id", back_populates='sender',
+        cascade='all, delete, delete-orphan')
+
+
+    @property
+    def invite_ids(self):
+        ids = []
+        for i in self.invitations:
+            ids.append(i.id)
+        return ids
+
+    @property
+    def beer_ids(self):
+        ids = []
+        for b in self.beers:
+            ids.append(b.id)
+        return ids
+
+    @property
+    def admin_beernight_ids(self):
+        ids = []
+        for b in self.beernights_admin:
+            ids.append(b.id)
+        return ids
+    
+    @property
+    def member_beernight_ids(self):
+        ids = []
+        for b in self.beernights_member:
+            ids.append(b.id)
+        return ids
 
     def get_url(self):
         return url_for('user.user_detail', id=self.id)
@@ -139,15 +177,18 @@ class Beer(BaseModel, db.Model):
     id = db.Column(
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    name = db.Column(db.String(255))
-    price = db.Column(db.Integer)
-    alcohol = db.Column(db.Float)
-    volume = db.Column(db.Integer)
-    country = db.Column(db.String(255))
-    manufacturer = db.Column(db.String(255))
-    description = db.Column(db.String(500))
-    beer_type = db.Column(db.String(255))
+    name = db.Column(db.String(255), info={'label': 'Nafn',})
+    price = db.Column(db.Integer, info={'label': 'Verð(kr)',})
+    alcohol = db.Column(db.Float, info={'label': 'Áfengi(%)',})
+    book_score = db.Column(db.Float)
+    economic_score = db.Column(db.Float)
+    volume = db.Column(db.Integer, info={'label': 'Magn(ml)',})
+    country = db.Column(db.String(255), info={'label': 'Land',})
+    manufacturer = db.Column(db.String(255), info={'label': 'Framleiðandi',})
+    description = db.Column(db.String(500), info={'label': 'Lýsing',})
+    beer_type = db.Column(db.String(255), info={'label': 'Tegund',})
     product_number = db.Column(db.Integer)
+    link_to_img = db.Column(db.String(200), info={'label': 'Slóð á mynd',})
     ratings = db.relationship(
         "BeerRating", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
@@ -157,12 +198,28 @@ class Beer(BaseModel, db.Model):
 
     def __init__(self):
         pass
+    
+    def is_liked_by_user(self, user_id):
+        user = User.query.get(user_id)
+        for l in user.beers:
+            if l.id == self.id:
+                return True
+        return False
 
     def getUserRating(self, user_id):
         for r in self.ratings:
             if r.user_id == user_id:
                 return r.rating
         return None
+
+    @property
+    def calculateBook(self):
+        if self.volume and self.alcohol and self.price:
+            x = max(1, abs(self.volume - 330))
+            y = math.log10(x)
+            booksRating = ((self.volume * self.alcohol)/self.price) - max(0, y) + (abs(self.float_average_rating - 3.0) * math.log(1 + len(self.ratings)))
+            return round(booksRating, 2)
+        return 0
 
     def getAllUsers(self):
         ratings = self.ratings
@@ -174,17 +231,20 @@ class Beer(BaseModel, db.Model):
     
     @hybrid_property
     def bang_for_buck(self):
-        bfb = (self.volume * (self.alcohol))/self.price
-        return round(bfb,2)
+        if self.price:
+            bfb = (self.volume * (self.alcohol))/self.price
+            return round(bfb,2)
+        else:
+            return 0
     
     @bang_for_buck.expression
     def bang_for_buck(cls):
-        bfb = (cls.volume * (cls.alcohol))/cls.price
-        return bfb
+        if self.price:
+            bfb = (cls.volume * (cls.alcohol))/cls.price
+            return func.round(bfb,2)
+        else:
+            return 0
 
-    @property
-    def beernight(self):
-        return Beernight.query.get(self.beernight_id)
 
     @property
     def get_printable_id(self):
@@ -213,6 +273,24 @@ class Beer(BaseModel, db.Model):
             return round(total_ratings, 2)
         else:
             return "-"
+    
+    @property
+    def float_average_rating(self):
+        if self.average_rating == "-":
+            return 0
+        else:
+            return self.average_rating
+    
+    @property
+    def round_rating(self):
+        if(len(self.ratings) > 0):
+            total_ratings = 0
+            for i in self.ratings:
+                total_ratings += i.rating
+            total_ratings = total_ratings/len(self.ratings)
+            return round(total_ratings)
+        else:
+            return False
 
     @property
     def std_of_ratings(self):
@@ -359,6 +437,8 @@ class Beernight(BaseModel, db.Model):
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     uuid = db.Column(db.String, default=str(uuid.uuid4()))
+    copy_count = db.Column(db.Integer, default=0)
+    is_featured = db.Column(db.Boolean, default=False)
     is_public = db.Column(db.Boolean, default=False, info={
         'label': 'Sýnilegur öllum',
     })
@@ -370,6 +450,10 @@ class Beernight(BaseModel, db.Model):
         info={
             'validators': [validators.InputRequired()],
             'label': 'Nafn'})
+    category = db.Column(
+        db.String(255),
+        info={'label': 'Flokkur'})
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     admins = db.relationship(
         "User",
         secondary=user_beernight_admin,
@@ -381,7 +465,68 @@ class Beernight(BaseModel, db.Model):
     beers = db.relationship(
         "BeernightBeer", lazy='joined', backref="beernight")
 
-    def getAllRatings(self):
+    invitations = db.relationship(
+        "BeernightInvitation", lazy="joined", back_populates='beernight',
+        cascade='all, delete, delete-orphan')
+
+    @property
+    def total_volume(self):
+        total_volume = 0
+        for b in self.beers:
+            total_volume += b.get_att('volume')
+        return total_volume
+
+    @property
+    def total_alcohol_volume(self):
+        total_alcohol = 0
+        for b in self.beers:
+            total_alcohol += (b.get_att('volume') * (b.get_att('alcohol')/100))
+        return round(total_alcohol)
+
+    @property
+    def num_ratings_finished(self):
+        finished = 0
+        for b in self.beers:
+            finished += b.getFinishedRatingNumber
+        return finished
+
+    @property
+    def percentage_finished(self):
+        all_ratings = len(self.members)*len(self.beers)*5
+        finished = self.num_ratings_finished
+        if all_ratings != 0:
+            return round((finished/all_ratings)*100)
+        else:
+            return 0
+
+
+    def user_ratings_finished_num(self, user_id):
+        finished = 0
+        for b in self.beers:
+            finished += b.getUserRatingNumber(user_id)
+        return finished
+
+    def user_ratings_finished_percentage(self,user_id):
+        all_ratings = len(self.beers)*5
+        finished = self.user_ratings_finished_num(user_id)
+        if all_ratings != 0:
+            return round((finished/all_ratings)*100)
+        else:
+            return 0
+        
+    @property
+    def round_rating(self):
+        if(len(self.ratings) > 0):
+            total_ratings = 0
+            for i in self.ratings:
+                total_ratings += i.rating
+            total_ratings = total_ratings/len(self.ratings)
+            return round(total_ratings)
+        else:
+            return False
+
+    @property
+    def beerRatings(self):
         ratings = []
         for m in self.beers:
             for r in m.ratings:
@@ -389,26 +534,87 @@ class Beernight(BaseModel, db.Model):
         return ratings
     
     def is_user_admin(self, user_id):
+        if self.creator_id == user_id:
+            return True
+        return False
+
+    def is_user_admin(self, user_id):
         for i in self.admins:
+            if i.id == user_id:
+                return True
+        return False
+
+    def getUserRating(self, user_id):
+        for r in self.ratings:
+            if r.user_id == user_id:
+                return r.rating
+        return None
+
+    def is_user_in_beernight(self, user_id):
+        return self.is_user_admin(user_id) or self.is_user_member(user_id)
+
+    def is_user_member(self, user_id):
+        for i in self.members:
             if i.id == user_id:
                 return True
         return False
 
     def getAllUserRatings(self, user_id):
         ratings = []
-        for m in self.mos_objects:
+        for m in self.beers:
             for r in m.ratings:
                 if user_id == r.user_id:
                     ratings.append(r)
         return ratings
 
     def getAllUsers(self):
-        ratings = self.getAllRatings()
+        ratings = self.beerRatings
         user_ids = []
         for i in ratings:
             user_ids.append(i.user_id)
         user_ids = list(set(user_ids))
         return user_ids
+
+    def get_mean_user_rating(self, user_id):
+        rating = None
+        counter = 0
+        for i in self.beerRatings:
+            if i.user_id == user_id:
+                r = i.get_mean_overall_rating
+                if r:
+                    if not rating:
+                        rating = r
+                    else:
+                        rating += r
+                    counter += 1
+        if rating and counter != 0:
+            return round(rating/counter, 2)
+        return None
+
+    def get_mean_cat_user_rating(self, user_id, cat):
+        rating = None
+        counter = 0
+        for i in self.beerRatings:
+            if i.user_id == user_id:
+                r = getattr(i, cat)
+                if r:
+                    if not rating:
+                        rating = r
+                    else:
+                        rating += r
+                    counter += 1
+        if rating and counter != 0:
+            return round(rating/counter, 2)
+        return None
+
+    @property
+    def creator(self):
+        creator = User.query.get(self.creator_id)
+        return creator
+
+    @property
+    def ajax_rate_action(self):
+        return url_for('beernight.beernight_rate', id=self.id)
 
     @property
     def num_beers(self):
@@ -417,10 +623,6 @@ class Beernight(BaseModel, db.Model):
     @property
     def printable_id(self):
         return "Bjórkvöld-{:04d}".format(self.name)
-
-    @property
-    def edit_url(self):
-        return url_for('beer.beer_edit', id=self.id)
     
     @property
     def average_rating(self):
@@ -434,6 +636,20 @@ class Beernight(BaseModel, db.Model):
             return "-"
 
     @property
+    def float_average_rating(self):
+        if self.average_rating == "-":
+            return 0
+        else:
+            return self.average_rating
+
+    @property
+    def get_copy_count(self):
+        if self.copy_count:
+            return self.copy_count
+        else:
+            return 0
+
+    @property
     def std_of_ratings(self):
         ratings = [r.rating for r in self.ratings]
         if len(ratings) == 0:
@@ -442,14 +658,64 @@ class Beernight(BaseModel, db.Model):
         return round(np.std(ratings), 2)
 
     @property
+    def get_beer_mean_score(self):
+        rating = None
+        counter = 0
+        for c in self.beers:
+            r = c.get_mean_overall_rating
+            if r:
+                if not rating:
+                    rating = r
+                else:
+                    rating += r
+                counter += 1
+        if rating and counter != 0:
+            return round(rating/counter, 2)
+        return None
+            
+    def number_of_ratings_per_user(self, user_id):
+        counter = 0
+        for i in self.beerRatings:
+            if i.user_id == user_id:
+                counter += 1
+        return counter
+
+    @property
     def number_of_ratings(self):
         return len(self.ratings)
+
+    @property
+    def number_of_beer_ratings(self):
+        return len(self.beerRatings)
 
 user_beernight = db.Table(
     'user_beernight',
     db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
     db.Column('beernight_id', db.Integer(), db.ForeignKey('beernight.id'))
 )
+
+class BeernightInvitation(BaseModel, db.Model):
+    __tablename__ = 'beernightinvitation'
+    __table_args__ = (
+        db.UniqueConstraint('beernight_id', 'receiver_id'),
+      )
+    id = db.Column(
+        db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    receiver = db.relationship("User", foreign_keys=[receiver_id], back_populates="invitations")
+
+    sender_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    sender = db.relationship("User", foreign_keys=[sender_id], back_populates="sent_invitations")
+
+    beernight_id = db.Column(db.Integer, db.ForeignKey("beernight.id"))
+    beernight = db.relationship("Beernight", back_populates="invitations")
+
+    def __init__(self, receiver_id, sender_id, beernight_id):
+        self.receiver_id = receiver_id
+        self.sender_id = sender_id
+        self.beernight_id = beernight_id
 
 class BeernightRating(BaseModel, db.Model):
     __tablename__ = 'beernightRating'
@@ -468,7 +734,7 @@ class BeernightRating(BaseModel, db.Model):
     beernight = db.relationship("Beernight", back_populates="ratings")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, user_id, beernight_id):
+    def __init__(self, user_id, beernight_id, rating):
         self.user_id = user_id
         self.beernight_id = beernight_id
         self.rating = rating
@@ -488,19 +754,68 @@ class BeernightBeer(BaseModel, db.Model):
     beernight_id = db.Column(db.Integer, db.ForeignKey('beernight.id'))
     orginal_beer_id = db.Column(db.Integer, db.ForeignKey("beer.id"))
     orginal_beer = db.relationship("Beer")
+    is_custom_made = db.Column(db.Boolean, default=False)
+    name = db.Column(db.String(255), info={'label': 'Nafn',})
+    price = db.Column(db.Integer, info={'label': 'Verð(kr)',})
+    alcohol = db.Column(db.Float, info={'label': 'Áfengi(%)',})
+    book_score = db.Column(db.Float)
+    economic_score = db.Column(db.Float)
+    volume = db.Column(db.Integer, info={'label': 'Magn(ml)',})
+    country = db.Column(db.String(255), info={'label': 'Land',})
+    manufacturer = db.Column(db.String(255), info={'label': 'Framleiðandi',})
+    description = db.Column(db.String(500), info={'label': 'Lýsing',})
+    beer_type = db.Column(db.String(255), info={'label': 'Tegund',})
+    product_number = db.Column(db.Integer)
+    link_to_img = db.Column(db.String(200), info={'label': 'Slóð á mynd',})
     ratings = db.relationship(
         "BeernightbeerRating", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
     comments = db.relationship(
         "BeernightbeerComment", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
-    def __init__(self, beer):
-        self.orginal_beer = beer
 
-    def getUserRating(self, user_id):
+    def __init__(self, beer=None):
+        self.orginal_beer = beer
+    
+
+    @property
+    def getFinishedRatingPercentage(self):
+        all_ratings = self.num_all_cat_ratings
+        if all_ratings != 0:
+            return self.getFinishedRatingNumber/all_ratings
+        else:
+            return 0
+
+    @property
+    def getFinishedRatingNumber(self):
+        finished_ratings = 0
         for r in self.ratings:
-            if r.user_id == user_id:
-                return r.rating
+            finished_ratings += r.finished_categories
+        return finished_ratings
+    
+    @property
+    def num_all_cat_ratings(self):
+        return len(self.ratings)*5
+
+    def getUserRatingPercentage(self, user_id):
+        rating = self.get_user_rating(user_id)
+        if rating:
+            print(rating.finishedPercentage)
+            return rating.finishedPercentage
+        return 0
+
+    def getUserRatingNumber(self, user_id):
+        rating = self.get_user_rating(user_id)
+        if rating:
+            return rating.finished_categories
+        return 0
+
+    def get_att(self, att):
+        if self.orginal_beer:
+            a = getattr(self.orginal_beer, att)
+            return a
+        else:
+            return getattr(self, att)
         return None
 
     def getAllUsers(self):
@@ -519,10 +834,41 @@ class BeernightBeer(BaseModel, db.Model):
     def get_printable_id(self):
         return "Bjór-{}".format(self.id)
         
+    @property
+    def calculateBook(self):
+        x = max(1, abs(self.volume - 330))
+        y = math.log10(x)
+        booksRating = ((self.volume * self.alcohol)/self.price) - max(0, y) + (abs(self.float_average_rating - 3.0) * math.log(1 + len(self.ratings)))
+        return booksRating
+
+    def getAllUsers(self):
+        ratings = self.ratings
+        user_ids = []
+        for i in ratings:
+            user_ids.append(i.user_id)
+        user_ids = list(set(user_ids))
+        return user_ids
+    
+    @hybrid_property
+    def bang_for_buck(self):
+        if self.price:
+            bfb = (self.volume * (self.alcohol))/self.price
+            return round(bfb,2)
+        else:
+            return 0
+    
+    @bang_for_buck.expression
+    def bang_for_buck(cls):
+        if self.price:
+            bfb = (cls.volume * (cls.alcohol))/cls.price
+            return func.round(bfb,2)
+        else:
+            return 0
+
 
     @property
     def ajax_rate_action(self):
-        return url_for('beer.beernight_beer_rate', id=self.id)
+        return url_for('beernight.beernight_beer_rate', id=self.id)
 
     def get_category_len(self, cat):
         counter = 0
@@ -537,6 +883,24 @@ class BeernightBeer(BaseModel, db.Model):
                 return i
         return None
 
+    @property
+    def get_mean_overall_rating(self):
+        cats = ['smell', 'sight', 'taste', 'feel', 'rating']
+        rating = None
+        counter = 0
+        for c in cats:
+            r = self.average_cat_rating(c)
+            if r:
+                if not rating:
+                    rating = r
+                else:
+                    rating += r
+                counter += 1
+        if rating and counter != 0:
+            return round(rating/counter, 2)
+        return None
+
+
     def average_cat_rating(self, cat):
         len_rat = self.get_category_len(cat)
         if(len_rat > 0):
@@ -548,7 +912,23 @@ class BeernightBeer(BaseModel, db.Model):
             total_ratings = total_ratings/len_rat
             return round(total_ratings, 2)
         else:
-            return "-"
+            return None
+
+    def cat_rating_user(self, cat, user_id):
+        len_rat = self.get_category_len(cat)
+        if(len_rat > 0):
+            for i in self.ratings:
+                if i.user_id == user_id:
+                    cat_rat = getattr(i, cat)
+                    if cat_rat:
+                        return cat_rat
+        return None
+
+    def mean_rating_user(self, user_id):
+        for i in self.ratings:
+            if i.user_id == user_id:
+                return i.get_mean_overall_rating
+        return None
 
     @property
     def std_of_ratings(self):
@@ -607,6 +987,42 @@ class BeernightbeerRating(BaseModel, db.Model):
     
     def get_category_len(self, cat):
         return len(getattr(self, cat))
+
+    @property
+    def finishedPercentage(self):
+        return round((self.finished_categories/5)*100)
+    
+    @property
+    def finished_categories(self):
+        counter = 0
+        if self.rating:
+            counter += 1
+        if self.taste:
+            counter += 1
+        if self.smell:
+            counter += 1
+        if self.feel:
+            counter += 1
+        if self.sight:
+            counter += 1
+        return counter
+
+    @property
+    def get_mean_overall_rating(self):
+        cats = ['smell', 'sight', 'taste', 'feel', 'rating']
+        rating = None
+        counter = 0
+        for c in cats:
+            r = getattr(self, c)
+            if r:
+                if not rating:
+                    rating = r
+                else:
+                    rating += r
+                counter += 1
+        if rating and counter != 0:
+            return round(rating/counter, 2)
+        return None
 
     @property
     def get_user(self):

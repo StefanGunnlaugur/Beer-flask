@@ -1,0 +1,322 @@
+{% extends "__base.jinja" %}
+
+{% block body %}
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+			<symbol id="star"><g transform="scale(0.03125 0.03125)"><path d="M896 384l-313.5-40.781-134.5-279.219-134.531 279.219-313.469 40.781 230.469 208.875-59.469 303.063 277-148.812 277.062 148.812-59.562-303.063 230.5-208.875z" /></g></symbol>
+			<symbol viewBox="0 0 18 18" id="no_rating"><g transform="scale(0.017578125 0.017578125)"><path d="M512 56.889c-251.362 0-455.111 203.749-455.111 455.111s203.749 455.111 455.111 455.111 455.111-203.749 455.111-455.111-203.749-455.111-455.111-455.111zM170.667 512c0-73.639 23.666-141.694 63.472-197.527l475.388 475.388c-55.833 39.806-123.888 63.472-197.527 63.472-188.222 0-341.333-153.111-341.333-341.333zM789.861 709.527l-475.388-475.388c55.833-39.806 123.888-63.472 197.527-63.472 188.222 0 341.333 153.111 341.333 341.333 0 73.639-23.666 141.694-63.472 197.527z" /></g></symbol>
+	</svg>
+    <link rel="stylesheet" href="{{ url_for("static", filename = 'css/radio--rating.css') }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename = 'css/heartbox-fav.css') }}">
+    <style type="text/css">   
+        .list-public-beers .list-group-item {
+            background-color:{{config.COLORS.lineColor}};
+        }
+        .list-public-beers .list-group-item:hover {
+            background-color: {{config.COLORS.warning}};
+        }
+
+    </style>
+    <div class="progress" style="height: 5px;">
+        <div class="progress-bar" role="progressbar" id='ratingProgress-beernight' style="width: {{beernight.percentage_finished}}%;" aria-valuenow="{{beernight.percentage_finished}}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="beer-containter col">
+        <div class="beer-header" style="margin-bottom: 4em;">
+            <p class="h2 row">{{beernight.name}}</p>
+            <span class="row mb-1">{{macros.btn_icon('star', 'r')}}{{beernight.average_rating}}</span>
+            
+            {% if beernight.is_public and not current_user.is_anonymous %}
+            <button class="btn btn-success row mb-2" data-toggle='modal', data-target='#copyBeernightModal'>
+                {{macros.btn_icon('copy', 'r')}}
+                Afrita bjórkvöld
+            </button>
+            {% endif %}
+            <span class="row ml-0">
+            {% if not beernight.is_featured and current_user.is_admin() %}
+                <a href="{{url_for('beernight.beernight_set_featured', id=beernight.id)}}" class="btn btn-success row">
+                    {{macros.btn_icon('plus', 'r')}}
+                    Merkja sem meðmæli
+                </a>
+            {% elif beernight.is_featured and current_user.is_admin() %}
+                <a href="{{url_for('beernight.beernight_remove_featured', id=beernight.id)}}" class="btn btn-danger row">
+                    {{macros.btn_icon('trash', 'r')}}
+                    Af merkja sem meðmæli
+                </a>
+            {% endif %}
+            </span>
+        </div>
+        <div class="row">
+            <div class="col-3 text-center" style="margin-right: 3em;">
+                <img class='img-responsive mh-100 mw-100 mb-5' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beernight.name }}/>
+                {% if not current_user.is_anonymous %}
+                    {% if beernight.getUserRating(current_user.id) %}
+                        {{macros.star_rating(beernight, 'beernight', beernight.getUserRating(current_user.id), 2)}}
+                    {% else %}
+                        {{macros.star_rating(beernight, 'beernight', 0, 2)}}
+                    {% endif%}
+                {% endif %}
+                {% if beernight.is_user_admin(current_user.id)%}
+                    <div class="add-user-container">
+                        <span class="h3 mb-5">Bættu vin við bjórkvöldið</span>
+                        <form class="mt-2" id="add-user-form" action="{{url_for('beernight.send_beernight_invitation', beernight_id=beernight.id)}}">
+                            <input type="text" id="add-user-text-email" placeholder="Netfang"><br><br>
+                        </form>
+                        <button class="btn btn-info" id="add-user-button" onclick="postUserEmail()">Senda beiðni</button>
+                        <div class="error-message-container mt-3">
+                            <span class="text-danger" id="error-message"></span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if beernight.members | length > 0 and not current_user.is_anonymous%}
+                    {% if beernight.is_user_in_beernight(current_user.id)%}
+                        <div class="mb-5">
+                            <div class=' w-100 d-flex justify-content-center'>
+                                <span class="row h3">Meðlimir</span>
+                            </div>
+                            <div class="row">
+                                <ul id="beerListUL" class="list-group w-100">
+                                    {% for m in beernight.members %}
+                                        {% if beernight.is_user_admin(current_user.id) and not beernight.is_user_admin(m.id) %}
+                                            <li class="list-group-item {% if beernight.is_user_admin(m.id) %}list-group-item-primary{% else %}list-group-item-dark{% endif %} w-100" data-toggle="collapse" data-target="#collapse-member-{{m.id}}" aria-expanded="false" aria-controls="collapse-member" style="cursor: pointer;">
+                                                <div style="" class="w-100 d-flex justify-content-between">
+                                                    <span class="">{{m.name}}</span>
+                                                    <span class="">{{macros.btn_icon('caret-down', 'r')}}</span>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar" role="progressbar" id='userRatingProgress-{{m.id}}' style="width: {{beernight.user_ratings_finished_percentage(m.id)}}%;" aria-valuenow="{{beernight.user_ratings_finished_percentage(m.id)}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <div class="collapse w-100" id="collapse-member-{{m.id}}">
+                                                    <div class="w-100 mt-2" id="collapse-member-{{m.id}}">
+                                                        {%if not beernight.is_user_admin(m.id)%}
+                                                        <a href="{{url_for('beernight.beernight_make_member_admin', id=beernight.id, member_id=m.id)}}" class="btn btn-info row mb-2">
+                                                            {{macros.btn_icon('plus', 'r')}}<small>Gera stjórnanda</small>
+                                                        </a>
+                                                        {% endif %}
+                                                        <a href="{{url_for('beernight.beernight_remove_member', id=beernight.id, member_id=m.id)}}" class="btn btn-danger row">
+                                                            {{macros.btn_icon('trash', 'r')}}<small>Fjarlægja meðlim</small>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {% else %}
+                                            <li class="list-group-item {% if beernight.is_user_admin(m.id) %}list-group-item-primary{% else %}list-group-item-dark{% endif %} w-100">
+                                                <div class="w-100"> 
+                                                    <span class="">{{m.name}}</span>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar" role="progressbar" id='userRatingProgress-{{m.id}}' style="width: {{beernight.user_ratings_finished_percentage(m.id)}}%;" aria-valuenow="{{beernight.user_ratings_finished_percentage(m.id)}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </li>
+                                        {% endif %}
+                                       
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif%}
+            </div>
+            <div class="col">
+                <div class="row w-100 d-flex flex-row-reverse mb-2 mx-0">
+                    <a class='btn btn-sm btn-dark text-success float-right' href='{{url_for("beernight.beernight_result", id=beernight.id)}}'>
+                        {{macros.btn_icon('plus', 'r')}}
+                        Yfirlit
+                    </a>
+                </div>
+                {% if beernight.is_user_admin(current_user.id)%}
+                <div class="row w-100 d-flex flex-row-reverse mb-2 mx-0">
+                    <a class='btn btn-sm btn-dark text-success float-right' href='{{url_for("beernight.beernight_create_beer", id=beernight.id)}}'>
+                        {{macros.btn_icon('plus', 'r')}}
+                        Búa til bjór
+                    </a>
+                </div>
+                {% endif %}
+                <div class="row w-100 d-flex flex-row-reverse mb-2">
+                    {% if beers|length > 0 %}
+                        <ul id="beerListUL" class="w-100 list-group list-group-flush list-public-beers">
+                                {% for b in beers %}
+                                    <li class="list-group-item row">
+                                        {% if b.is_custom_made %}
+                                            {{macros.beernight_beer_line(b, b, beernight, b.get_user_rating(current_user.id), current_user)}}
+                                        {% else %}
+                                            {{macros.beernight_beer_line(b, b.orginal_beer, beernight, b.get_user_rating(current_user.id), current_user)}}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                    {% else %}
+                        {{macros.no_results("Engir bjórar í bjórkvöldi",
+                        "Bættu þeim við á skotstundu", url_for('beer.beer_list'))}}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block modals %}
+    <div class="modal fade" id='copyBeernightModal' tabindex="-1">
+        <form method='POST' enctype="multipart/form-data">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Afrita bjórkvöld</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% with form=copy_beernight_form %}
+                        {% include 'forms/_form.jinja' %}
+                    {% endwith %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+                    <button class='btn btn-primary' type='submit'>
+                        Klára
+                        <span class='ml-1'><i class='fa fa-check'></i></span>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id='makeBeerModal' tabindex="-1">
+        <form method='POST' enctype="multipart/form-data">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Búa til nýjan bjór</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% with form=beerform %}
+                        {% include 'forms/_form.jinja' %}
+                    {% endwith %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+                    <button class='btn btn-primary' type='submit'>
+                        Klára
+                        <span class='ml-1'><i class='fa fa-check'></i></span>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+   
+{% endblock%}
+
+{% block scripts %}
+    {{super()}}
+    
+    <script>
+        
+        function postBeerRating(value, type, beer_id) {
+            var action = $("#ratingForm-"+type+"_"+beer_id).attr("action");
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e) {
+                if(this.readyState === XMLHttpRequest.DONE) {
+                    if(xhr.status == '200'){
+                        var response = JSON.parse(xhr.responseText);
+                        console.log(response)
+                        var beer_id = response['beer_id']
+                        var user_id = response['user_id']
+                        var beer_percentage = response['beer_percentage']
+                        var user_percentage = response['user_percentage']
+                        var beernight_percentage = response['beernight_percentage']
+                        updateUI(beer_id, user_id, beer_percentage, user_percentage, beernight_percentage)
+                    } else{
+                        promptError("Villa koma upp:", xhr.responseText, "");
+                    }
+                }
+            }
+            let formData = new FormData();
+            formData.append("value", value);
+            formData.append("type", type);
+            xhr.open("POST", action, true);
+            xhr.send(formData);
+            
+        }
+
+        function postBeerlistRating(value, type, beer_id){
+            var action = $("#ratingForm-"+type+"_"+beer_id).attr("action");
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function(e) {
+                    if(this.readyState === XMLHttpRequest.DONE) {
+                        if(xhr.status == '200'){
+                            var response = JSON.parse(xhr.responseText);
+                        } else{
+                            promptError("Villa koma upp:", xhr.responseText, "");
+                        }
+                    }
+                }
+                let formData = new FormData();
+                formData.append("value", value);
+                formData.append("type", type);
+                xhr.open("POST", action, true);
+                xhr.send(formData);
+        }
+
+
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function postUserEmail() {
+            var action = $("#add-user-form").attr("action");
+            var text = $("#add-user-text-email").val();
+            console.log(text)
+            if(validateEmail(text)){
+                $("#error-message").html("");
+
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function(e) {
+                    if(this.readyState === XMLHttpRequest.DONE) {
+                        if(xhr.status == '200'){
+                            var response = JSON.parse(xhr.responseText);
+                            window.onbeforeunload = null;
+                            window.location = response['url'];
+                        } else{
+                            var response = JSON.parse(xhr.responseText);
+                            $("#error-message").html(response['error']);
+                            //promptError("Villa koma upp:", xhr.responseText, "");
+                        }
+                    }
+                }
+                let formData = new FormData();
+                formData.append("text", text);
+                xhr.open("POST", action, true);
+                xhr.send(formData);
+            }
+            else{
+                $("#error-message").html("Fylltu inn gilt netfang");
+            }
+        }
+
+        function updateUI(beer_id, user_id, beer_percentage, user_percentage, beernight_percentage){
+            setBeerUI(beer_id, beer_percentage);
+            setUserUI(user_id, user_percentage);
+            setBeernightUI(beernight_percentage);
+        }
+
+        function setBeerUI(beer_id,percentage){
+            const beerProgress = document.querySelector('#ratingProgress-'+beer_id);
+            beerProgress.style.width = `${percentage.toString()}%`;
+        }
+        function setBeernightUI(percentage){
+            const beernightProgress = document.querySelector('#ratingProgress-beernight');
+            beernightProgress.style.width = `${percentage.toString()}%`;
+        }
+        function setUserUI(user_id, percentage){
+            const userProgress = document.querySelector('#userRatingProgress-'+user_id);
+            userProgress.style.width = `${percentage.toString()}%`;
+        }
+
+    </script>
+{% endblock %}
