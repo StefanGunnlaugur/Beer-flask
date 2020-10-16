@@ -3,7 +3,7 @@
 
     <div class="media-heading">
          <span style="padding-left: 8px;" class="show-button" class="mb-2" data-toggle="collapse" data-target="#collapse-{{comment.id}}" aria-expanded="false" aria-controls="collapse-comment" style="cursor: pointer;">
-            <i class="fas fa-plus mr-2 fa-lg" aria-hidden="true"></i>
+            <i style="cursor: pointer;" class="fas fa-plus mr-2 fa-lg" aria-hidden="true"></i>
         </span>
         <span class="badge badge-info">{{comment.num_likes}}</span> 
         <div class="col">
@@ -11,28 +11,28 @@
             <span class="row">{{comment.created_at | datetime(format='med-low')}}</span>
         </div>
     </div>
-
+    <div class="ml-3">
+        <span style="font-size: 1em;" class="font-italic row mx-2">{{comment.text}}</span>
+        <div class="media-left ml-1">
+            <div class="vote-wrap">
+                <div class="save-post" style="cursor: pointer;">
+                    {% if comment.is_liked_by_user(current_user.id) %}
+                        <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: red;" class="fas fa-heart" aria-badge="Save"></span></a>
+                    {% else %}
+                        <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: gray;" class="fas fa-heart" aria-badge="Save"></span></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="panel-collapse collapse in ml-3" id="collapse-{{comment.id}}">
 
-            <div class="media-left ml-2">
-                <div class="vote-wrap">
-                    <div class="save-post">
-                        {% if comment.is_liked_by_user(current_user.id) %}
-                            <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: red;" class="fas fa-heart" aria-badge="Save"></span></a>
-                        {% else %}
-                            <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: gray;" class="fas fa-heart" aria-badge="Save"></span></a>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- vote-wrap -->
-            </div>
-          <!-- media-left -->
+
 
 
         <div class="media-body">
-            <p>{{comment.text}}</p>
             {% if current_user%}
-                <div class="comment-meta">
+                <div class="comment-meta mt-2">
                     {% if comment.user_id == current_user.id%}
                     <span><a href="{{url_for('beer.delete_comment', id=beer.id, comment_id=comment.id)}}">eyða</a></span>
                     {% endif %}

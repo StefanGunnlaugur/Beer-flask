@@ -2,13 +2,19 @@ import json
 import traceback
 import random
 import numpy as np
+import os
+from os import path
 from datetime import date
 from zipfile import ZipFile
 from operator import itemgetter
+from PIL import Image
+import imghdr
+import secrets
 
 import flask_excel as excel
 from flask import (Blueprint, Response, send_from_directory, request,
                    render_template, flash, redirect, url_for)
+from flask import make_response
 from flask import current_app as app
 from flask_security import login_required, current_user
 from sqlalchemy.exc import IntegrityError
@@ -24,7 +30,8 @@ from lobe.db import (resolve_order, add_beer_rating, add_beer_comment,
                     delete_beernight_invitation_db, copy_public_beernight,
                     add_beernight_rating, make_member_admin, remove_member_from_beernight,
                     make_beernightbeer)
-from lobe.forms import (BeerEditForm, BeernightForm, CopyBeernightForm, BeernightbeerForm)
+from lobe.forms import ( BeerEditForm, BeernightForm, CopyBeernightForm, 
+                        BeernightbeerForm, UploadBeernightImageForm)
 
 beernight = Blueprint(
     'beernight', __name__, template_folder='templates')
@@ -35,7 +42,6 @@ def public_beernights():
     beernights = Beernight.query\
             .filter(Beernight.is_public == True)
     beernights_sorted = sorted(beernights, key=lambda x: x.name, reverse=False)
-    beernights_sorted = beernights_sorted + beernights_sorted + beernights_sorted + beernights_sorted + beernights_sorted
     featured_beernights = Beernight.query.filter(Beernight.is_featured == True)
     
     high_rated_beernights = sorted(beernights, key=lambda x: x.float_average_rating, reverse=False)
@@ -78,6 +84,8 @@ def beernight_detail(id):
     rating = beernight.average_rating
     beers = beernight.beers
     form = CopyBeernightForm(request.form)
+    beernight_beer_form = BeernightbeerForm()
+    upload_image_form = UploadBeernightImageForm()
     if request.method == 'POST':
         if form.validate():
             try:
@@ -101,31 +109,49 @@ def beernight_detail(id):
                 "Ekki tókst að hlaða búa til bjórkvöld.",
                 category="warning")
         return redirect(url_for('beernight.beernight_detail', id=beernight.id))
-    return render_template(
+
+    response = make_response(render_template(
         'beernight.jinja',
         beernight=beernight,
         beers=beers,
         rating=rating,
         copy_beernight_form=form,
-        section='beernight')
+        upload_image_form=upload_image_form,
+        beernight_beer_form=beernight_beer_form,
+        section='beernight'))
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    return response
 
-@beernight.route('/beernight/beer/<int:id>/create', methods=['GET', 'POST'])
+@beernight.route('/beernight/beer/<int:id>/create', methods=['POST'])
 @login_required
-@roles_accepted(['admin'])
+@roles_accepted(['admin', 'Notandi'])
 def beernight_create_beer(id):
+    beernight = Beernight.query.get(id)
     form = BeernightbeerForm(request.form)
-    if request.method == 'POST':
+    if beernight.is_user_admin(current_user.id):
         if form.validate():
             try:
-                beer = make_beernightbeer(form, id)
-                if beer:
-                    flash("Tókst að búa til bjór {}.".format(
-                                beer.name),
-                                category="success")
-                    return redirect(url_for('beernight.beernight_detail', id=id))
+                image_file = request.files['picture']
+                if image_file.filename != '':
+                    if imghdr.what(image_file) in ['jpg', 'png', 'gif', 'jpeg']:
+                        beer = make_beernightbeer(form, id, image_file)
+                        if beer:
+                            flash("Tókst að búa til bjór {}.".format(
+                                        beer.name),
+                                        category="success")
+                            return redirect(url_for('beernight.beernight_detail', id=id))
+                        else:
+                            flash(
+                                "Ekki tókst að búa til bjór.",
+                                category="warning")
+                    else:
+                        flash(
+                            "Mynd ekki á réttu formi",
+                            category="warning")
                 else:
                     flash(
-                        "Ekki tókst að búa til bjór.",
+                        "Mynd vantar!",
                         category="warning")
             except Exception as error:
                 print(error)
@@ -136,12 +162,33 @@ def beernight_create_beer(id):
             flash(
                 "Ekki var fyllt rétt inn í reiti!",
                 category="warning")
-    return render_template(
-        'forms/model.jinja',
-        form=form,
-        action=url_for('beernight.beernight_create_beer', id=id),
-        section='beernight',
-        type='create')
+    else:
+        flash(
+            "Ekki tókst að búa til bjór.",
+            category="warning")
+    return redirect(url_for('beernight.beernight_detail', id=id))
+
+
+@beernight.route('/beernight/beer/sendImage/<int:id>/')
+@login_required
+def send_beernight_beer_image(id):
+    beer = BeernightBeer.query.get(id)
+    try:
+        if not beer.is_custom_made and beer.orginal_beer:
+            return redirect(url_for('beer.send_beer_image', id=beer.orginal_beer.id))
+        if beer.image_path:
+            if path.exists(os.path.join(beer.data_path, beer.image_path)):
+                return send_from_directory(
+                    beer.data_path,
+                    beer.image_path)
+        return send_from_directory(
+            app.config['STATIC_DATA_DIR'],
+            'defaultBeerImage.png')
+    except Exception as error:
+        app.logger.error(
+            "Error sending a beernight image : {}\n{}".format(
+                error, traceback.format_exc()))
+    return ''
 
 
 @beernight.route('/beernight/<int:id>/rate', methods=['POST'])
@@ -203,6 +250,7 @@ def delete_beer_from_beernight(id, beernight_id):
 @beernight.route('/beer/beernightbeer/<int:id>/rate', methods=['POST'])
 @login_required
 @roles_accepted(['admin', 'Notandi'])
+@member_of_beernight(id)
 def beernight_beer_rate(id):
     try:
         beer = BeernightBeer.query.get(id)
@@ -216,7 +264,6 @@ def beernight_beer_rate(id):
             'user_percentage': beer.beernight.user_ratings_finished_percentage(current_user.id),
             'beernight_percentage': beer.beernight.percentage_finished,
             }
-        print(response)
         return Response(json.dumps(response), status=200)
     except Exception as error:
         app.logger.error('Error creating a verification : {}\n{}'.format(
@@ -465,3 +512,56 @@ def beernight_remove_featured(id):
             error, traceback.format_exc()))
         flash('Ekki gekk að afmerkja sem meðmæli', category="danger")
         return redirect(url_for('beernight.beernight_detail', id=id)) 
+
+
+def save_picture(form_picture, beernight):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(beernight.data_path, picture_fn)
+    output_size = (612, 612)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+
+    return picture_fn
+
+
+@beernight.route("/beernight/uploadImage/<int:id>", methods=['POST'])
+@login_required
+def uploadBeernightImage(id):
+    form = request.files.get('picture')
+    beernight = Beernight.query.get(id)
+    if beernight.is_user_admin(current_user.id):
+        if imghdr.what(form) in ['jpg', 'png', 'gif', 'jpeg']:
+            picture_file = save_picture(form, beernight)
+            if picture_file:
+                if beernight.image_path:
+                    if path.exists(os.path.join(beernight.data_path, beernight.image_path)):
+                        os.remove(os.path.join(beernight.data_path, beernight.image_path))
+                beernight.image_path = picture_file
+                db.session.commit()
+        flash('Tókst að hlaða upp mynd!', 'success')
+        return redirect(url_for('beernight.beernight_detail', id=id)) 
+    flash('Ekki tókst að hlaða upp mynd', 'warning')
+    return redirect(url_for('beernight.beernight_detail', id=id)) 
+
+@beernight.route('/beernight/sendImage/<int:id>/')
+@login_required
+#@member_of_beernight(id)
+def send_beernight_image(id):
+    beernight = Beernight.query.get(id)
+    try:
+        if beernight.image_path:
+            if path.exists(os.path.join(beernight.data_path, beernight.image_path)):
+                return send_from_directory(
+                    beernight.data_path,
+                    beernight.image_path)
+        return send_from_directory(
+            app.config['STATIC_DATA_DIR'],
+            'defaultBeernightImage.png')
+    except Exception as error:
+        app.logger.error(
+            "Error sending a beernight image : {}\n{}".format(
+                error, traceback.format_exc()))
+    return ''

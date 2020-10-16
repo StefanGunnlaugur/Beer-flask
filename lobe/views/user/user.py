@@ -1,6 +1,10 @@
 import traceback
-
-from flask import redirect, flash, url_for, request, render_template, Blueprint
+import imghdr
+import secrets
+import os
+from os import path
+from flask import (Blueprint, Response, send_from_directory, request,
+                   render_template, flash, redirect, url_for)
 from flask import current_app as app
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
@@ -37,27 +41,6 @@ def user_list():
 @roles_accepted(['admin'])
 def admin_page():
     form = BeerForm(request.form)
-    if request.method == 'POST':
-        if form.validate():
-            try:
-                beer = make_beer(form)
-                if beer:
-                    flash("Tókst að búa til bjór {}.".format(
-                                beer.name),
-                                category="success")
-                else:
-                    flash(
-                        "Ekki tókst að búa til bjór.",
-                        category="warning")
-            except Exception as error:
-                print(error)
-                flash(
-                    "Ekki tókst að búa til bjór.",
-                    category="warning")
-        else:
-            flash(
-                "Ekki var fyllt rétt inn í reiti!",
-                category="warning")
     return render_template(
         'admin.jinja',
         beerform=form,
@@ -102,7 +85,7 @@ def current_user_detail():
                 category="warning")
         return redirect(url_for('user.current_user_detail'))
     
-    beernigts_member = sorted(user.beernights_member, key=lambda x: x.created_at, reverse=True)[:5]
+    beernigts_member = sorted(user.get_member_beernights, key=lambda x: x.created_at, reverse=True)[:5]
     beernights_admin = sorted(user.beernights_admin, key=lambda x: x.created_at, reverse=True)[:5]
     invitations = sorted(user.invitations, key=lambda x: x.created_at, reverse=True)[:5]
     return render_template(
@@ -329,3 +312,26 @@ def role_edit(id):
         type='edit',
         action=url_for('user.role_edit', id=id),
         section='role')
+
+
+@user.route('/user/post_score/', methods=['POST'])
+@login_required
+@roles_accepted(['admin', 'Notandi'])
+def beer_comment():
+    try:
+        user = User.query.get(current_user.id)
+        game_score = int(request.form.get('score'))
+        if game_score:
+            if game_score > 0:
+                if not user.game_score:
+                    user.game_score = game_score
+                elif game_score < user.game_score:
+                    user.game_score = game_score
+                db.session.commit()
+        return Response(url_for('other.how_drunk_alpha'), status=200)
+    except Exception as error:
+        flash('Ekki tókst að senda stig',
+                    category="warning")
+        app.logger.error('Error creating a verification : {}\n{}'.format(
+            error, traceback.format_exc()))
+        return Response(error, status=500)

@@ -4,7 +4,7 @@ import traceback
 from flask import redirect, flash, url_for, request, render_template, Blueprint
 from flask import current_app as app
 from flask_security import login_required, roles_accepted, current_user
-from lobe.models import (Beernight)
+from lobe.models import (Beernight, BeernightBeer)
 
 def roles_accepted(roles):
     def decorator(f):
@@ -12,7 +12,6 @@ def roles_accepted(roles):
         def wrapper(*args, **kwargs):
             if not current_user.is_authenticated:
                 return redirect(url_for('login'))
-                current_user_detail
             for r in roles:
                 if current_user.has_role(r):
                     return f(*args, **kwargs)
@@ -27,11 +26,11 @@ def member_of_beernight(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
             # First check if user is authenticated.
-            beernight_id = kwargs['id']
+            beer_id = kwargs['id']
             if not current_user.is_authenticated:
                 return redirect(url_for('login'))
-            print('asdfasdfasdfasdfsadfasdf',beernight_id)
-            beernight = Beernight.query.get(beernight_id)
+            beernightBeer = BeernightBeer.query.get(beer_id)
+            beernight = Beernight.query.get(beernightBeer.beernight_id)
             is_member = beernight.is_user_member(current_user.id)
             if not is_member:
                 flash("Ekki heimilað.", category="danger")

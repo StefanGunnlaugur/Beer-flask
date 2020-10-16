@@ -1,6 +1,7 @@
 import os
 import traceback
 import json
+from os import path
 from flask import (redirect, url_for, render_template, send_from_directory,
                    flash, request, Blueprint, session)
 from flask import current_app as app
@@ -24,10 +25,9 @@ main = Blueprint(
 @main.route('/')
 def index():
     print('anon', current_user.is_anonymous)
-    print(current_user.name)
     if not current_user.is_anonymous:
         return redirect(url_for('user.current_user_detail'))
-    return redirect(url_for('beer.beer_list'))
+    return redirect(url_for('beer.beer_list', drink_type='beer'))
 
 
 @main.errorhandler(404)
@@ -100,11 +100,18 @@ def login():
     session['oauth_state'] = state
     return render_template('login_user.jinja', auth_url=auth_url)
 
+def create_directories(user_id):
+    if not path.exists(os.path.join(app.config['USERS_DATA_DIR'], str(user_id))):
+        user_path = os.path.join(app.config['USERS_DATA_DIR'], str(user_id))
+        os.mkdir(user_path)
+        os.mkdir(os.path.join(user_path, "beernights"))
+        os.mkdir(os.path.join(user_path, "other"))
+
 
 @main.route('/gCallback')
 def callback():
     if current_user is not None and current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
             return 'You denied access.'
@@ -132,6 +139,8 @@ def callback():
                 user.email = email
                 user.active = True
                 user.roles.append(role)
+                db.session.flush()
+                create_directories(user.id)
             user.name = user_data['name']
             user.tokens = json.dumps(token)
             user.avatar = user_data['picture']
@@ -148,4 +157,4 @@ def callback():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('beer.beer_list'))
+    return redirect(url_for('beer.beer_list', drink_type='beer'))

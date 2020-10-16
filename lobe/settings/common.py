@@ -8,6 +8,12 @@ APP_ROOT = os.path.abspath(os.path.join(
 LOG_PATH = os.path.join(APP_ROOT, os.pardir, 'logs', 'info.log')
 
 # For other static files, like the LOBE manual
+DATA_BASE_DIR = os.path.join(APP_ROOT, os.pardir, 'data/')
+IMAGE_DIR = os.path.join(DATA_BASE_DIR, 'images/')
+BEERNIGHT_IMAGE_DIR = os.path.join(IMAGE_DIR, 'beernights/')
+BEERS_IMAGE_DIR = os.path.join(IMAGE_DIR, 'beers/')
+USERS_DATA_DIR = os.path.join(IMAGE_DIR, 'users/')
+STATIC_DATA_DIR = os.path.join(IMAGE_DIR, 'static/')
 OTHER_DIR = os.path.join(APP_ROOT, os.pardir, 'other')
 
 BEER_PAGINATION = 500
@@ -28,6 +34,12 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # The default configuration id stored in database
 DEFAULT_CONFIGURATION_ID = 1
 
+CAT_INDEX = {'beer': 'Bjór', 'red': 'Rauðvín', 'white':'Hvítvín', 'spirits':'Sterkt', 'rose':'Rósavín', 'bubble':'Freyðivín', 'sider':'Síder og blöndur', 'desert':'Eftirréttavín o.fl.', 'other':'Annað'}
+CAT_INDEX = {'beer': 'Bjór', 'red': 'Rauðvín', 'white':'Hvítvín', 'spirits':'Sterkt', 'rose':'Rósavín', 'bubble':'Freyðivín', 'sider':'Síder og blöndur', 'desert':'Eftirréttavín o.fl.', 'other':'Annað'}
+REVERSE_CAT_INDEX = {'Bjór': 'beer', 'Rauðvín': 'red', 'Hvítvín':'white', 'Sterkt':'spirits', 'Rósavín':'rose', 'Freyðivín':'bubble', 'Síder og blöndur':'sider', 'Eftirréttavín o.fl.':'desert', 'Annað':'other'}
+
+#DRINK_CATEGORIES = ['Bjór', 'Rauðvín', 'Hvítvín', 'Sterkt', 'Rósavín', 'Freyðivín', 'Síder og blöndur', 'Eftirréttavín o.fl.', 'Annað']
+
 COLORS = {
     'common': "#bdbdbd",
     'rare': "#42a5f5",
@@ -47,6 +59,9 @@ COLORS = {
     'siteBackgroundDark': '#46344e',
     'siteBackground': '#f1f1f1',
     'headerColor': '#f0ad4e',
+    'redWine':'#ef4d4d',
+    'whiteWine':'#dbf47c',
+    'spirits':'#E38200',
     'headerFadedColor': '#f9deb9',
     'fontColor': '#000000',
     'lineColor': '#ffffff',

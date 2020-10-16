@@ -245,7 +245,8 @@
                 name: 'Einkunnir bjóra',
                 type: 'bar',
                 marker: {
-                    color: '{{config.COLORS.headerColor}}'
+                    color: '{{config.COLORS.headerColor}}',
+                    opacity: 0.9
                 },
                 width:width
             };
@@ -267,7 +268,7 @@
         
 
 
-        // plot 2
+        // plot 3
         var users = {{users}}
         var container = document.getElementById('line-chart-users');
 
@@ -343,15 +344,24 @@
         setBubblePlot({{bar_chart_beer}}['names'][0], 'mean_ratings');
         
         function setBubblePlot(chosenBeer, chosenCategory) {
+            var width;
+            if({{users_names}}.length > 4){
+                width = Array({{users_names}}.length).fill(0.9);
+            }
+            else{
+                width = Array({{users_names}}.length).fill(0.2);
+            }
 
             var trace1 = {
             x: {{users_names}},
             y: {{beers_members_info}}[chosenBeer][chosenCategory],
-            mode: 'lines+markers',
+            type: 'bar',
             marker: {
+                color: '{{config.COLORS.headerColor}}',
                 size: 12, 
-                opacity: 0.5
-            }
+                opacity: 0.9
+            },
+            width:width
             };
 
             var data = [trace1];

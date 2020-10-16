@@ -13,11 +13,7 @@
         </div>
         <div class="row">
             <div class="col-4 text-center">
-                {% if beer.product_number %}
-                    <img class='img-responsive mh-100 mw-100' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
-                {% else %}
-                    <img class='img-responsive mh-100 mw-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
-                {% endif %}
+                <img class='img-responsive mh-100 mw-100' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
             </div>
             <div class="col-8">
                 <div class="row">
@@ -35,10 +31,10 @@
                             <span>Verð: {{beer.price}}kr.</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>Tegund: {{beer.beer_type}}</span>
+                            <span>Tegund: {{beer.get_type}}</span>
                         </div>
                          <div class="my-20" style="margin: 20px 0px">
-                            <span>Book stuðull: {{beer.book_score|round(2)}}</span>
+                            <span>Book stuðull: {{beer.calculateBook|round(2)}}</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
                             <span>Hagkvæmni stuðull: {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
@@ -117,7 +113,7 @@
                                             <a class="dropdown-item" href='{{url_for("beernight.add_beer_to_beernight", id=beer.id, beernight_id=b.id)}}'>{{b.name}}</a>
                                         {% endfor%}
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
+                                        <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal' style="cursor: pointer;">
                                             {{macros.btn_icon('plus', 'r')}}
                                             Búa til bjórkvöld
                                         </a>        

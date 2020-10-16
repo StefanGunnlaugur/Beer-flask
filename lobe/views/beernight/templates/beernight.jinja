@@ -14,7 +14,34 @@
         .list-public-beers .list-group-item:hover {
             background-color: {{config.COLORS.warning}};
         }
+        .img-upload-btn {
+            display: none;
+        }
 
+        .beernight-img:hover + .img-upload-btn, .img-upload-btn:hover {
+            display: inline-block;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+        }
+
+        /* Make the image responsive */
+        .image-container .beernight-img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Style the button and place it in the middle of the container/image */
+        .image-container .img-upload-btn {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
     </style>
     <div class="progress" style="height: 5px;">
         <div class="progress-bar" role="progressbar" id='ratingProgress-beernight' style="width: {{beernight.percentage_finished}}%;" aria-valuenow="{{beernight.percentage_finished}}" aria-valuemin="0" aria-valuemax="100"></div>
@@ -23,7 +50,6 @@
         <div class="beer-header" style="margin-bottom: 4em;">
             <p class="h2 row">{{beernight.name}}</p>
             <span class="row mb-1">{{macros.btn_icon('star', 'r')}}{{beernight.average_rating}}</span>
-            
             {% if beernight.is_public and not current_user.is_anonymous %}
             <button class="btn btn-success row mb-2" data-toggle='modal', data-target='#copyBeernightModal'>
                 {{macros.btn_icon('copy', 'r')}}
@@ -46,7 +72,12 @@
         </div>
         <div class="row">
             <div class="col-3 text-center" style="margin-right: 3em;">
-                <img class='img-responsive mh-100 mw-100 mb-5' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beernight.name }}/>
+                <div class="image-container">
+                    <img class='img-responsive mh-100 mw-100 mb-5 rounded-circle beernight-img' src={{ url_for("beernight.send_beernight_image", id=beernight.id) }} alt={{ beernight.name }}/>
+                    {%if beernight.is_user_admin(current_user.id)%}
+                        <button class="btn btn-info img-upload-btn" data-toggle='modal', data-target='#uploadBeernightImageModal'>{{macros.btn_icon('image', 'r')}}Breyta</button>
+                    {% endif %}
+                </div>
                 {% if not current_user.is_anonymous %}
                     {% if beernight.getUserRating(current_user.id) %}
                         {{macros.star_rating(beernight, 'beernight', beernight.getUserRating(current_user.id), 2)}}
@@ -117,18 +148,25 @@
             </div>
             <div class="col">
                 <div class="row w-100 d-flex flex-row-reverse mb-2 mx-0">
-                    <a class='btn btn-sm btn-dark text-success float-right' href='{{url_for("beernight.beernight_result", id=beernight.id)}}'>
-                        {{macros.btn_icon('plus', 'r')}}
-                        Yfirlit
-                    </a>
+                    {% if beernight.beers | length > 0 and beernight.is_user_member(current_user.id)%}
+                        <a class='btn btn-sm btn-dark text-success float-right' href='{{url_for("beernight.beernight_result", id=beernight.id)}}'>
+                            {{macros.btn_icon('plus', 'r')}}
+                            Yfirlit
+                        </a>
+                    {% elif beernight.is_user_member(current_user.id)%}
+                        <a class='btn btn-sm btn-dark text-success float-right disabled' href='{{url_for("beernight.beernight_result", id=beernight.id)}}'>
+                            {{macros.btn_icon('plus', 'r')}}
+                            Yfirlit
+                        </a>
+                    {% endif%}
                 </div>
                 {% if beernight.is_user_admin(current_user.id)%}
-                <div class="row w-100 d-flex flex-row-reverse mb-2 mx-0">
-                    <a class='btn btn-sm btn-dark text-success float-right' href='{{url_for("beernight.beernight_create_beer", id=beernight.id)}}'>
-                        {{macros.btn_icon('plus', 'r')}}
-                        Búa til bjór
-                    </a>
-                </div>
+                    <div class="row w-100 d-flex flex-row-reverse mb-2 mx-0">
+                        <button class='btn btn-sm btn-dark text-success float-right' data-toggle='modal', data-target='#makeBeerModal'>
+                            {{macros.btn_icon('plus', 'r')}}
+                            Búa til bjór
+                        </button>
+                    </div>
                 {% endif %}
                 <div class="row w-100 d-flex flex-row-reverse mb-2">
                     {% if beers|length > 0 %}
@@ -136,16 +174,16 @@
                                 {% for b in beers %}
                                     <li class="list-group-item row">
                                         {% if b.is_custom_made %}
-                                            {{macros.beernight_beer_line(b, b, beernight, b.get_user_rating(current_user.id), current_user)}}
+                                            {{macros.beernight_beer_line(b, beernight, b.get_user_rating(current_user.id), current_user)}}
                                         {% else %}
-                                            {{macros.beernight_beer_line(b, b.orginal_beer, beernight, b.get_user_rating(current_user.id), current_user)}}
+                                            {{macros.beernight_beer_line(b, beernight, b.get_user_rating(current_user.id), current_user)}}
                                         {% endif %}
                                     </li>
                                 {% endfor %}
                             </ul>
                     {% else %}
                         {{macros.no_results("Engir bjórar í bjórkvöldi",
-                        "Bættu þeim við á skotstundu", url_for('beer.beer_list'))}}
+                        "Bættu þeim við á skotstundu", url_for('beer.beer_list', drink_type='beer'))}}
                     {% endif %}
                 </div>
             </div>
@@ -155,6 +193,37 @@
 {% endblock %}
 
 {% block modals %}
+
+    <div class="modal fade" id='uploadBeernightImageModal' tabindex="-1">
+        <div class="modal-dialog">
+            <form id="myform" method='POST' action="{{url_for('beernight.uploadBeernightImage', id=beernight.id)}}" enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hlaða upp mynd</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="beer_image">Veldu mynd á bjórkvöldið:</label>
+                        <input type="file" id="picture" name="picture"accept="image/*" capture />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+                        <button class='btn btn-primary' type='submit'>
+                            Klára
+                            <span class='ml-1'><i class='fa fa-check'></i></span>
+                        </button>
+                    </div>
+                    <div>
+                        <p><img class='img-responsive mh-100 mw-100 mb-5 rounded-circle' id="img" style="display:none" alt="from phone"/></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        
+    </div>
     <div class="modal fade" id='copyBeernightModal' tabindex="-1">
         <form method='POST' enctype="multipart/form-data">
             <div class="modal-dialog">
@@ -183,7 +252,7 @@
     </div>
 
     <div class="modal fade" id='makeBeerModal' tabindex="-1">
-        <form method='POST' enctype="multipart/form-data">
+        <form method='POST' action='{{url_for("beernight.beernight_create_beer", id=beernight.id)}}' enctype="multipart/form-data">
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -193,9 +262,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {% with form=beerform %}
+                    {% with form=beernight_beer_form %}
                         {% include 'forms/_form.jinja' %}
                     {% endwith %}
+                    <label for="beer_image">Veldu mynd á bjórinn: *</label>
+                    <input type="file" id="picture" name="picture"accept="image/*" capture />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
@@ -215,7 +286,32 @@
     {{super()}}
     
     <script>
-        
+        $('#picture').on('change',function(){
+            //get the file name
+            var fileName = $(this).val();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
+
+        document.addEventListener('DOMContentLoaded', (ev)=>{
+            let form = document.getElementById('myform');
+            //get the captured media file
+            let input = document.getElementById('picture');
+            console.log(input)
+            input.addEventListener('change', (ev)=>{
+                console.dir( input.files[0] );
+                console.log(input)
+                console.log(input.files[0])
+                if(input.files[0].type.indexOf("image/") > -1){
+                    let img = document.getElementById('img');
+                    img.src = window.URL.createObjectURL(input.files[0]);
+                    img.style.display = "inline-block";
+                }        
+                
+            })
+            
+        })
+
         function postBeerRating(value, type, beer_id) {
             var action = $("#ratingForm-"+type+"_"+beer_id).attr("action");
             var xhr = new XMLHttpRequest();

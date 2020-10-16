@@ -2,7 +2,11 @@ import datetime
 import json
 import math
 import os
+import secrets
+from os import path
 import traceback
+from PIL import Image
+
 from flask import current_app as app
 import csv
 from pydub import AudioSegment
@@ -28,13 +32,33 @@ def resolve_order(object, sort_by, order='desc'):
     else:
         return ordering.desc()
 
-def make_beer(form):
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.config['BEERS_IMAGE_DIR'], picture_fn)
+    output_size = (612, 612)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    return picture_fn
+
+def make_beer(form, image):
     try:
         beer = Beer()
         form.populate_obj(beer)
         beer.book_score = beer.calculateBook
         db.session.add(beer)
         db.session.commit()
+        if beer:
+            picture_file = save_picture(image)
+            if picture_file:
+                if beer.image_path:
+                    if path.exists(os.path.join(app.config['BEERS_IMAGE_DIR'], beer.image_path)):
+                        os.remove(os.path.join(app.config['BEERS_IMAGE_DIR'], beer.image_path))
+                beer.image_path = picture_file
+                db.session.commit()
         return beer
     except Exception as e:
         print(e)
@@ -172,12 +196,26 @@ def make_beernight(form, beer, user):
             beernight.beers.append(beernightBeer)
         db.session.add(beernight)
         db.session.commit()
+        os.mkdir(os.path.join(user.user_beernights_path, str(beernight.id)))
         return beernight
     except Exception as e:
         print(e)
     return None
 
-def make_beernightbeer(form, beernight_id):
+
+def save_beernight_beer_picture(form_picture, beer):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(beer.data_path, picture_fn)
+    output_size = (612, 612)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    return picture_fn
+
+
+def make_beernightbeer(form, beernight_id, image):
     try:
         beernight = Beernight.query.get(beernight_id)
         beer = BeernightBeer()
@@ -187,6 +225,14 @@ def make_beernightbeer(form, beernight_id):
         db.session.flush()
         beernight.beers.append(beer)
         db.session.commit()
+        if beer:
+            picture_file = save_beernight_beer_picture(image, beer)
+            if picture_file:
+                if beer.image_path:
+                    if path.exists(os.path.join(beer.data_path, beer.image_path)):
+                        os.remove(os.path.join(beer.data_path, beer.image_path))
+                beer.image_path = picture_file
+                db.session.commit()
         return beer
     except Exception as e:
         print(e)
@@ -287,6 +333,7 @@ def copy_public_beernight(form, beernight_id):
             old_beernight.copy_count += 1
             db.session.add(beernight)
             db.session.commit()
+            os.mkdir(os.path.join(current_user.user_beernights_path, str(beernight.id)))
             return beernight
         return False
     except Exception as e:

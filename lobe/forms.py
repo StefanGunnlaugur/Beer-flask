@@ -6,7 +6,6 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import (Form, HiddenField, MultipleFileField, SelectMultipleField,
                      SelectField, TextField, BooleanField, validators, TextAreaField,
                      ValidationError, FloatField, widgets, StringField)
-
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.ext.sqlalchemy.orm import model_form
 from wtforms.fields.html5 import EmailField
@@ -80,7 +79,8 @@ class UserEditForm(Form):
 class BeernightForm(ModelForm):
     class Meta:
         model = Beernight
-        exclude = ['uuid', 'is_featured']
+        exclude = ['uuid', 'is_featured','copy_count']
+    name = TextField('Nafn')
     category = SelectField(
     'Flokkur',
     choices=[
@@ -98,14 +98,16 @@ class BeernightForm(ModelForm):
 class CopyBeernightForm(ModelForm):
     class Meta:
         model = Beernight
-        exclude = ['uuid', 'is_public', 'is_featured', 'category']
+        exclude = ['uuid', 'is_public', 'is_featured', 'category', 'copy_count']
+
+
 
 
 
 class BeernightbeerForm(ModelForm):
     class Meta:
         model = BeernightBeer
-        exclude = ['book_score', 'economic_score', 'product_number', 'is_custom_made']
+        exclude = ['book_score', 'economic_score', 'is_custom_made', 'product_number', 'image_path']
         validators = {
                     'name': [InputRequired()],
                     'alcohol': [InputRequired()],
@@ -117,7 +119,7 @@ class BeernightbeerForm(ModelForm):
 class BeerForm(ModelForm):
     class Meta:
         model = Beer
-        exclude = ['book_score', 'economic_score', 'product_number']
+        exclude = ['book_score', 'economic_score','product_id', 'image_path']
         validators = {
                     'name': [InputRequired()],
                     'alcohol': [InputRequired()],
@@ -125,3 +127,5 @@ class BeerForm(ModelForm):
                     'beer_type': [InputRequired()],
                       }
 
+class UploadBeernightImageForm(FlaskForm):
+    picture = FileField('Hlaða upp mynd á bjórkvöld', validators=[FileAllowed(['jpg', 'png'])])

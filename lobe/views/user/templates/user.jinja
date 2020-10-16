@@ -28,6 +28,7 @@
         .list-public-invites .list-group-item:hover {
             background-color: {{config.COLORS.inviteHover}};
         }
+
     </style>
 
     <div class='row'>
@@ -80,7 +81,7 @@
     <div class="wrapper row">
         <div class="row w-100">
             <div style="background-color: {% if beernights_admin|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 85%" class="d-inline mb-2" data-toggle="collapse" data-target="#collapse-beernights-admin" aria-expanded="false" aria-controls="collapse-admins" style="cursor: pointer;">
-                <p class="my-2 ml-3"><i class="fas fa-plus mr-2" aria-hidden="true" ></i> Bjórkvöldin mín</p>
+                <p class="my-2 ml-3">{% if beernights_admin|length > 0 %}<i class="fas fa-plus mr-2" aria-hidden="true">{% else %}<i class="fas fa-ghost mr-2" aria-hidden="true">{% endif %}</i> Bjórkvöldin mín</p>
             </div>
             <div class="d-inline" style="width: 15%">
                 <a class="btn btn-dark float-right" href="{{url_for('user.admin_beernight_list')}}">{{macros.btn_icon('eye', 'r')}}Skoða öll</a>
@@ -101,7 +102,7 @@
     <div class="wrapper row">
         <div class="row w-100">
             <div style="background-color: {% if beernights_member|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 85%" class="d-inline mb-2" data-toggle="collapse" data-target="#collapse-beernights-member" aria-expanded="false" aria-controls="collapse-member" style="cursor: pointer;">
-                <p class="my-2 ml-3"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Bjórkvöld sem gestur</p>
+                <p class="my-2 ml-3">{% if beernights_member|length > 0 %}<i class="fas fa-plus mr-2" aria-hidden="true">{% else %}<i class="fas fa-ghost mr-2" aria-hidden="true">{% endif %}</i> Bjórkvöld sem gestur</p>
             </div>
             <div class="d-inline" style="width: 15%">
                 <a class="btn btn-dark float-right" href="{{url_for('user.member_beernight_list')}}">{{macros.btn_icon('eye', 'r')}}Skoða öll</a>

@@ -1,0 +1,64 @@
+{% extends "__base.jinja" %}
+
+{% block body %}
+    <div class='containter'>
+        <div class="col">
+            <span class="h1 row">Hversu full/ur er ég?</span>
+            <p class="row">
+                Hvað ertu lengi að skrifa stafrófið?
+            </p>
+            {% if not current_user.is_anonymous%}
+            <p class="row">
+                Besta score: {{current_user.game_score}}
+            </p>
+            {% endif %}
+        </div>
+        <div class="col">
+            <button class="btn btn-warning" onclick="restartGame()">Endurstilla</button>
+            <div id="stopwatch" class=""></div>
+                <span id="timer" class=""></span>
+            <div>
+                <span id="drunkDescription" class=""></span>
+            </div>
+            <div>
+                <span>Stig:</span>
+                <span id="score" class=""></span>
+            </div>
+            <div>
+                <span>Villur:</span>
+                <span id="errors" class=""></span>
+            </div>
+            <div>
+                <span>Niðustaða:</span>
+                <span id="results" class=""></span>
+            </div>
+            <div>
+                <span>input:</span>
+                <span id="input" class=""></span>
+            </div>
+        </div>
+        <div class="col mt-5">
+            <span id='alpha-display' class="h2 row">ABCDEFGHIJKLMNOPQRSTUVXYZ</span>
+            <div id="btn-content" class="row row-cols-3">
+
+            </div>
+        </div>
+    <div>
+
+
+
+{% endblock %}
+
+{% block modals %}
+
+   
+{% endblock%}
+
+{% block scripts %}
+    {{super()}}
+    <script>
+       var post_action = '{{url_for('user.beer_comment')}}'
+
+    </script>
+    <script src='{{url_for("main.static", filename="js/game.js")}}'></script>
+{% endblock %}

@@ -27,6 +27,7 @@ from lobe.views.main import main
 from lobe.views.user import user
 from lobe.views.beer import beer
 from lobe.views.beernight import beernight
+from lobe.views.other import other
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -45,9 +46,9 @@ def create_app():
             'settings', os.getenv('FLASK_ENV', 'development'))))
     if 'REVERSE_PROXY_PATH' in app.config:
         ReverseProxyPrefixFix(app)
-    
     app.logger.setLevel(logging.DEBUG)
     app.logger.addHandler(create_logger(app.config['LOG_PATH']))
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
     sqlalchemy_db.init_app(app)
     #Security(app, user_datastore)
@@ -61,6 +62,8 @@ def create_app():
     app.register_blueprint(user)
     app.register_blueprint(beer)
     app.register_blueprint(beernight)
+    app.register_blueprint(other)
+
 
     app.executor = Executor(app)
     #app.user_datastore = user_datastore
@@ -87,7 +90,21 @@ def create_logger(log_path: str):
 
 
 app = create_app()
-
+'''
+@app.after_request
+def add_header(response):
+    # response.cache_control.no_store = True
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
+'''
+@app.after_request
+def add_header(response):
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    if ('Cache-Control' not in response.headers):
+        response.headers['Cache-Control'] = 'public, max-age=600'
+    return response
 
 #https://bitwiser.in/2015/09/09/add-google-login-in-flask.html
 login_manager = LoginManager(app)
@@ -103,4 +120,4 @@ def load_user(user_id):
 def unauthorized():
     # do stuff
     flash("Notanda hefur ekki heimild", category='danger')
-    return redirect(url_for('beer.beer_list'))
+    return redirect(url_for('beer.beer_list', drink_type='beer'))

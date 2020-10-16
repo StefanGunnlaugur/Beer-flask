@@ -43,11 +43,14 @@
         .items-collection .btn-group{
             width:90%
         }
+
+
+        
     </style>
 
     <div class="container">
         <div class='col-12 mb-4'>
-            <h1 class='font-weight-bold row'>Allir bjórar</h1>
+            <h1 class='font-weight-bold row'>{{cat_name}}</h1>
             <span class="row">Fjöldi: {{beer_list | length}}</span>
         </div>
         <input type="text" id="beerFilterInput" onkeyup="filterFunction()" placeholder="Leitaðu að bjór">
@@ -58,40 +61,40 @@
         </div>
         <div class="wrapper row">
             
-            <div class="row mb-3 col" id="collapse-users">
+            <div class="row mb-3 collapse col" id="collapse-users">
                 <div class="row col">
-                    <div class="dropdown">
+                    <div class="dropdown" style="padding-left:20px;">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Raða eftir
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=name&order=asc" class="btn btn-light w-50 text-left">Stafrófsröð(A-Ö)</a>
-                                <a href="{{url}}?sort_by=name&order=dsc" class="btn btn-light w-50 text-left">Stafrófsröð(Ö-A)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=name&order=asc" class="btn btn-light w-50 text-left">Stafrófsröð(A-Ö)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=name&order=dsc" class="btn btn-light w-50 text-left">Stafrófsröð(Ö-A)</a>
                             </div>
                             <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=alcohol&order=dsc" class="btn btn-light w-50 text-left">Áfengismagn(Hátt-Lágt)</a>
-                                <a href="{{url}}?sort_by=alcohol&order=asc" class="btn btn-light w-50 text-left">Áfengismagn(Lágt-Hátt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=alcohol&order=dsc" class="btn btn-light w-50 text-left">Áfengismagn(Hátt-Lágt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=alcohol&order=asc" class="btn btn-light w-50 text-left">Áfengismagn(Lágt-Hátt)</a>
                             </div>
                            <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=price&order=dsc" class="btn btn-light w-50 text-left">Verð(Hátt-Lágt)</a>
-                                <a href="{{url}}?sort_by=price&order=asc" class="btn btn-light w-50 text-left">Verð(Lágt-Hátt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=price&order=dsc" class="btn btn-light w-50 text-left">Verð(Hátt-Lágt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=price&order=asc" class="btn btn-light w-50 text-left">Verð(Lágt-Hátt)</a>
                             </div>
                             <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=volume&order=dsc" class="btn btn-light w-50 text-left">Magn(Hátt-Lágt)</a>
-                                <a href="{{url}}?sort_by=volume&order=asc" class="btn btn-light w-50 text-left">Magn(Lágt-Hátt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=volume&order=dsc" class="btn btn-light w-50 text-left">Magn(Hátt-Lágt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=volume&order=asc" class="btn btn-light w-50 text-left">Magn(Lágt-Hátt)</a>
                             </div>
                             <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=rating&order=dsc" class="btn btn-light w-50 text-left">Einkunn(Hátt-Lágt)</a>
-                                <a href="{{url}}?sort_by=rating&order=asc" class="btn btn-light w-50 text-left">Einkunn(Lágt-Hátt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=rating&order=dsc" class="btn btn-light w-50 text-left">Einkunn(Hátt-Lágt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=rating&order=asc" class="btn btn-light w-50 text-left">Einkunn(Lágt-Hátt)</a>
                             </div>
                             <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=book_score&order=dsc" class="btn btn-light w-50 text-left">Book stuðull(Hátt-Lágt)</a>
-                                <a href="{{url}}?sort_by=book_score&order=asc" class="btn btn-light w-50 text-left">Book stuðull(Lágt-Hátt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=book_score&order=dsc" class="btn btn-light w-50 text-left">Book stuðull(Hátt-Lágt)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=book_score&order=asc" class="btn btn-light w-50 text-left">Book stuðull(Lágt-Hátt)</a>
                             </div>
                             <div class="dropdown-item btn-group">
-                                <a href="{{url}}?sort_by=economic_score&order=dsc" class="btn btn-light w-50 text-left">Hagkvæmast(Mest-Minnst)</a>
-                                <a href="{{url}}?sort_by=economic_score&order=asc" class="btn btn-light w-50 text-left">Hagkvæmast(Minnst-Mest)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=economic_score&order=dsc" class="btn btn-light w-50 text-left">Hagkvæmast(Mest-Minnst)</a>
+                                <a style="font-size:14px" href="{{url}}?sort_by=economic_score&order=asc" class="btn btn-light w-50 text-left">Hagkvæmast(Minnst-Mest)</a>
                             </div>
                         </div>
                     </div>
@@ -102,9 +105,9 @@
                             <div class="items col" style="max-width: 20%;">
                                 <div class="info-block block-info clearfix">
                                     <div data-toggle="buttons" class="bizmoduleselect">
-                                        <label class="btn btn-default">
+                                        <label class="btn btn-default category-button">
                                             <div class="itemcontent">
-                                                <small class="text-nowrap" style="">{{c}}</small>
+                                                <small id='cat-name' class="text-nowrap" style="">{{c}}</small>
                                             </div>
                                         </label>
                                     </div>
@@ -116,15 +119,22 @@
             </div>
             
         </div>
-
-        <ul class="list-group-flush list-group-mine" id="beerListUL">
-            {% for b in beer_list %}
-                <li class="list-group-item mb-1">
-                    {{macros.beer_line(b, current_user)}}
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="mh-100" >
+            <ul id="drinkList" class="list-group-flush list-group-mine">
+                {% for b in beer_list[:10] %}
+                    <li class="list-group-item mb-1">
+                        {{macros.beer_line(b, current_user, true)}}
+                    </li>
+                {% endfor %}
+                {% for b in beer_list[10:] %}
+                    <li class="list-group-item mb-1">
+                        {{macros.beer_line(b, current_user)}}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -133,25 +143,136 @@
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
         });
-        
-        function filterFunction() {
+
+        $(document).ready(function(){
+
+            $("#drinkList li").slice(20).hide();
+            var mincount = 20;
+            var maxcount = 40;
+
+
+            $(window).scroll(function() 
+                                {
+                                if($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
+                                        $("#yourlist li").slice(mincount,maxcount).fadeIn(1200);
+
+            $("#loading").fadeIn(100).delay(1000).fadeOut(100);
+                                    
+            mincount = mincount+20;
+            maxcount = maxcount+20
+            filterFunction()
+            }
+            });
+
+
+
+        });
+    document.addEventListener("DOMContentLoaded", function() {
+        var lazyloadImages;    
+
+        if ("IntersectionObserver" in window) {
+            lazyloadImages = document.querySelectorAll(".lazy");
+            var imageObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                var image = entry.target;
+                image.src = image.dataset.src;
+                image.classList.remove("lazy");
+                imageObserver.unobserve(image);
+                }
+            });
+            });
+
+            lazyloadImages.forEach(function(image) {
+            imageObserver.observe(image);
+            });
+        } else {  
+            var lazyloadThrottleTimeout;
+            lazyloadImages = document.querySelectorAll(".lazy");
+            
+            function lazyload () {
+            if(lazyloadThrottleTimeout) {
+                clearTimeout(lazyloadThrottleTimeout);
+            }    
+
+            lazyloadThrottleTimeout = setTimeout(function() {
+                var scrollTop = window.pageYOffset;
+                lazyloadImages.forEach(function(img) {
+                    if(img.offsetTop < (window.innerHeight + scrollTop)) {
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    }
+                });
+                if(lazyloadImages.length == 0) { 
+                document.removeEventListener("scroll", lazyload);
+                window.removeEventListener("resize", lazyload);
+                window.removeEventListener("orientationChange", lazyload);
+                }
+            }, 20);
+            }
+
+            document.addEventListener("scroll", lazyload);
+            window.addEventListener("resize", lazyload);
+            window.addEventListener("orientationChange", lazyload);
+        }
+    })
+
+        function filterFunction(remove=false, item=false, btnPress=false) {
             var input, filter, ul, li, a, i, txtValue;
             input = document.getElementById("beerFilterInput");
             filter = input.value.toUpperCase();
-            ul = document.getElementById("beerListUL");
+            ul = document.getElementById("drinkList");
             li = ul.getElementsByTagName("li");
+            cats = getSelectedCategories();
+            if(btnPress){
+                if(remove){
+                    cats = cats.filter(v => v !== item); 
+                }
+                else{
+                    cats.push(item)
+                }
+            }
             for (i = 0; i < li.length; i++) {
                 a = li[i].getElementsByTagName("span")[0]
-                //a = li[i].getElementsByTagName("a")[1];
-                //a = a.getElementsByTagName("span")[0];
+                cat = li[i].getElementsByTagName("span")[1]
                 txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                txtValueCat = cat.textContent || cat.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1 && (cats.includes(txtValueCat.toUpperCase()) || cats.length == 0)) {
                     li[i].style.display = "";
                 } else {
                     li[i].style.display = "none";
                 }
+                
             }
         }
+
+        function getSelectedCategories(){
+            var selected = []
+            var all = $(".category-button").map(function() {
+                if($(this).attr('aria-pressed') === "true"){
+                    var name = $(this).find('small');
+                    selected.push(name.text().toUpperCase())
+                }
+            })
+
+            return selected
+        }
+
+        $(document).ready(function () {
+            $('.category-button')
+                .on('click', function() {
+                    if($(this).attr('aria-pressed') === "true"){
+                        var name = $(this).find('small');
+                        var upperCase = name.text().toUpperCase()
+                        filterFunction(true, upperCase, true)
+                    }
+                    else{
+                        var name = $(this).find('small');
+                        var upperCase = name.text().toUpperCase()
+                        filterFunction(false, upperCase, true)
+                    }
+                })
+        });
 
         $(document).ready(function () {
             $('.collapse')

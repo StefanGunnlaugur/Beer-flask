@@ -16,7 +16,7 @@
 {% block modals %}
 
     <div class="modal fade" id='makeBeerModal' tabindex="-1">
-        <form method='POST' enctype="multipart/form-data">
+        <form method='POST' action="{{url_for('beer.make_beer_route')}}" enctype="multipart/form-data">
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -29,6 +29,8 @@
                     {% with form=beerform %}
                         {% include 'forms/_form.jinja' %}
                     {% endwith %}
+                    <label for="beer_image">Veldu mynd á bjórinn: *</label>
+                    <input type="file" id="picture" name="picture"accept="image/*" capture />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
@@ -48,7 +50,12 @@
     {{super()}}
     
     <script>
-
+        $('#picture').on('change',function(){
+            //get the file name
+            var fileName = $(this).val();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
 
     </script>
 {% endblock %}

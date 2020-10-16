@@ -1,12 +1,12 @@
-[2020-09-28 14:30:32,793] ERROR in beernight: Error creating a verification : name 'beer' is not defined
+[2020-10-16 02:01:48,633] ERROR in user: Error creating a verification : '<' not supported between instances of 'int' and 'NoneType'
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/beernight/beernight.py", line 86, in beernight_rate
-    rating = add_beer_rating(current_user.id, beer, input_rating)
-NameError: name 'beer' is not defined
+  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/user/user.py", line 324, in beer_comment
+    if game_score > 0 and game_score < user.game_score:
+TypeError: '<' not supported between instances of 'int' and 'NoneType'
 
-[2020-10-07 02:16:03,200] ERROR in beernight: Error creating a verification : user_ratings_finished_percentage() takes 1 positional argument but 2 were given
+[2020-10-16 02:03:37,402] ERROR in user: Error creating a verification : '<' not supported between instances of 'int' and 'NoneType'
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/beernight/beernight.py", line 183, in beernight_beer_rate
-    'user_percentage': beer.beernight.user_ratings_finished_percentage(current_user.id),
-TypeError: user_ratings_finished_percentage() takes 1 positional argument but 2 were given
+  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/user/user.py", line 326, in beer_comment
+    if game_score > 0 and game_score < user.game_score:
+TypeError: '<' not supported between instances of 'int' and 'NoneType'
 

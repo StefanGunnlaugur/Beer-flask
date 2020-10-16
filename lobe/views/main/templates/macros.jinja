@@ -73,7 +73,7 @@
 
 
 {% macro no_results(title, text, link, link_text, icon, type) %}
-    <div class='jumbotron'>
+    <div class='jumbotron w-100'>
         <h3 class='font-weight-bold'>
             <span class='text-{% if type %}{{type}}{% else %}warning{% endif %}'>
                 <i class='fa fa-{% if icon %}{{icon}}{% else %}exclamation-triangle{% endif%}'></i>
@@ -110,7 +110,7 @@
             <div class="row d-flex align-items-center">
                 <div class="d-flex justify-content-center col-7">
                     <a href='{{url_for("beernight.beernight_detail", id=beernight.id)}}'>
-                        <img class='img-responsive mw-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beernight.name }} />
+                        <img class='img-responsive mh-100 mw-100 rounded-circle beernight-img' src={{ url_for("beernight.send_beernight_image", id=beernight.id) }} alt={{ beernight.name }}/>
                     </a>
                 </div>
                 <div class="col ml-2">
@@ -148,7 +148,7 @@
                     <span class='float-right'>
                     {% if beernight.round_rating%}
                         {% for i in range(5) %}
-                            {% if i < beernight.round_rating + 1 %}
+                            {% if i < beernight.round_rating %}
                                 <i class='fa fa-xs fa-circle'></i>
                             {% else %}
                                 <i class='far fa-xs fa-circle'></i>
@@ -166,36 +166,30 @@
         <div class="card-body d-flex justify-content-between flex-column">
             <div>
                 <a href='{{url_for("beer.beer_detail", id=beer.id)}}'><p class="card-title text-center font-weight-bold">{{beer.name}}</p></a>
-                <p class='text-center'>{{beer.beer_type}}</p>
+                <p class='text-center'>{{beer.get_type}}</p>
             </div>
             <div class="row d-flex align-items-center">
                 <div class="d-flex justify-content-center col-7">
-                    {% if beer.product_number %}
-                        <a href='{{url_for("beer.beer_detail", id=beer.id)}}'>
-                            <img class='img-responsive mh-100 mw-100' style="height: 12em;" src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
-                        </a>
-                    {% else %}
-                        <a href='{{url_for("beer.beer_detail", id=beer.id)}}'>
-                            <img class='img-responsive mh-100 mw-100' style="height: 12em;" src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
-                        </a>
-                    {% endif %}
+                    <a href='{{url_for("beer.beer_detail", id=beer.id)}}'>
+                        <img class='img-responsive mh-100 mw-100' style="height: 12em;" src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                    </a>
                 </div>
                 <div class="col ml-2">
-                        <div class="row">
-                            <p class="text-nowrap" data-toggle="tooltip" title="Verð">{{beer.price}}kr</p>
-                        </div>
-                        <div class="row">
-                            <p class="text-nowrap" data-toggle="tooltip" title="Ágengismagn">{{beer.alcohol}}%</p>
-                        </div>
-                        <div class="row">
-                            <p class="text-nowrap" data-toggle="tooltip" title="Einkunn bjórs frá notendum">{{btn_icon('star', 'r')}}{{beer.average_rating}}</p>
-                        </div>
-                        <div class="row">
-                            <p class="text-nowrap" data-toggle="tooltip" title="Book stuðullinn er blanda nokkurra þátta, m.a. verð, áfengismagn og einkunn bjórs. Nákvæm lýsing er hernaðarleyndarmál. Há tala er betri.">{{btn_icon('book', 'r')}}{{beer.bang_for_buck}}</p>
-                        </div>
-                        <div class="row">
-                            <span data-toggle="tooltip" title="Áfengismagn fyrir hverja krónu. Hagkvæmari bjórinn hefur hærri töli. (ml*alcohol)/kr">{{btn_icon('beer', 'r')}}{{beer.bang_for_buck}}</span>
-                        </div>
+                    <div class="row">
+                        <p class="text-nowrap" data-toggle="tooltip" title="Verð">{{beer.price}}kr</p>
+                    </div>
+                    <div class="row">
+                        <p class="text-nowrap" data-toggle="tooltip" title="Ágengismagn">{{beer.alcohol}}%</p>
+                    </div>
+                    <div class="row">
+                        <p class="text-nowrap" data-toggle="tooltip" title="Einkunn bjórs frá notendum">{{btn_icon('star', 'r')}}{{beer.average_rating}}</p>
+                    </div>
+                    <div class="row">
+                        <p class="text-nowrap" data-toggle="tooltip" title="Book stuðullinn er blanda nokkurra þátta, m.a. verð, áfengismagn og einkunn bjórs. Nákvæm lýsing er hernaðarleyndarmál. Há tala er betri.">{{btn_icon('book', 'r')}}{{beer.bang_for_buck}}</p>
+                    </div>
+                    <div class="row">
+                        <span data-toggle="tooltip" title="Áfengismagn fyrir hverja krónu. Hagkvæmari bjórinn hefur hærri töli. (ml*alcohol)/kr">{{btn_icon('beer', 'r')}}{{beer.bang_for_buck}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -234,31 +228,23 @@
     </div>
 {% endmacro %}
 
-{% macro beer_line(beer, current_user)%}
+{% macro beer_line(beer, current_user, load_image=false)%}
     <!--
     <div class="beer-line row" data-toggle="collapse" data-target="#collapse-beernights-{{beer.id}}" aria-expanded="false" aria-controls="collapse-member" style="cursor: pointer;">
     -->
     <div class="beer-line row">
-        <div class="beer-line-image col-2 bg-white mh-100 text-center">
-            {% if beer.product_number %}
-                <a href='{{url_for("beer.beer_detail", id=beer.id)}}'>
-                    <img class='img-responsive mh-100' style='height: 100px' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{beer.product_number}}_r.jpg" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
-                </a>
-            {% elif beer.link_to_img %}
-                <a href='{{url_for("beer.beer_detail", id=beer.id)}}'>
-                    <img class='img-responsive mh-100' style='height: 100px' src="{{beer.link_to_img}}" alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
-                </a>
+        <div class="beer-line-image col-2 bg-white mh-100 justify-content-center d-flex align-items-center">
+            {%if load_image%}
+                <img class='img-responsive mh-100 mw-100' style='height: 100px' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }}/>
             {% else %}
-                <a href='{{url_for("beer.beer_detail", id=beer.id)}}'>
-                    <img class='img-responsive mh-100' style='height: 100px' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beer.name }} />
-                </a>
+                <img class='img-responsive mh-100 mw-100 lazy' style='height: 100px' data-src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }}/>
             {% endif %}
         </div>
         <div class="beer-line-info col ml-3">
             <div class="row mt-2 mb-2">
                 <div class="col">
                     <a class="row pb-0 d-inline" href='{{url_for("beer.beer_detail", id=beer.id)}}'><span id="beername-el" class="card-title font-weight-bold mb-0">{{beer.name}}</span></a>
-                    <span class="row col" data-toggle="tooltip" title="Tegund bjórs">{{beer.beer_type}}</span>
+                    <span class="row" data-toggle="tooltip" title="Tegund bjórs">{{beer.get_type}}</span>
                 </div>
                 {% if not current_user.is_anonymous%}
                     <div class="col-2">
@@ -266,6 +252,13 @@
                             <a onclick="likeBeer({{beer.id}}, '{{beer.ajax_favourite_action}}')"><span id="beer-like-heart-{{beer.id}}" style="font-size: 24px; color: {{config.COLORS.heartChecked}};" class="fas fa-heart" aria-badge="Save"></span></a>
                         {% else %}
                             <a onclick="likeBeer({{beer.id}}, '{{beer.ajax_favourite_action}}')"><span id="beer-like-heart-{{beer.id}}" style="font-size: 24px; color: {{config.COLORS.heartUnChecked}};" class="fas fa-heart" aria-badge="Save"></span></a>
+                        {% endif %}
+                        {% if current_user.is_admin()%}
+                            <a id="deleteBeerButton" href='{{url_for("beer.beer_delete", id=beer.id)}}' class="btn btn-secondary btn-sm text-danger col-6" type="button">
+                                <span class=''>
+                                    <i class='fa fa-trash'></i>
+                                </span>
+                            </a>
                         {% endif %}
                     </div>
                 {% endif %}
@@ -303,7 +296,7 @@
 {% macro beernight_line(beernight, current_user)%}
     <div class="beer-line row" style='height: 100px'>
         <div class="beer-line-image col-2 mh-100 text-center">
-            <img class='img-responsive mh-100' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ beernight.name }} />
+            <img class='img-responsive mh-100 mw-100 mb-5 rounded-circle beernight-img' style='height: 100px' src={{ url_for("beernight.send_beernight_image", id=beernight.id) }} alt={{ beernight.name }}/>
         </div>
         <div class="beer-line-info col">
             <div class="row">
@@ -328,8 +321,11 @@
 {% endmacro %}
 
 {% macro invites_line(invite)%}
-    <div class="line-container row">
+    <div class="line-container row" >
         <div class="info-content row ml-3 w-100">
+            <div class="col-2 d-flex align-items-center">
+                <img class='img-responsive mh-100 mw-100 rounded-circle beernight-img' src={{ url_for("beernight.send_beernight_image", id=invite.beernight.id) }} alt={{ invite.beernight.name }}/>
+            </div>
             <div class="col">
                 <table class="table table-borderless">
                     <thead>
@@ -361,35 +357,34 @@
     </div>
 {% endmacro %}
 
-{% macro beernight_beer_line(beer, org_beer, beernight, rating, current_user)%}
+{% macro beernight_beer_line(beer, beernight, rating, current_user)%}
     <div class="line-container">
         <div class="info-content row w-100" data-toggle="collapse" data-target="#collapse-beer-{{beer.id}}" aria-expanded="false" aria-controls="collapse-users">
             <div class="beer-line row col" style="cursor: pointer;">
                 <div class="beer-line-image col-2 bg-white mh-100 text-center ml-4 d-flex align-items-center justify-content-center">
-                    {% if org_beer.product_number %}
-                        <img class='img-responsive mh-100' style='height: 100px' src="https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{{org_beer.product_number}}_r.jpg" alt={{ org_beer.name }} alt={{ org_beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
-                    {% elif org_beer.link_to_img %}
-                        <img class='img-responsive mh-100' style='height: 100px' src="{{org_beer.link_to_img}}" alt={{ org_beer.name }} alt={{ org_beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
-                    {% else %}
-                        <img class='img-responsive mh-100 mw-100' style='max-height: 100px' src={{ url_for("static", filename = 'images/roundlogo.png') }} alt={{ org_beer.name }} />
-                    {% endif %}
+                    <img class='img-responsive mh-100' style='height: 100px' src={{ url_for("beernight.send_beernight_beer_image", id=beer.id) }} alt={{ beer.get_att('name')}} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
                 </div>
                 <div class="beer-line-info col">
                     <div class="row">
-                        <a class="h4" href='{{url_for("beer.beer_detail", id=org_beer.id)}}'>{{org_beer.name}}</a>
+                        {% if beer.is_custom_made %}
+                            <a class="h4">{{beer.get_att('name')}}</a>
+                        {% else %}
+                            <a class="h4" href='{{url_for("beer.beer_detail", id=beer.orginal_beer.id)}}'>{{beer.get_att('name')}}</a>
+                        {% endif %}
+                        
                     </div>
                     <div class="row">
                         <div class="col">
-                            <p>{{org_beer.beer_type}}</p>
+                            <p>{{beer.get_att('beer_type')}}</p>
                         </div>
                         <div class="col">
-                            <p>{{org_beer.alcohol}}%</p>
+                            <p>{{beer.get_att('alcohol')}}%</p>
                         </div>
                         <div class="col">
-                            <p>{{org_beer.volume}}ml</p>
+                            <p>{{beer.get_att('volume')}}ml</p>
                         </div>
                         <div class="col">
-                            <p>{{org_beer.bang_for_buck}}{{btn_icon('beer', 'r')}}</p>
+                            <p>{{beer.get_att('bang_for_buck')}}{{btn_icon('beer', 'r')}}</p>
                         </div>
                     </div>
                     <div class="progress" style="height: 5px;">
@@ -407,94 +402,95 @@
                 </div>
             {% endif %}
         </div>
-
-        <ul class="collapse mt-4" id="collapse-beer-{{beer.id}}">
-            <li class="list-group-item star-line col">
-                <div class="row">
-                    <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
-                        <span class="h2 my-auto">{% if beer.average_cat_rating('sight') %}{{beer.average_cat_rating('sight')}}{%else%}-{%endif%}</span>
+        {% if beernight.is_user_member(current_user.id) or beernight.is_user_admin(current_user.id) %}
+            <ul class="collapse mt-4" id="collapse-beer-{{beer.id}}">
+                <li class="list-group-item star-line col">
+                    <div class="row">
+                        <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
+                            <span class="h2 my-auto">{% if beer.average_cat_rating('sight') %}{{beer.average_cat_rating('sight')}}{%else%}-{%endif%}</span>
+                        </div>
+                        <div class="col">
+                            {% if rating %}
+                                {{star_rating(beer,'sight', rating.sight, 7)}}
+                            {% else %}
+                                {{star_rating(beer,'sight', 0, 7)}}
+                            {% endif %}
+                        </div>
+                        <div class="col-4 d-flex justify-content-center" >
+                            <span class="h4 my-auto">Ásýnd</span>
+                        </div>
                     </div>
-                    <div class="col">
-                        {% if rating %}
-                            {{star_rating(beer,'sight', rating.sight, 7)}}
-                        {% else %}
-                            {{star_rating(beer,'sight', 0, 7)}}
-                        {% endif %}
+                </li>
+                <li class="list-group-item star-line col">
+                    <div class="row">
+                        <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
+                            <span class="h2 my-auto">{% if beer.average_cat_rating('smell') %}{{beer.average_cat_rating('smell')}}{%else%}-{%endif%}<span>
+                        </div>
+                        <div class="col">
+                            {% if rating %}
+                                {{star_rating(beer,'smell', rating.smell, 7)}}
+                            {% else %}
+                                {{star_rating(beer,'smell', 0, 7)}}
+                            {% endif %}
+                        </div>
+                        <div class="col-4 d-flex justify-content-center" >
+                            <span class="h4 my-auto">Lykt</span>
+                        </div>
                     </div>
-                    <div class="col-4 d-flex justify-content-center" >
-                        <span class="h4 my-auto">Ásýnd</span>
+                </li>
+                <li class="list-group-item star-line col">
+                    <div class="row">
+                        <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
+                            <span class="h2 my-auto">{% if beer.average_cat_rating('taste') %}{{beer.average_cat_rating('taste')}}{%else%}-{%endif%}<span>
+                        </div>
+                        <div class="col">
+                            {% if rating %}
+                                {{star_rating(beer,'taste', rating.taste, 7)}}
+                            {% else %}
+                                {{star_rating(beer,'taste', 0, 7)}}
+                            {% endif %}
+                        </div>
+                        <div class="col-4 d-flex justify-content-center" >
+                            <span class="h4 my-auto">Bragð</span>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <li class="list-group-item star-line col">
-                <div class="row">
-                    <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
-                        <span class="h2 my-auto">{% if beer.average_cat_rating('smell') %}{{beer.average_cat_rating('smell')}}{%else%}-{%endif%}<span>
+                </li>
+                <li class="list-group-item star-line col">
+                    <div class="row">
+                        <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
+                            <span class="h2 my-auto">{% if beer.average_cat_rating('feel') %}{{beer.average_cat_rating('feel')}}{%else%}-{%endif%}<span>
+                        </div>
+                        <div class="col">
+                            {% if rating %}
+                                {{star_rating(beer,'feel', rating.feel, 7)}}
+                            {% else %}
+                                {{star_rating(beer,'feel', 0, 7)}}
+                            {% endif %}
+                        </div>
+                        <div class="col-4 d-flex justify-content-center" >
+                            <span class="h4 my-auto">Áferð</span>
+                        </div>
                     </div>
-                    <div class="col">
-                        {% if rating %}
-                            {{star_rating(beer,'smell', rating.smell, 7)}}
-                        {% else %}
-                            {{star_rating(beer,'smell', 0, 7)}}
-                        {% endif %}
+                </li>
+                <li class="list-group-item star-line col">
+                    <div class="row">
+                        <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
+                            <span class="h2 my-auto">{% if beer.average_cat_rating('rating') %}{{beer.average_cat_rating('rating')}}{%else%}-{%endif%}<span>
+                        </div>
+                        <div class="col">
+                            {% if rating %}
+                                {{star_rating(beer,'rating', rating.rating, 7)}}
+                            {% else %}
+                                {{star_rating(beer,'rating', 0, 7)}}
+                            {% endif %}
+                        </div>
+                        <div class="col-4 d-flex justify-content-center" >
+                            <span class="h4 my-auto">Geðþáttaákvörðun</span>
+                        </div>
                     </div>
-                    <div class="col-4 d-flex justify-content-center" >
-                        <span class="h4 my-auto">Lykt</span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item star-line col">
-                <div class="row">
-                    <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
-                        <span class="h2 my-auto">{% if beer.average_cat_rating('taste') %}{{beer.average_cat_rating('taste')}}{%else%}-{%endif%}<span>
-                    </div>
-                    <div class="col">
-                        {% if rating %}
-                            {{star_rating(beer,'taste', rating.taste, 7)}}
-                        {% else %}
-                            {{star_rating(beer,'taste', 0, 7)}}
-                        {% endif %}
-                    </div>
-                    <div class="col-4 d-flex justify-content-center" >
-                        <span class="h4 my-auto">Bragð</span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item star-line col">
-                <div class="row">
-                    <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
-                        <span class="h2 my-auto">{% if beer.average_cat_rating('feel') %}{{beer.average_cat_rating('feel')}}{%else%}-{%endif%}<span>
-                    </div>
-                    <div class="col">
-                        {% if rating %}
-                            {{star_rating(beer,'feel', rating.feel, 7)}}
-                        {% else %}
-                            {{star_rating(beer,'feel', 0, 7)}}
-                        {% endif %}
-                    </div>
-                    <div class="col-4 d-flex justify-content-center" >
-                        <span class="h4 my-auto">Áferð</span>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item star-line col">
-                <div class="row">
-                    <div class="col-2 ml-2 d-flex justify-content-center" style="background-color:{{config.COLORS.headerColor}};">
-                        <span class="h2 my-auto">{% if beer.average_cat_rating('rating') %}{{beer.average_cat_rating('rating')}}{%else%}-{%endif%}<span>
-                    </div>
-                    <div class="col">
-                        {% if rating %}
-                            {{star_rating(beer,'rating', rating.rating, 7)}}
-                        {% else %}
-                            {{star_rating(beer,'rating', 0, 7)}}
-                        {% endif %}
-                    </div>
-                    <div class="col-4 d-flex justify-content-center" >
-                        <span class="h4 my-auto">Geðþáttaákvörðun</span>
-                    </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>   
+        {% endif %}
     </div>
     
 {% endmacro %}

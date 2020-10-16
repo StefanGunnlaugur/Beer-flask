@@ -1,6 +1,6 @@
-[2020-10-07 02:16:45,548] ERROR in beernight: Error creating a verification : percentage_finished() takes 0 positional arguments but 1 was given
+[2020-10-16 02:05:13,373] ERROR in user: Error creating a verification : '<' not supported between instances of 'int' and 'NoneType'
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/beernight/beernight.py", line 184, in beernight_beer_rate
-    'beernight_percentage': beer.beernight.percentage_finished,
-TypeError: percentage_finished() takes 0 positional arguments but 1 was given
+  File "/Users/stefan/Documents/Projects/Beer-flask/lobe/views/user/user.py", line 328, in beer_comment
+    if game_score > 0 and game_score < user.game_score:
+TypeError: '<' not supported between instances of 'int' and 'NoneType'
 

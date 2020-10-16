@@ -8,7 +8,7 @@ import traceback
 import datetime
 from shutil import copyfile
 from tqdm import tqdm
-
+from os import path
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Command, Manager
 from flask_security.utils import hash_password
@@ -51,6 +51,20 @@ class AddDefaultRoles(Command):
 
         db.session.commit()
 
+def create_directories(user_id):
+    if not path.exists(os.path.join(app.config['USERS_DATA_DIR'], str(user_id))):
+        user_path = os.path.join(app.config['USERS_DATA_DIR'], str(user_id))
+        os.mkdir(user_path)
+        os.mkdir(os.path.join(user_path, "beernights"))
+        os.mkdir(os.path.join(user_path, "other"))
+
+class AddUserColumns(Command):
+    def run(self):
+        users = User.query.all()
+        for u in users:
+            create_directories(u.id)
+        
+
 class AddUserRole(Command):
     def run(self):
         users = User.query.all()
@@ -63,16 +77,22 @@ class AddBeerColumns(Command):
     def run(self):
         beers = Beer.query.all()
         for b in beers:
-            b.economic_score = b.bang_for_buck
-            b.book_score = b.calculateBook
+            if b.product_id:
+                b.image_path = b.product_id + '.jpg'
+            else:
+                b.product_id = None
         db.session.commit()
+
+def create_beernight_directories(beernight):
+    os.mkdir(os.path.join(beernight.creator.user_beernights_path, str(beernight.id)))
+
 
 class AddBeernightColumns(Command):
     def run(self):
         beernights = Beernight.query.all()
         for b in beernights:
-            b.is_featured = False
-        db.session.commit()
+            create_beernight_directories(b)
+        
 
 class DeleteUser(Command):
     def run(self):
@@ -111,18 +131,29 @@ class AddUser(Command):
 
 class AddBeersFromJson(Command):
     def run(self):
-        with open('scraper/data-16-09-2020.json') as json_file:
+        with open('scraper/data-all-14-10-2020.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 beer = Beer.query.filter_by(name=p['name']).first()
                 if beer is None:
                     beer = Beer()
                     beer.name = p['name']
-                beer.price = int(p['price'].replace('.', '').replace(' kr', ''))
-                beer.alcohol = float(p['alcohol'].replace('%', ''))
-                beer.beer_type = p['taste']
-                beer.volume = int(p['volume'].replace(' ml', ''))
-                beer.product_number = int(p['product_number'])
+                if p['price']:
+                    beer.price = int(p['price'].replace('.', '').replace(' kr', ''))
+                if p['alcohol']:
+                    beer.alcohol = float(p['alcohol'].replace('%', ''))
+                if p['taste']:
+                    beer.get_type = p['taste']
+                if p['type']:
+                    beer.drink_detail = p['type']
+                if p['volume']:
+                    beer.volume = int(p['volume'].replace(' ml', ''))
+                if p['product_number']:
+                    beer.product_id = str(p['product_number'])
+                if p['category']:
+                    beer.category = p['category']
+                
+                beer.image_path = str(p['product_number']) + '.jpg'
                 db.session.add(beer)
                 beer.economic_score = beer.bang_for_buck
         db.session.commit()
@@ -169,6 +200,7 @@ manager.add_command('add_default_roles', AddDefaultRoles)
 manager.add_command('add_column_defaults', AddColumnDefaults)
 manager.add_command('add_beers_from_json', AddBeersFromJson)
 manager.add_command('add_beer_columns', AddBeerColumns)
+manager.add_command('add_user_columns', AddUserColumns)
 manager.add_command('add_beernight_columns', AddBeernightColumns)
 
 

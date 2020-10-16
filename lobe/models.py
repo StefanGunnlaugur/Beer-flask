@@ -89,6 +89,7 @@ class User(db.Model, UserMixin):
     sex = db.Column(db.String(255))
     age = db.Column(db.Integer)
     active = db.Column(db.Boolean())
+    game_score = db.Column(db.Integer)
     created_at = db.Column(
         db.DateTime,
         default=db.func.current_timestamp())
@@ -142,6 +143,26 @@ class User(db.Model, UserMixin):
             ids.append(b.id)
         return ids
 
+    @property
+    def get_member_beernights(self):
+        beernights = []
+        for b in self.beernights_member:
+            if not b.is_user_admin(self.id):
+                beernights.append(b)
+        return beernights
+
+    @property
+    def user_data_path(self):
+        return os.path.join(app.config['USERS_DATA_DIR'], str(self.id))
+    
+    @property
+    def user_beernights_path(self):
+        return os.path.join(self.user_data_path, 'beernights')
+    
+    @property
+    def user_other_path(self):
+        return os.path.join(self.user_data_path, 'other')
+
     def get_url(self):
         return url_for('user.user_detail', id=self.id)
 
@@ -186,9 +207,12 @@ class Beer(BaseModel, db.Model):
     country = db.Column(db.String(255), info={'label': 'Land',})
     manufacturer = db.Column(db.String(255), info={'label': 'Framleiðandi',})
     description = db.Column(db.String(500), info={'label': 'Lýsing',})
-    beer_type = db.Column(db.String(255), info={'label': 'Tegund',})
-    product_number = db.Column(db.Integer)
-    link_to_img = db.Column(db.String(200), info={'label': 'Slóð á mynd',})
+    beer_type = db.Column(db.String(255), info={'label': 'Tegund'})
+    drink_detail = db.Column(db.String(255), info={'label': 'Tegund nánar'})
+    category = db.Column(db.String(255), info={'label': 'Flokkur áfengis'})
+    vinbud_link = db.Column(db.String(255), info={'label': 'Hlekkur á drykk'})
+    product_id = db.Column(db.String(255))
+    image_path = db.Column(db.String)
     ratings = db.relationship(
         "BeerRating", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
@@ -213,6 +237,13 @@ class Beer(BaseModel, db.Model):
         return None
 
     @property
+    def get_type(self):
+        if not self.beer_type:
+            return ''
+        else:
+            return self.beer_type
+
+    @property
     def calculateBook(self):
         if self.volume and self.alcohol and self.price:
             x = max(1, abs(self.volume - 330))
@@ -231,7 +262,7 @@ class Beer(BaseModel, db.Model):
     
     @hybrid_property
     def bang_for_buck(self):
-        if self.price:
+        if self.price and self.alcohol and self.price:
             bfb = (self.volume * (self.alcohol))/self.price
             return round(bfb,2)
         else:
@@ -437,11 +468,6 @@ class Beernight(BaseModel, db.Model):
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     uuid = db.Column(db.String, default=str(uuid.uuid4()))
-    copy_count = db.Column(db.Integer, default=0)
-    is_featured = db.Column(db.Boolean, default=False)
-    is_public = db.Column(db.Boolean, default=False, info={
-        'label': 'Sýnilegur öllum',
-    })
     ratings = db.relationship(
         "BeernightRating", lazy="joined", back_populates='beernight',
         cascade='all, delete, delete-orphan')
@@ -450,6 +476,12 @@ class Beernight(BaseModel, db.Model):
         info={
             'validators': [validators.InputRequired()],
             'label': 'Nafn'})
+    copy_count = db.Column(db.Integer, default=0)
+    is_featured = db.Column(db.Boolean, default=False)
+    is_public = db.Column(db.Boolean, default=False, info={
+        'label': 'Sýnilegur öllum',
+    })
+    image_path = db.Column(db.String)
     category = db.Column(
         db.String(255),
         info={'label': 'Flokkur'})
@@ -468,6 +500,11 @@ class Beernight(BaseModel, db.Model):
     invitations = db.relationship(
         "BeernightInvitation", lazy="joined", back_populates='beernight',
         cascade='all, delete, delete-orphan')
+
+
+    @property
+    def data_path(self):
+        return os.path.join(self.creator.user_beernights_path, str(self.id))
 
     @property
     def total_volume(self):
@@ -533,7 +570,7 @@ class Beernight(BaseModel, db.Model):
                 ratings.append(r)
         return ratings
     
-    def is_user_admin(self, user_id):
+    def is_user_creator(self, user_id):
         if self.creator_id == user_id:
             return True
         return False
@@ -766,7 +803,7 @@ class BeernightBeer(BaseModel, db.Model):
     description = db.Column(db.String(500), info={'label': 'Lýsing',})
     beer_type = db.Column(db.String(255), info={'label': 'Tegund',})
     product_number = db.Column(db.Integer)
-    link_to_img = db.Column(db.String(200), info={'label': 'Slóð á mynd',})
+    image_path = db.Column(db.String)
     ratings = db.relationship(
         "BeernightbeerRating", lazy="joined", back_populates='beer',
         cascade='all, delete, delete-orphan')
@@ -777,6 +814,10 @@ class BeernightBeer(BaseModel, db.Model):
     def __init__(self, beer=None):
         self.orginal_beer = beer
     
+
+    @property
+    def data_path(self):
+        return self.beernight.data_path
 
     @property
     def getFinishedRatingPercentage(self):

@@ -24,7 +24,7 @@
         <tbody>
             {% for b in beernights %}
                 <tr>
-                    <td><a style="color: {{config.COLORS.warning}};" class="text-color-warning" href='{{url_for("beernight.beernight_detail", id=b.id)}}'>{{b.name}}</a></td>
+                    <td><a style="color: {{config.COLORS.warningDark}};" class="text-color-warning" href='{{url_for("beernight.beernight_detail", id=b.id)}}'>{{b.name}}</a></td>
                     <td>{{b.created_at | datetime(format='med-low')}}</td>
                     <td>{% if b.is_public %}Já{% else %}Nei{% endif %}</td>
                     <td>{{b.average_rating}}</td>
