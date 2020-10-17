@@ -1,0 +1,102 @@
+{% extends "__base.jinja" %}
+
+{% block body %}
+    <audio id="easyAudio" src={{ url_for("other.send_easy") }} preload="auto"></audio>
+    <audio id="intenseAudio" src={{ url_for("other.send_dub") }} preload="auto"></audio>     
+
+    <div class='containter'>
+        <div class="col text-center">
+            <span class="h1">Hversu full/t/ur er ég?</span>
+            <p class="">
+                Hvað ertu lengi að skrifa stafrófið?
+            </p>
+            {% if not current_user.is_anonymous%}
+                <p class="">
+                    Hæstu stigin þín: <span id="high-score-display">{{current_user.get_score}}</span>
+                </p>
+            {% endif %}
+            <div>
+                <button id="start-button" class="btn btn-success">{{macros.btn_icon('play','')}}</button>
+            </div>
+        </div>
+        <div id="info-container" class="col">
+            <button class="btn btn-dark" onclick="restartGame()">Endurstilla</button>
+            <div class="audio-buttons float-right">
+                <button id="mute-button" class="btn btn-dark" onclick="muteAudio()">{{macros.btn_icon('volume-mute','')}}</button>
+                <button id="unmute-button" class="btn btn-dark" onclick="unmuteAudio()">{{macros.btn_icon('volume-up','')}}</button>
+            </div>
+            <div class="mt-3 d-flex justify-content-between" style="height:4em;">
+                <div>
+                    <span>Stig:</span>
+                    <span id="score" class=""></span>
+                </div>
+                <div id="" class="">
+                    <span id="timer" class="h4"></span>
+                </div>
+                <div>
+                    <span>Villur:</span>
+                    <span id="errors" class=""></span>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-2" style="height:3em;">
+            <span id="drunkDescription" class="text-center"></span>
+        </div>
+        <div class="col mt-2 mb-5">
+            <span id='alpha-display' class="h2 row justify-content-center" style="font-size:1.2em;"></span>
+            <div id="btn-content" class="row row-cols-3">
+
+            </div>
+        </div>
+    <div>
+
+
+
+{% endblock %}
+
+{% block modals %}
+    <div class="modal fade" id='gameOverModal' tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Leik lokið</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <span id="new-record" class="h3">NÝTT MET!<span>
+                </div>
+                <div class='col-12'>
+                    <div class='row'>
+                        <div class='col-6'><p>Stigin þín eru:</p></div>
+                        <div class='col-6 text-right'><p class="h4" id="game_score_display"></p></div>
+
+                        <div class='col-6'><p>Lýsing á hífun:</p></div>
+                        <div class='col-6 text-right'><p id="description_modal_display"></p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="close-modal-button" type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+            </div>
+            </div>
+        </div>
+       
+    </div>
+   
+{% endblock%}
+
+{% block scripts %}
+    {{super()}}
+    <script>
+        var post_action = '{{url_for('user.beer_comment')}}'
+        var high_score = 0;
+        var is_anonymous = {{ current_user.is_anonymous|tojson }};
+        if(!is_anonymous){
+            var high_score = '{{current_user.get_score}}';
+        }
+    </script>
+    <script src='{{url_for("main.static", filename="js/game.js")}}'></script>
+{% endblock %}

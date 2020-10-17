@@ -1,0 +1,159 @@
+{% extends "__base.jinja" %}
+{% block body %}
+    <style type="text/css">   
+        .list-public-beernights .list-group-item {
+            background-color:{{config.COLORS.publicBeernightColor}};
+        }
+        .list-public-beernights .list-group-item:hover {
+            background-color: {{config.COLORS.publicHover}};
+        }
+
+        .list-category-beernights .list-group-item {
+            background-color:{{config.COLORS.memberColor}};
+        }
+        .list-category-beernights .list-group-item:hover {
+            background-color: {{config.COLORS.memberHover}};
+        }
+
+    </style>
+
+    <div class='col w-100 mb-2'>
+        <div class="mb-2">
+            <a  href='{{url_for("beernight.random_beernight")}}' class="btn btn-dark float-right">{{macros.btn_icon('question')}}Taktu mig eitthvert</a>
+        </div>
+        <div class='mb-3'>
+            <h1 class='font-weight-bold'>Opnar smakkanir</h1>
+        </div>
+        <div class="w-100">
+            <input class="" type="text" id="beernightFilterInput" onkeyup="filterFunction()" placeholder="Leitaðu að smökkuni t.d. jól">
+        </div>
+    </div>
+    <div class="collapse" id="collapse-beernight-search">
+        <div class="col">
+            <button class="btn btn-dark float-right mb-2" id="close-beer-search">Loka{{macros.btn_icon('angle-up')}}</button>
+        </div>
+        <div class="col" style="max-height: 40em; overflow-y: scroll;">
+            <div class="lists">
+                <ul class="list-group list-public-beernights" id="beerListUL">
+                    {% for b in beernights %}
+                        <li class="list-group-item">
+                            {{macros.beernight_line(b, current_user)}}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>  
+    </div>
+    {% if beernights|length > 0 %}
+        <div class='row mt-4'>
+            <div class='col-12'>
+                <h3 class='font-weight-bold'>Meðmæli</h3>
+            </div>
+        </div>
+        {% with items=featured_beernights, type="beernight"%}
+            {% include 'carousel_item.jinja'%}
+        {% endwith %}
+    {% endif %}
+
+    {% if beernights|length > 0 %}
+        <div class='row mt-4'>
+            <div class='col-12'>
+                <h3 class='font-weight-bold'>Vinsælar smakkanir</h3>
+            </div>
+        </div>
+        {% with items=popular_beernights, type="beernight"%}
+            {% include 'carousel_item.jinja'%}
+        {% endwith %}
+    {% endif %}
+
+    <div class='row mt-4'>
+        <div class='col-12'>
+            <h3 class='font-weight-bold'>Flokkar</h3>
+        </div>
+    </div>
+    
+    <div class="mb-5" id="accordion">
+        {% for c in cat_names %}
+            <div class="card">
+                <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapse-{{c}}" aria-expanded="true" aria-controls="collapse-{{c}}">
+                    <p class="h3">{{c}}</p>
+                </div>
+
+                <div id="collapse-{{c}}" class="collapse" aria-labelledby="collapse-{{c}}" data-parent="#accordion">
+                    <div class="row">
+                        <div class="w-50 col" style="max-height: 30em; overflow-y: scroll;">
+                            <div class="lists">
+                                <ul class="list-group list-category-beernights" id="beerListUL">
+                                    {% for b in categories[c] %}
+                                        <li class="list-group-item">
+                                            {{macros.beernight_line(b, current_user)}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="card">
+            <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapse-{{c}}" aria-expanded="true" aria-controls="collapse-{{c}}">
+                <p class="h3">Ný</p>
+            </div>
+
+            <div id="collapse-{{c}}" class="collapse" aria-labelledby="collapse-{{c}}" data-parent="#accordion">
+                <div class="row">
+                    <div class="w-50 col" style="max-height: 30em; overflow-y: scroll;">
+                        <div class="lists">
+                            <ul class="list-group list-category-beernights" id="beerListUL">
+                                {% for b in new_beernights %}
+                                    <li class="list-group-item">
+                                        {{macros.beernight_line(b, current_user)}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+       
+{% endblock%}
+
+{% block scripts %}
+    {{super()}}
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+        
+        $( "#beernightFilterInput" ).click(function() {
+            $('#collapse-beernight-search').collapse('show')
+        });
+
+        $( "#close-beer-search").click(function() {
+            var test = $('#collapse-beernight-search');
+            $('#collapse-beernight-search').collapse('hide')
+        });
+        function filterFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("beernightFilterInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("beerListUL");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+    </script>
+{% endblock %}

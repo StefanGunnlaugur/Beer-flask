@@ -18,8 +18,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from termcolor import colored
 
-from lobe import app
-from lobe.models import (User, Role, db, Beer, Beernight)
+from skal import app
+from skal.models import (User, Role, db, Beer, Beernight)
 
 
 migrate = Migrate(app, db)

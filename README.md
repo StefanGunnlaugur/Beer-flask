@@ -1,5 +1,5 @@
 # L.O.B.E.
-LOBE is a recording client made specifically for TTS data collections. It supports multiple collections, single and multi-speaker, and can prompt sentences based on phonetic coverage.
+SKAL is a recording client made specifically for TTS data collections. It supports multiple collections, single and multi-speaker, and can prompt sentences based on phonetic coverage.
 
 # Setup
 * Other system requirements (installed via apt):
@@ -20,10 +20,10 @@ Start by creating a databese and a user:
 ```
 # Log in as postgres user
 sudo -u postgres -i
-# Create role for lobe and select password
-createuser lobe --pwprompt
-# Create lobe database with the new user as owner
-createdb lobe --owner=lobe
+# Create role for skal and select password
+createuser skal --pwprompt
+# Create skal database with the new user as owner
+createdb skal --owner=skal
 ```
 Remember to change settings/development.py accordingly. Replace all the values in \<BRACKETS\> with the postgres information you created just now.
 `SQLALCHEMY_DATABASE_URI = 'postgresql://<POSTGRES-USERNAME>:<POSTGRES-PWD>@localhost:5432/<DATABASENAME>'`

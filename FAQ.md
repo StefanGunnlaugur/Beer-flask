@@ -4,7 +4,7 @@
 
 You need to use Chrome.
 
-## How do I log into LOBE the first time?
+## How do I log into SKAL the first time?
 
 ```
 python manage.py db upgrade
