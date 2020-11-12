@@ -2,13 +2,13 @@
     <table class='table table-hover'>
         <thead>
             <th>
-                Frá
+                {{ _('Frá') }}
             </th>
             <th>
-                Smökkun
+                {{ _('Smökkun') }}
             </th>
             <th>
-                Sent
+                {{ _('Sent') }}
             </th>
             <th>
                 
@@ -22,8 +22,8 @@
                     <td>{{i.created_at | datetime(format='med-low')}}</td>
                     <td>
                         <div class="col-4 d-flex align-items-center">
-                            <a id="accept-beernight-invite-button" class="btn btn-success mx-1" href='{{url_for("beernight.accept_beernight_invite", id=i.id)}}'>Samþykkja</a>
-                            <a id="decline-beernight-invite-button" class="btn btn-danger mx-1" href='{{url_for("beernight.decline_beernight_invite", id=i.id)}}'>Hafna</a>
+                            <a id="accept-beernight-invite-button" class="btn btn-success mx-1" href='{{url_for("beernight.accept_beernight_invite", beernight_id=i.id)}}'>{{ _('Samþykkja') }}</a>
+                            <a id="decline-beernight-invite-button" class="btn btn-danger mx-1" href='{{url_for("beernight.decline_beernight_invite", beernight_id=i.id)}}'>{{ _('Hafna') }}</a>
                         </div>
                     </td>
                 </tr>

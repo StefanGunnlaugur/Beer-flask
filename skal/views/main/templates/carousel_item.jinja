@@ -15,7 +15,9 @@
                                     <div class="col-md-4 col-sm-6 d-flex align-items-stretch">
                                         {%if type == "beer"%}
                                             {{macros.beer_card(item, current_user)}}
-                                        {% elif type == "beernight" %}
+                                        {% elif type == "beernight-featured" %}
+                                            {{macros.beernight_card(item)}}
+                                        {% elif type == "beernight-popular" %}
                                             {{macros.beernight_card(item)}}
                                         {%endif%}
                                     </div>
@@ -44,7 +46,7 @@
     <!--Small screen Carousel wrapper-->
 
     <div id="{{type}}-carousel-small" class="carousel slide carousel-multi-item d-sm-block d-lg-none" style="margin-bottom:30px" data-interval="false">
-
+        
         <div class="row justify-content-md-center">
             <div class="col-1 align-self-center">
                 <a href="#{{type}}-carousel-small" data-slide="prev"><i class="fas fa-chevron-left fa-2x"></i></a>
@@ -53,11 +55,17 @@
                 {% for item_set in items | batch(1, '&nbsp;') %}
                     <div class="carousel-item {% if loop.index0==0 %}active{% endif %}">
                         {% for item in item_set %}
-                            <div class="col-12 col-md-8 offset-md-2" style="float:left">
-                                {%if type == "beer"%}
-                                    {{macros.beer_card(item, current_user)}}
-                                {%endif%}
-                            </div>
+                            {% if item is not none%}
+                                <div class="col-12 col-md-8 offset-md-2" style="float:left">
+                                    {%if type == "beer"%}
+                                        {{macros.beer_card(item, current_user)}}
+                                    {% elif type == "beernight-featured" %}
+                                        {{macros.beernight_card(item)}}
+                                    {% elif type == "beernight-popular" %}
+                                            {{macros.beernight_card(item)}}
+                                    {%endif%}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endfor %}

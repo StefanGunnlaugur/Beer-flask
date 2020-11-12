@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 
 from sqlalchemy import or_
+from flask_babel import gettext
 
 from skal.decorators import roles_accepted
 from skal.models import User, Role, db, Beer, Beernight, BeernightInvitation
@@ -27,11 +28,11 @@ def beer_tasting():
         section='other')
 
 
-@other.route('/other/howdrunk/')
-def how_drunk_am_i():
-    return render_template(
-        'how_drunk_am_i.jinja',
-        section='other')
+#@other.route('/other/howdrunk/')
+#def how_drunk_am_i():
+#    return render_template(
+#        'how_drunk_am_i.jinja',
+#        section='other')
 
 @other.route('/other/howdrunkalpha/')
 def how_drunk_alpha():

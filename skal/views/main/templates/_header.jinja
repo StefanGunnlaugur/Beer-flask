@@ -6,53 +6,61 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">  
         <li class="nav-item {% if section == 'beer' %}active{% endif %}">
-            <a class="nav-link {% if section == 'beer' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='beer')}}">Bjórar</a>
+            <a class="nav-link {% if section == 'beer' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='beer')}}">{{ _('Bjórar') }}</a>
         </li>
         <li class="nav-item {% if section == 'red' %}active{% endif %}">
-            <a class="nav-link {% if section == 'red' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='red')}}">Rauðvín</a>
+            <a class="nav-link {% if section == 'red' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='red')}}">{{ _('Rauðvín') }}</a>
         </li>
         <li class="nav-item {% if section == 'white' %}active{% endif %}">
-            <a class="nav-link {% if section == 'white' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='white')}}">Hvítvín</a>
+            <a class="nav-link {% if section == 'white' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='white')}}">{{ _('Hvítvín') }}</a>
         </li>
         <li class="nav-item {% if section == 'spirits' %}active{% endif %} border-right border-dark">
-            <a class="nav-link {% if section == 'spirits' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='spirits')}}">Sterkt</a>
+            <a class="nav-link {% if section == 'spirits' %}text-light{% endif %}" href="{{url_for('beer.beer_list', drink_type='spirits')}}">{{ _('Sterkt') }}</a>
         </li>
         <li class="nav-item {% if section == 'beernight' %}active{% endif %}">
-            <a class="nav-link {% if section == 'beernight' %}text-light{% endif %}" href="{{url_for('beernight.public_beernights')}}">Smökkun</a>
+            <a class="nav-link {% if section == 'beernight' %}text-light{% endif %}" href="{{url_for('beernight.public_beernights')}}">{{ _('Smakkanir') }}</a>
         </li>
         {% if not current_user.is_anonymous %}
             <li class="nav-item {% if section == 'user' %}active{% endif %}">
-                <a class="nav-link {% if section == 'user' %}text-light{% endif %}"  href="{{url_for('user.current_user_detail')}}">Mín síða</a>
+                <a class="nav-link {% if section == 'user' %}text-light{% endif %}"  href="{{url_for('user.current_user_detail')}}">{{ _('Mín síða') }}</a>
             </li>
         {% endif %}
         <li class="nav-item dropdown {% if section == 'other' %}active{% endif %}">
             <a class="nav-link {% if section == 'other' %}text-light{% endif %}" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown">
-                <span>Annað</span>
+                <span>{{ _('Annað') }}</span>
                 {{macros.btn_icon('info-circle','')}}
             </a>
             <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{url_for('other.beer_tasting')}}">Smökkun</a>
-                    <a class="dropdown-item" href="http://blog.beeriety.com/2009/12/03/five-steps-to-proper-beer-tasting/">Smökkun utanaðkomandi</a>
-                    <a class="dropdown-item" href="{{url_for('other.how_drunk_am_i') }}">Hversu fullur er ég?</a>
-                    <a class="dropdown-item" href="{{url_for('other.how_drunk_alpha') }}">Hversu fullur er ég aftur?</a>
-
+                    <a class="dropdown-item" href="{{url_for('other.beer_tasting')}}">{{ _('Bjórsmökkun upplýsingar') }}</a>
+                    <a class="dropdown-item" href="http://blog.beeriety.com/2009/12/03/five-steps-to-proper-beer-tasting/">{{ _('Bjórsmökkun utanaðkomandi') }}</a>
+                    <a class="dropdown-item" href="{{url_for('other.how_drunk_alpha') }}">{{ _('Hversu fullur er ég?') }}</a>
             </div>
         </li>
         {% if not current_user.is_anonymous and current_user.is_admin() %}
             <li class="nav-item {% if section == 'admin' %}active{% endif %}">
-                <a class="nav-link {% if section == 'admin' %}text-light{% endif %}" href="{{url_for('user.admin_page')}}">Stjórnsíða</a>
+                <a class="nav-link {% if section == 'admin' %}text-light{% endif %}" href="{{url_for('user.admin_page')}}">{{ _('Stjórnsíða') }}</a>
             </li>
         {% endif %}
         
     </ul>
+
     <ul class="navbar-nav ml-auto">
+        <div class="mx-2">
+            {% for language in AVAILABLE_LANGUAGES.items() %}
+                {% if CURRENT_LANGUAGE == language[0] %}
+                    
+                {% else %}
+                    <a class="h-50" href="{{ url_for('main.set_language', language=language[0]) }}" >{{macros.flag_icon(language[0])}}</a>
+                {%  endif %}
+            {% endfor %}
+        </div>
         {% if not current_user.is_anonymous %}
             <li class="nav-item mr-auto">
-                <a class="nav-link" href="{{url_for('main.logout') }}">{{macros.btn_icon('sign-out-alt','')}} Skrá út</a>            
+                <a class="nav-link" href="{{url_for('main.logout') }}">{{macros.btn_icon('sign-out-alt','')}}{{ _('Skrá út') }}</a>            
             </li>
         {% else %}
             <li class="nav-item {% if section == 'user' %}active{% endif %}">
-                <a class="nav-link {% if section == 'user' %}text-light{% endif %}" href="{{url_for('main.login')}}">{{macros.btn_icon('sign-in-alt','')}} Skrá inn</a>
+                <a class="nav-link {% if section == 'user' %}text-light{% endif %}" href="{{url_for('main.login')}}">{{macros.btn_icon('sign-in-alt','')}}{{ _('Skrá inn') }}</a>
             </li>
         {% endif %}
         </ul>

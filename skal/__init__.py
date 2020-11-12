@@ -11,12 +11,13 @@ from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from flask_babel import gettext
 
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 
 from flask_executor import Executor
-
+from flask_babel import Babel
 from skal.decorators import roles_accepted
 from skal.forms import ExtendedLoginForm
 from skal.models import User, Role
@@ -49,7 +50,8 @@ def create_app():
     app.logger.setLevel(logging.DEBUG)
     app.logger.addHandler(create_logger(app.config['LOG_PATH']))
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-
+    # translation
+    app.config['BABEL_DEFAULT_LOCALE'] = 'is'
     sqlalchemy_db.init_app(app)
     #Security(app, user_datastore)
     # register filters
@@ -99,6 +101,25 @@ def add_header(response):
     response.headers['Expires'] = '-1'
     return response
 '''
+babel = Babel(app)
+@babel.localeselector
+def get_locale():
+    # if the user has set up the language manually it will be stored in the session,
+    # so we use the locale from the user settings
+    try:
+        language = session['language']
+    except KeyError:
+        language = None
+    if language is not None:
+        return language
+    return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+
+@app.context_processor
+def inject_conf_var():
+    return dict(
+                AVAILABLE_LANGUAGES=app.config['LANGUAGES'],
+                CURRENT_LANGUAGE=session.get('language',request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
+
 @app.after_request
 def add_header(response):
     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
@@ -119,5 +140,5 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorized():
     # do stuff
-    flash("Notanda hefur ekki heimild", category='danger')
+    flash(gettext("Notanda hefur ekki heimild"), category='danger')
     return redirect(url_for('beer.beer_list', drink_type='beer'))

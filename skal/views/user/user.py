@@ -8,6 +8,7 @@ from flask import (Blueprint, Response, send_from_directory, request,
 from flask import current_app as app
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from flask_babel import gettext
 
 from sqlalchemy import or_
 
@@ -51,14 +52,45 @@ def admin_page():
 @roles_accepted(['admin'])
 def user_detail(id):
     user = User.query.get(id)
+    form = BeernightForm(request.form)
+    if request.method == 'POST':
+        if form.validate():
+            try:
+                beernight = make_beernight(form, None, user)
+                if beernight:
+                    flash(gettext("Tókst að búa til smökkun {}.".format(
+                                beernight.name)),
+                                category="success")
+                else:
+                    flash(
+                        gettext("Ekki tókst að búa til smökkun."),
+                        category="warning")
+            except Exception as error:
+                print(error)
+                flash(
+                    gettext("Ekki tókst að búa til smökkun."),
+                    category="warning")
+        else:
+            flash(
+                gettext("Ekki tókst að búa til smökkun."),
+                category="warning")
+        return redirect(url_for('user.current_user_detail'))
+    
+    beernigts_member = sorted(user.get_member_beernights, key=lambda x: x.created_at, reverse=True)[:5]
+    beernights_admin = sorted(user.beernights_admin, key=lambda x: x.created_at, reverse=True)[:5]
+    invitations = sorted(user.invitations, key=lambda x: x.created_at, reverse=True)[:5]
     return render_template(
         "user.jinja",
+        fav_beers = user.beers,
+        beernights_member=beernigts_member,
+        beernights_admin=beernights_admin,
+        invites = invitations,
+        beernight_form = form,
         user=user,
         section='user')
 
 @user.route('/heimasida/', methods=['GET', 'POST'])
 @login_required
-@roles_accepted(['admin', 'Notandi'])
 def current_user_detail():
     user = current_user
     form = BeernightForm(request.form)
@@ -67,21 +99,21 @@ def current_user_detail():
             try:
                 beernight = make_beernight(form, None, user)
                 if beernight:
-                    flash("Tókst að búa til smökkun {}.".format(
-                                beernight.name),
+                    flash(gettext("Tókst að búa til smökkun {}.".format(
+                                beernight.name)),
                                 category="success")
                 else:
                     flash(
-                        "Ekki tókst að búa til smökkun.",
+                        gettext("Ekki tókst að búa til smökkun."),
                         category="warning")
             except Exception as error:
                 print(error)
                 flash(
-                    "Ekki tókst að búa til smökkun.",
+                    gettext("Ekki tókst að búa til smökkun."),
                     category="warning")
         else:
             flash(
-                "Ekki tókst að búa til smökkun.",
+                gettext("Ekki tókst að búa til smökkun."),
                 category="warning")
         return redirect(url_for('user.current_user_detail'))
     
@@ -100,7 +132,6 @@ def current_user_detail():
 
 @user.route('/fav_beer_list/')
 @login_required
-@roles_accepted(['Notandi', 'admin'])
 def fav_beer_list():
     page = int(request.args.get('page', 1))
     user = User.query.get(current_user.id)
@@ -118,7 +149,6 @@ def fav_beer_list():
 
 @user.route('/admin_beernight_list/')
 @login_required
-@roles_accepted(['Notandi', 'admin'])
 def admin_beernight_list():
     page = int(request.args.get('page', 1))
     user = User.query.get(current_user.id)
@@ -136,7 +166,6 @@ def admin_beernight_list():
 
 @user.route('/member_beernight_list/')
 @login_required
-@roles_accepted(['Notandi', 'admin'])
 def member_beernight_list():
     page = int(request.args.get('page', 1))
     user = User.query.get(current_user.id)
@@ -155,7 +184,6 @@ def member_beernight_list():
 
 @user.route('/invites_list/')
 @login_required
-@roles_accepted(['Notandi', 'admin'])
 def invites_list():
     page = int(request.args.get('page', 1))
     user = User.query.get(current_user.id)
@@ -183,7 +211,7 @@ def user_edit(id):
             if form.validate():
                 form.populate_obj(user)
                 db.session.commit()
-                flash("Notanda var breytt", category='success')
+                flash(gettext("Notanda var breytt"), category='success')
         except Exception as error:
             app.logger.error('Error updating a user : {}\n{}'.format(
                 error, traceback.format_exc()))
@@ -205,55 +233,13 @@ def user_toggle_admin(id):
     if ds_user.has_role('admin'):
         app.user_datastore.remove_role_from_user(ds_user, 'admin')
         app.user_datastore.add_role_to_user(ds_user, 'Notandi')
-        flash("Notandi er ekki lengur vefstjóri", category='success')
+        flash(gettext("Notandi er ekki lengur vefstjóri"), category='success')
     else:
         app.user_datastore.add_role_to_user(ds_user, 'admin')
         app.user_datastore.remove_role_from_user(ds_user, 'Notandi')
-        flash("Notandi er nú vefstjóri", category='success')
+        flash(gettext("Notandi er nú vefstjóri"), category='success')
     db.session.commit()
     return redirect(url_for('user.user_detail', id=id))
-
-
-@user.route('/users/<int:id>/make_verifier/', methods=['GET', 'POST'])
-@login_required
-@roles_accepted(['admin'])
-def user_make_verifier(id):
-    ds_user = app.user_datastore.get_user(id)
-    app.user_datastore.add_role_to_user(ds_user, 'Greinir')
-    flash("Notandi er nú greinandi", category='success')
-    db.session.commit()
-    return redirect(url_for('user.user_detail', id=id))
-
-
-@user.route('/users/create/', methods=['GET', 'POST'])
-@login_required
-@roles_accepted(['admin'])
-def user_create():
-    form = ExtendedRegisterForm(request.form)
-    if request.method == 'POST' and form.validate():
-        try:
-            new_user = app.user_datastore.create_user(
-                name=form.name.data,
-                email=form.email.data,
-                password=hash_password(form.password.data),
-                roles=['admin' if form.is_admin.data else 'Notandi'])
-            form.populate_obj(new_user)
-            db.session.commit()
-            flash("Nýr notandi var búinn til", category='success')
-            return redirect(url_for('user.user_list'))
-        except Exception as error:
-            app.logger.error('Error creating a user : {}\n{}'.format(
-                error, traceback.format_exc()))
-            flash(
-                "Villa kom upp við að búa til nýjan notanda",
-                category='warning')
-    return render_template(
-        'forms/model.jinja',
-        form=form,
-        type='create',
-        action=url_for('user.user_create'),
-        section='user')
-
 
 
 @user.route('/users/<int:id>/delete/')
@@ -264,9 +250,30 @@ def delete_user(id):
     name = user.name
     db.session.delete(user)
     db.session.commit()
-    flash("{} var eytt".format(name), category='success')
+    flash(gettext("{} var eytt".format(name)), category='success')
     return redirect(url_for('user.user_list'))
 
+@user.route('/users/<int:id>/deactivate/')
+@login_required
+@roles_accepted(['admin'])
+def deactivate_user(id):
+    user = db.session.query(User).get(id)
+    name = user.name
+    user.active = False
+    db.session.commit()
+    flash(gettext("Notandi {} var óvirkjaður".format(name)), category='success')
+    return redirect(url_for('user.user_list'))
+
+@user.route('/users/<int:id>/activate/')
+@login_required
+@roles_accepted(['admin'])
+def activate_user(id):
+    user = db.session.query(User).get(id)
+    name = user.name
+    user.active = True
+    db.session.commit()
+    flash(gettext("Notandi {} var óvirkjaður".format(name)), category='success')
+    return redirect(url_for('user.user_list'))
 
 @user.route('/roles/create/', methods=['GET', 'POST'])
 @login_required
@@ -301,7 +308,7 @@ def role_edit(id):
         try:
             form.populate_obj(role)
             db.session.commit()
-            flash("Hlutverki var breytt", category='success')
+            flash(gettext("Hlutverki var breytt"), category='success')
         except Exception as error:
             app.logger.error('Error updating a role : {}\n{}'.format(
                 error, traceback.format_exc()))
@@ -316,13 +323,12 @@ def role_edit(id):
 
 @user.route('/user/post_score/', methods=['POST'])
 @login_required
-@roles_accepted(['admin', 'Notandi'])
 def beer_comment():
     try:
         user = User.query.get(current_user.id)
         game_score = int(request.form.get('score'))
         if game_score:
-            if game_score > 0:
+            if game_score > 0 and game_score <= 1300:
                 if not user.game_score:
                     user.game_score = game_score
                 elif game_score > user.game_score:
@@ -330,7 +336,7 @@ def beer_comment():
                 db.session.commit()
         return Response(url_for('other.how_drunk_alpha'), status=200)
     except Exception as error:
-        flash('Ekki tókst að senda stig',
+        flash(gettext('Ekki tókst að senda stig'),
                     category="warning")
         app.logger.error('Error creating a verification : {}\n{}'.format(
             error, traceback.format_exc()))

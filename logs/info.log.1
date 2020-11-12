@@ -1,12 +1,12 @@
-[2020-10-16 02:01:48,633] ERROR in user: Error creating a verification : '<' not supported between instances of 'int' and 'NoneType'
+[2020-10-18 16:41:34,417] ERROR in beer: Error updating a user : name 'beernight_id' is not defined
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/user/user.py", line 324, in beer_comment
-    if game_score > 0 and game_score < user.game_score:
-TypeError: '<' not supported between instances of 'int' and 'NoneType'
+  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/beer/beer.py", line 306, in beer_edit
+    return redirect(url_for('beernight.beernight_detail', beernight_id=beernight_id))
+NameError: name 'beernight_id' is not defined
 
-[2020-10-16 02:03:37,402] ERROR in user: Error creating a verification : '<' not supported between instances of 'int' and 'NoneType'
+[2020-10-22 21:58:42,875] ERROR in main: Error sending a beernight image : name 'icon' is not defined
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/user/user.py", line 326, in beer_comment
-    if game_score > 0 and game_score < user.game_score:
-TypeError: '<' not supported between instances of 'int' and 'NoneType'
+  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/main/main.py", line 163, in get_flag_icon
+    if path.exists(os.path.join(app.config['ICON_DIR'], icon)):
+NameError: name 'icon' is not defined
 

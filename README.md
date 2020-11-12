@@ -1,5 +1,5 @@
-# L.O.B.E.
-SKAL is a recording client made specifically for TTS data collections. It supports multiple collections, single and multi-speaker, and can prompt sentences based on phonetic coverage.
+# Skál
+SKAL is a rating client for alcoholic beverages, focused on the icelandic state managed alcohol store. Development is based on the basic structure of the recording client L.O.B.E. developed by Atli Þór Sigurgeirsson at the University of Reykjavik with minor assistance from Stefán Gunnlaugur Jónsson. 
 
 # Setup
 * Other system requirements (installed via apt):

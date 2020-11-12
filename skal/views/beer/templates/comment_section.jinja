@@ -5,20 +5,20 @@
   <div class="post-comments">
     {% if current_user%}
       <div class="form-group">
-        <label for="comment">Skrifaðu athugasemd</label>
+        <label for="comment">{{ _('Skrifaðu athugasemd') }}</label>
         <textarea name="comment" id="comment-input" class="form-control" rows="3"></textarea>
       </div>
-      <button type="submit" id='submit-comment-button' class="btn btn-info" disabled>Senda</button>
+      <button type="submit" id='submit-comment-button' class="btn btn-info" disabled>{{ _('Senda') }}</button>
     {% endif %}
     <div class="comments-nav">
       <ul class="nav nav-pills">
         <li role="presentation" class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="false">
-              Það eru {{comments | length}} athugasemdir <span class="caret"></span>
+              {{ _('Það eru') }} {{comments | length}} {{ _('athugasemdir') }} <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#">Kemur</a></li>
-            <li><a href="#">Seinna</a></li>
+            <li><a href="#">{{ _('Kemur') }}</a></li>
+            <li><a href="#">{{ _('Seinna') }}</a></li>
           </ul>
         </li>
       </ul>

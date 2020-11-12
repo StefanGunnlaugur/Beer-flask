@@ -1,0 +1,214 @@
+# English translations for PROJECT.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-10-22 23:20+0000\n"
+"PO-Revision-Date: 2020-10-23 00:40+0000\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Last-Translator: \n"
+"X-Generator: Poedit 2.4.1\n"
+
+#: views/other/templates/beer_tasting.jinja:7
+msgid "Smökkun"
+msgstr "Tasting"
+
+#: views/other/templates/beer_tasting.jinja:9
+msgid ""
+"Smökkun er ekki lengur þamb búið bless heldur hefur hún þróast yfir í "
+"listform sem á sér fáa líka. Frá kraft bjórum yfir í pissandi lager bjóra, "
+"allir hafa þeir sín sérkenni, persónuleika og fingrafar."
+msgstr ""
+"Tasting is not just chug chug, bye bye see you later any more. It has "
+"evolved into an art form with few equals. Everything from craft beers to "
+"piss poor lagers, everyone of them has its own distinct personality and "
+"fingerprint."
+
+#: views/other/templates/beer_tasting.jinja:10
+msgid ""
+"Sumir bjórar eru gerðir til að drekka án umhugsunar, aðrir til að staldra "
+"við, meta og mæla. Allt er það smekksatriði þó í lokin."
+msgstr ""
+"Some beers are made to drink without a second thought while others are made "
+"to think about, measure and ponder over. It’s all a matter of preference in "
+"the end though."
+
+#: views/other/templates/beer_tasting.jinja:11
+msgid ""
+"Ég er ekki sérfræðingur fyrir fimm aura en þetta eru þeir þættir sem mér og "
+"aðrir meðlimir í bjórklúbbnum Guðbjarti finnst gott að hafa í huga þegar "
+"kemur að smökkun."
+msgstr ""
+"I am not a specialist by any means but these are the traits that I, and "
+"other members of the beer-tasting group Guðbjartur, find the most "
+"important  to keep in mind while admiring beers."
+
+#: views/other/templates/beer_tasting.jinja:13
+msgid ""
+"Haltu þeim bjórum sem eiga að vera kaldir köldum og þeim sem eiga að vera "
+"volgir volgum. Það er fátt verra en hrímaður Guinnes eða pissvolgur pilsner."
+msgstr ""
+"Keep the beers that are supposed to be cool, cool and  those that are "
+"supposed to be warm, warm. There are few things that are worse than an ice "
+"cold Guinness or a piss warm pilsner."
+
+#: views/other/templates/beer_tasting.jinja:14
+msgid ""
+"Notaðu rétta glasið sem býður bjórnum heim og lætur honum líða vel. Þetta "
+"geta oftast verið einföld bjórglös t.d. tulip glös, stundum jafnvel krúsir. "
+"Lykilatriði er að hafa það hreint."
+msgstr ""
+"Use the right glass that invites the beer in for a cup of tea and makes it "
+"feel welcome. These can be quite simple beer glasses like tulip glasses and "
+"sometimes even pints. A key is to have it clean."
+
+#: views/other/templates/beer_tasting.jinja:15
+msgid ""
+"Drekktu bjórinn í hófi svo hans sé notið til fullnustu. Það er fátt verra "
+"en að klára 3 flöskur af rándýru eðalöli og muna svo ekki eftir því þegar "
+"fram líða stundir."
+msgstr ""
+"Drink responsibly so that each beer can be enjoyed to its fullest. There "
+"are few things worse than finishing 3 bottles of expensive luxury beers and "
+"not even remember it later on."
+
+#: views/other/templates/beer_tasting.jinja:16
+msgid ""
+"Njóttu með vinum, hlæðu, spjallaðu og ræddu hvað þér finnst. Lífið er "
+"leikur og bjórinn er partur af því."
+msgstr ""
+"Enjoy the experience with your friends, laugh, chat and discuss your "
+"opinion of the beers. Life was not made to be taken too seriously."
+
+#: views/other/templates/beer_tasting.jinja:17
+msgid "Ekki hlusta á mig, gerðu það sem þú villt gera, ég er ekki mamma þín."
+msgstr "Do not listen to me, do what you want, I’m not your mother."
+
+#: views/other/templates/beer_tasting.jinja:22
+msgid "Hvernig smakka ég bjór?"
+msgstr "How do I taste beer?"
+
+#: views/other/templates/beer_tasting.jinja:23
+msgid "-Let me introduce one bad boy."
+msgstr "-Let me introduce one bad boy."
+
+#: views/other/templates/beer_tasting.jinja:29
+msgid "Ásýnd"
+msgstr "Sight"
+
+#: views/other/templates/beer_tasting.jinja:30
+msgid "-Look at that bad boy."
+msgstr "-Look at that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:32
+msgid ""
+"Þegar þú hellir bjórnum fylgstu með útlitinum. Sé bjórinn mjög kolsýrður "
+"hallaðu þá glasinu meðan þú hellir. Eigi bjórinn ekki að vera kolsýrður "
+"reyndu þá að hella í mitt glasið svo lyktin og bragðir brjótist fram. Berðu "
+"glasið upp að ljósi og hallaðu því lítið eitt. Taktu eftir hvort hann sé "
+"skýr eða í móðu. Skoðaðu litinn og hvernig froðan hegðar sér."
+msgstr ""
+"When pooring beer keep an eye on its appearance. If the beer is carbonated "
+"poor at an angle. If the beer is not meant to be carbonated poor in the "
+"middle of the glass so that the aroma and taste breaks through. Bring the "
+"glass up to a light source and tilt it a bit. Notice if it is clear or "
+"foggy. Examine the color and how the foam behaves."
+
+#: views/other/templates/beer_tasting.jinja:36
+msgid "Lykt"
+msgstr "Smell"
+
+#: views/other/templates/beer_tasting.jinja:37
+msgid "-Sniff at that bad boy."
+msgstr "-Sniff at that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:39
+msgid ""
+"Ruggaðu glasinu í hringi til að opna bjórinn upp og stingdu svo nefinnu í "
+"það til að finna lykt af bjórnum. Þú getur hitað bjórinn upp með því að "
+"setja lófann á glasið þar sem bjórinn er til að virkja lyktia betur ef þú "
+"þarft. Taktu eftir þeim tónum lyktar sem þú finnur, eru þeir veikir, "
+"sterkir, ríkir. Passa þeir við restina af bjórnum. Sumum finnst gott að "
+"athuga ásýnd bjórsins eftir að hafa lyktað of svo lykta í annað sinn eftir "
+"það. Þá er bjórinn  búinn að jafna sig eilítið og fær aðra lykt. Taktu þá "
+"eftir muninum á lyktinni í bæði skiptin."
+msgstr ""
+"Swirl the glass around to open the beer, stick your nose in it to smell the "
+"beer. You can heat the beer up by placing your palm on the glass where the "
+"beer is to the smell gets activated more. Notice the notes in the smell, "
+"are they weak, strong, rich or subtle. Do they match the rest of the beer. "
+"Some people like to examine the sight of the beers after having tasted it "
+"and then smell it for a second time. Then the beer has settled and gives "
+"off a different aroma. Try to notice this difference."
+
+#: views/other/templates/beer_tasting.jinja:43
+msgid "-Bragð"
+msgstr "Taste"
+
+#: views/other/templates/beer_tasting.jinja:44
+msgid "Taste at that bad boy."
+msgstr "-Taste that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:46
+msgid ""
+"Taktu sopa. Taktu nóg til að bjórnum hylji tunguna. Leyfðu honum að leika "
+"um varirnar, tunguna, góminn og tennurnar. Þegar þú kyngir fyrsta sopanum "
+"hafðu munninn lokaðan og andaðu út um nefið. Taktu eftir fyrsta bragðinu "
+"sem þú finnur hvernig það varir eða breytist og svo eftirbragðinu."
+msgstr ""
+"Take a sip. Take enough to cover your tongue. Let it flow around your lips, "
+"tongue, gums and teeth. When you swallow the first sip keep your mouth "
+"closed and breath out through your nose. Notice the first sense of taste "
+"you feel and how it lingers into the aftertaste."
+
+#: views/other/templates/beer_tasting.jinja:50
+msgid "Áferð"
+msgstr "Texture"
+
+#: views/other/templates/beer_tasting.jinja:51
+msgid "-Gargle that bad boy."
+msgstr "-Gargle that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:53
+msgid ""
+"Taktu annan sopa taktu nú eftir áferð bjórsins og þyngd. Til dæmis kolsýru, "
+"þykkt og tilfinningu í munni. Drekktu fleiri sopa ef þú getur og leggðu mat "
+"á hversu hæglega bjórinn er drukkinn."
+msgstr ""
+"Take another sip and now notice the texture, feel and wight of the beer. "
+"For example how carbonated it is, its consistency and thickness. Take more "
+"sips if you can and evaluate how easily the beer is drunken."
+
+#: views/other/templates/beer_tasting.jinja:57
+msgid "Geðþáttaákvörðun"
+msgstr "Gut feeling"
+
+#: views/other/templates/beer_tasting.jinja:58
+msgid "-How bad was that boy?"
+msgstr "-How bad was that boy?"
+
+#: views/other/templates/beer_tasting.jinja:60
+msgid ""
+"Berðu nú bjórinn saman við aðra bjóra af svipaðir tegund. Naustu þess að "
+"drekka bjórinn. Olli hann þér vonbrigðum eða var hann nákvæmlega eins og þú "
+"hélst. Berð þú einhvern illvilja ganvart honum. Drap bjórinn mögulega ömmu "
+"þína með þvottasnúru. Hvernig líður þér með það? Þessi þáttur endurspeglar "
+"oftast meðaltal annarra þátta en það er algerlega undir smakkaranum komið. "
+"Slakaðu svo á og njóttu."
+msgstr ""
+"Compare the beer to other beers of the same type. Did you enjoy drinking "
+"it? Did it disappoint or was it exactly how you expected. Do you harbor bad "
+"feelings towards the beer for some reason? Did the beer kill your "
+"grandmother with a laundry basket? How does that make you feel? This aspect "
+"of the evaluation normally reflects the average of all the other parts but "
+"it is completely up to the taster. So take a breath and relax."

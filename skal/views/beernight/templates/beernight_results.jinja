@@ -6,50 +6,50 @@
 {% block body %}
     <div class='row'>
         <div class='col-12'>
-            <h1 class='font-weight-bold'>Yfirlit fyrir {{beernight.name}}</h1>
+            <h1 class='font-weight-bold'>{{ _('Yfirlit fyrir') }} {{beernight.name}}</h1>
         </div>
 
         <div class='col-md-6 col-12'>
             <div class='row'>
-                <div class='col-6'><p>Fjöldi einkunna:</p></div>
+                <div class='col-6'><p>{{ _('Fjöldi einkunna') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.number_of_beer_ratings}}</p></div>
 
-                <div class='col-6'><p>Fjöldi þáttakenda:</p></div>
+                <div class='col-6'><p>{{ _('Fjöldi þáttakenda') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.members | length }}</p></div>
 
-                <div class='col-6'><p>Fjöldi bjóra:</p></div>
+                <div class='col-6'><p>{{ _('Fjöldi drykkja') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.beers | length}}</p></div>
 
-                <div class='col-6'><p>Heildar bjórmagn:</p></div>
+                <div class='col-6'><p>{{ _('Heildar magn') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.total_volume/1000}}L</p></div>
             </div>
         </div>
         <div class='col-md-6 col-12'>
             <div class='row'>
-                <div class='col-6'><p>Búð til:</p></div>
+                <div class='col-6'><p>{{ _('Búð til') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.created_at | datetime(format='low')}}</p></div>
 
-                <div class='col-6'><p>Einkunn smökkuns:</p></div>
+                <div class='col-6'><p>{{ _('Einkunn smökkunar') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.average_rating}}</p></div>
 
-                <div class='col-6'><p>Meðaleinkunn bjóra:</p></div>
+                <div class='col-6'><p>{{ _('Meðaleinkunn drykkja') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.get_beer_mean_score}}</p></div>
 
-                <div class='col-6'><p>Heildar magn hreins áfengis í ml:</p></div>
+                <div class='col-6'><p>{{ _('Heildar magn hreins áfengis í ml') }} :</p></div>
                 <div class='col-6 text-right'><p>{{beernight.total_alcohol_volume}}ml</p></div>
             </div>
         </div>
     </div>
     <div class="w-100 d-flex flex-row-reverse">
-        <a href='{{url_for("beernight.stream_beernight_zip_results", id=beernight.id)}}' class='btn btn-primary btn-sm float-right mt-2'>
+        <a href='{{url_for("beernight.stream_beernight_zip_results", beernight_id=beernight.id)}}' class='btn btn-primary btn-sm float-right mt-2'>
             {{macros.btn_icon('download', 'r')}}
-            Sækja niðurstöður(.csv)
+            {{ _('Sækja niðurstöður(.csv)') }}
         </a>
     </div>
 
     <div class="wrapper">
         <div style="background-color: ; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-users" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
-            <p class="py-2"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Þátttakendur</p>
+            <p class="py-2"><i class="fas fa-plus mr-2" aria-hidden="true"></i>{{ _('Þátttakendur') }}</p>
         </div>
         <div class="collapse" id="collapse-users">
             {% if beernight.members|length > 0 %}
@@ -62,7 +62,7 @@
 
     <div class="wrapper" style="margin-top: 10px;">
         <div style="background-color: ; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-ratings" aria-expanded="false" aria-controls="collapse-ratings" style="cursor: pointer;">
-             <p class="py-2"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Bjórar</p>
+             <p class="py-2"><i class="fas fa-plus mr-2" aria-hidden="true"></i>{{ _('Drykkir') }}</p>
         </div>
         <div class="collapse" id="collapse-ratings">
             {% if beernight.beers|length > 0 %}
@@ -74,14 +74,14 @@
     </div>
 
     <div class='col-12' style="margin-top: 50px;">
-        <h3 class='font-weight-bold'>Meðaleinkunn bjóra</h3>
-        <p>Hver stöpull sýnir meðaleinkunn bjórs frá öllum þátttakendum</p>
+        <h3 class='font-weight-bold'>{{ _('Meðaleinkunn drykkja') }}</h3>
+        <p>{{ _('Hver stöpull sýnir meðaleinkunn drykkjar frá öllum þátttakendum') }}</p>
         <div class='card'>
             <div class='card-body'>
                 <div class="row">
                     <div class="col-1 ml-5">
                         <div class="row">
-                            Flokkur: 
+                            {{ _('Flokkur') }} :
                         </div>
                     </div>
                     <div class="col">
@@ -97,17 +97,17 @@
     </div>
 
     <div class='col-12' style="margin-top: 50px;">
-        <h3 class='font-weight-bold'>Þátttakendur</h3>
-        <p>Hægt er að sjá allar samanburð einkunna sem þátttakendur gefa í öllum flokkum fyrir alla bjóra</p>
+        <h3 class='font-weight-bold'>{{ _('Þátttakendur') }}</h3>
+        <p>{{ _('Hægt er að sjá samanburð allra einkunna sem þátttakendur gefa í öllum flokkum fyrir alla drykki') }}</p>
         <div class='card'>
             <div class='card-body'>
                 <div class="row">
                     <div class="col-1 ml-5">
                         <div class="row mb-3">
-                            Bjór: 
+                            {{ _('Drykkur') }} :
                         </div>
                         <div class="row">
-                            Flokkur: 
+                            {{ _('Flokkur') }} :
                         </div>
                     </div>
                     <div class="col">
@@ -127,13 +127,13 @@
 
     <div class='col-12 mb-5' style="margin-top: 50px;">
         <h3 class='font-weight-bold'>Þátttakendur</h3>
-        <p>Hver lína sýnir meðaleinkunnagjöf ákveðins ákveðins þátttakanda fyrir þá bjóra sem sem viðkomandi hefur drukkið</p>
+        <p>{{ _('Hver lína sýnir meðaleinkunnagjöf ákveðins ákveðins þátttakanda fyrir þá drykki sem sem viðkomandi hefur drukkið') }}</p>
         <div class='card'>
             <div class='card-body'>
                 <div class="row">
                     <div class="col-1 ml-5">
                         <div class="row">
-                            Flokkur: 
+                            {{ _('Flokkur') }} :
                         </div>
                     </div>
                     <div class="col">
@@ -223,7 +223,7 @@
                 },
                 xaxis:{
                     title:{
-                        text: 'Bjór'
+                        text: 'Drykkur'
                     },
                     tickmode: 'linear'
                 }
@@ -242,7 +242,7 @@
             var trace1 = {
                 x: bar_chart_beer['names'],
                 y: bar_chart_beer[rat_cat],
-                name: 'Einkunnir bjóra',
+                name: 'Einkunnir drykkja',
                 type: 'bar',
                 marker: {
                     color: '{{config.COLORS.headerColor}}',
@@ -297,7 +297,7 @@
                 },
                 xaxis:{
                     title:{
-                        text: 'Bjór'
+                        text: 'Drykkur'
                     },
                     tickmode:'linear'
                 }

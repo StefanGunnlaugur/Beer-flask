@@ -4,6 +4,7 @@ import json
 from os import path
 from flask import (redirect, url_for, render_template, send_from_directory,
                    flash, request, Blueprint, session)
+from flask_babel import gettext
 from flask import current_app as app
 from flask_security import current_user, login_required
 from skal.decorators import roles_accepted
@@ -14,6 +15,7 @@ from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
+from flask_babel import Babel
 
 main = Blueprint(
     'main', __name__,
@@ -24,7 +26,6 @@ main = Blueprint(
 
 @main.route('/')
 def index():
-    print('anon', current_user.is_anonymous)
     if not current_user.is_anonymous:
         return redirect(url_for('user.current_user_detail'))
     return redirect(url_for('beer.beer_list', drink_type='beer'))
@@ -32,13 +33,13 @@ def index():
 
 @main.errorhandler(404)
 def page_not_found(error):
-    flash("Við fundum ekki síðuna sem þú baðst um.", category="warning")
+    flash(gettext("Við fundum ekki síðuna sem þú baðst um."), category="warning")
     return redirect(url_for('index'))
 
 
 @main.errorhandler(500)
 def internal_server_error(error):
-    flash("Alvarleg villa kom upp, vinsamlega reynið aftur", category="danger")
+    flash(gettext("Alvarleg villa kom upp, vinsamlega reynið aftur"), category="danger")
     app.logger.error('Server Error: %s', (error))
     return redirect(url_for('index'))
 
@@ -83,17 +84,8 @@ def get_google_auth(state=None, token=None):
 
 @main.route('/login')
 def login():
-    '''
-    users = User.query.all()
-    for u in users:
-        att = {i.name: getattr(u, i.name) for i in u.__table__.columns}
-        for i in att:
-            print(i, att[i])
-        print()
-        print()
-    '''
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline')
@@ -144,11 +136,11 @@ def callback():
             user.name = user_data['name']
             user.tokens = json.dumps(token)
             user.avatar = user_data['picture']
-            user.active = True
             db.session.add(user)
             db.session.commit()
+            if not user.active:
+                flash(gettext("{} er óvirkur notandi, hafðu samband við kerfisstjóra".format(user.name)), category='warning')
             log = login_user(user)
-            print(log)
             return redirect(url_for('main.index'))
         return 'Could not fetch your information.'
 
@@ -158,3 +150,23 @@ def callback():
 def logout():
     logout_user()
     return redirect(url_for('beer.beer_list', drink_type='beer'))
+
+@main.route('/language/<language>')
+def set_language(language=None):
+    session['language'] = language
+    return redirect(request.referrer)
+
+@main.route('/get_flag_icon/<flag>')
+def get_flag_icon(flag):
+    if flag in app.config['LANGUAGES']:
+        try:
+            name=flag+'.png'
+            if path.exists(os.path.join(app.config['ICON_DIR'], name)):
+                return send_from_directory(
+                    app.config['ICON_DIR'],
+                    name)
+        except Exception as error:
+            app.logger.error(
+                "Error sending a beernight image : {}\n{}".format(
+                    error, traceback.format_exc()))
+    return ''

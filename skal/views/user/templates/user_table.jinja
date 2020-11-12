@@ -1,23 +1,25 @@
 <table class='table'>
     <thead>
         <th>
-            Nafn
+            {{ _('Nafn') }}
             {{macros.sort_th_a('name')}}
         </th>
         <th>
-            Tölvupóstur
+            {{ _('Tölvupóstur') }}
             {{macros.sort_th_a('email')}}
         </th>
         <th>
-            Kyn
+            {{ _('Kyn') }}
             {{macros.sort_th_a('sex')}}
         </th>
         <th>
-            Aldur
+            {{ _('Aldur') }}
             {{macros.sort_th_a('age')}}
         </th>
         <th>
-            Staða
+            {{ _('Staða') }}
+        </th>
+        <th>
         </th>
     </thead>
     <tbody>
@@ -28,6 +30,15 @@
                 <td>{{user.sex | default("Ekki tilgreint", true)}}</td>
                 <td>{{user.age | default("Ekki tilgreint", true)}}</td>
                 <td>{% for role in user.roles %}{{role.name}}{% endfor %}</td>
+                <td>
+                    <div class="col-4 d-flex align-items-center">
+                        {% if not user.active%}
+                            <a id="activate-user" class="btn btn-success mx-1" href='{{url_for("user.activate_user", id=user.id)}}'>{{ _('Virkja') }}</a>
+                        {% else %}
+                            <a id="activate-user" class="btn btn-warning mx-1" href='{{url_for("user.deactivate_user", id=user.id)}}'>{{ _('Óvirkja') }}</a>
+                        {% endif%}
+                    </div>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

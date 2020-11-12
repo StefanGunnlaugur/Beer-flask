@@ -19,7 +19,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from termcolor import colored
 
 from skal import app
-from skal.models import (User, Role, db, Beer, Beernight)
+from skal.models import (User, Role, db, Beer, Beernight, BeernightBeer)
 
 
 migrate = Migrate(app, db)
@@ -93,7 +93,13 @@ class AddBeernightColumns(Command):
         for b in beernights:
             create_beernight_directories(b)
         
-
+class AddBeernightBeerColumns(Command):
+    def run(self):
+        beers = BeernightBeer.query.all()
+        for b in beers:
+            if not b.name:
+                b.name="TempName"
+                db.session.commit()
 class DeleteUser(Command):
     def run(self):
         users = User.query.all()
@@ -202,7 +208,8 @@ manager.add_command('add_beers_from_json', AddBeersFromJson)
 manager.add_command('add_beer_columns', AddBeerColumns)
 manager.add_command('add_user_columns', AddUserColumns)
 manager.add_command('add_beernight_columns', AddBeernightColumns)
-
+manager.add_command('add_beernight_beer_columns', AddBeernightBeerColumns
+)
 
 
 if __name__ == '__main__':

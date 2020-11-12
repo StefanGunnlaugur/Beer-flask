@@ -1,5 +1,5 @@
 {% extends "_list.jinja" %}
-{% block title %}Allir uppáhalds bjórar{% endblock %}
+{% block title %}{{ _('Allir uppáhalds drykkir') }}{% endblock %}
 {% block total %}{{beers.total}}{% endblock %}
 {% block buttons %}
 
@@ -20,7 +20,7 @@
 
 {% block no_results %}
     {% if beers.total == 0 %}
-        {{macros.no_results("Engir bjórar",
-            "Til að sjá bjóra þarf fyrst að hjarta þá.")}}
+        {{macros.no_results("{{ _('Engir drykkir') }}",
+            "{{ _('Til að sjá drykki þarf fyrst að hjarta þá.') }}")}}
     {% endif %}
 {% endblock %}

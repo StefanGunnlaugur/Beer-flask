@@ -2,18 +2,7 @@
 {% block title %}Notendur{% endblock %}
 {% block total %}{{users.total}}{% endblock %}
 {% block buttons %}
-    {% if current_user.is_admin() %}
 
-        <a href='{{url_for("user.user_create")}}' class='btn btn-success float-right dropdown-toggle' data-toggle='dropdown'>
-            Búa til
-        </a>
-        <div class='dropdown-menu'>
-            <a href='{{url_for("user.user_create")}}' class='dropdown-item'>
-                {{macros.btn_icon('plus', 'r')}}
-                Búa til notanda
-            </a>
-        </div>
-    {% endif %}
 {% endblock %}
 {% block table %}
     {% if users.total > 0 %}
@@ -31,9 +20,9 @@
 
 {% block no_results %}
     {% if users.total == 0 %}
-        {{macros.no_results("Engir notendur",
-            "Til að taka upp söfnun þarf að búa til notendur",
+        {{macros.no_results("{{ _('Engir notendur') }}",
+            "{{ _('Til að taka upp söfnun þarf að búa til notendur') }}",
             url_for('user.create_user'),
-            "Búa til")}}
+            "{{ _('Búa til') }}")}}
     {% endif %}
 {% endblock %}

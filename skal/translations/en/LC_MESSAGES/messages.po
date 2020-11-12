@@ -1,0 +1,1259 @@
+# English translations for PROJECT.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-10-23 18:20+0000\n"
+"PO-Revision-Date: 2020-10-23 18:55+0000\n"
+"Last-Translator: \n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#: views/beer/beer.py:102 views/user/user.py:61 views/user/user.py:102
+msgid "Tókst að búa til smökkun {}."
+msgstr "Tasting {} created successfully."
+
+#: views/beer/beer.py:107 views/beer/beer.py:112 views/user/user.py:66
+#: views/user/user.py:71 views/user/user.py:75 views/user/user.py:107
+#: views/user/user.py:112 views/user/user.py:116
+msgid "Ekki tókst að búa til smökkun."
+msgstr "Failed to create testing."
+
+#: views/beer/beer.py:190
+msgid "Ekki tókst að eyða athugasemd"
+msgstr "Failed to delete comment"
+
+#: views/beer/beer.py:205
+msgid "Athugasemd hefur verið tilkynnt"
+msgstr "Comment has been reported"
+
+#: views/beer/beer.py:210
+msgid "Ekki tókst að tilkynna athugasemd"
+msgstr "Failed to report comment"
+
+#: views/beer/beer.py:225
+msgid "Ekki tókst að líka við athugasemd"
+msgstr "Failed to like comment"
+
+#: views/beer/beer.py:271 views/beernight/beernight.py:145
+msgid "Tókst að búa til drykk {}."
+msgstr "Drink {} successfully created."
+
+#: views/beer/beer.py:277 views/beer/beer.py:290
+#: views/beernight/beernight.py:151 views/beernight/beernight.py:161
+#: views/beernight/beernight.py:169
+msgid "Ekki tókst að búa til drykk."
+msgstr "Failed to create drink."
+
+#: views/beer/beer.py:281
+msgid "Ekki tókst að búa til drykk. Mynd ekki á réttur formi"
+msgstr "Failed to create drink. Image in wrong format"
+
+#: views/beer/beer.py:285
+msgid "Ekki tókst að búa til drykk. Mynd vantar."
+msgstr "Failed to create drink. Image missing."
+
+#: views/beer/beer.py:308 views/beernight/beernight.py:618
+msgid "Breyting tókst"
+msgstr "Edit successful"
+
+#: views/beer/beer.py:311 views/beernight/beernight.py:621
+msgid "Ekki tókst að breyta"
+msgstr "Failed to edit"
+
+#: views/beer/beer.py:342
+msgid "Drykk {} hefur verið eytt"
+msgstr "Drink {} has been deleted"
+
+#: views/beer/beer.py:345
+msgid "Ekki tókst að eyða drykk"
+msgstr "Failed to delete drink"
+
+#: views/beer/beer.py:366 views/beernight/beernight.py:541
+#: views/beernight/beernight.py:573
+msgid "Tókst að hlaða upp mynd!"
+msgstr "Image uploaded successfully!"
+
+#: views/beer/beer.py:368 views/beernight/beernight.py:543
+#: views/beernight/beernight.py:575
+msgid "Ekki tókst að hlaða upp mynd"
+msgstr "Failed to upload image"
+
+#: views/beer/templates/beer.jinja:56
+msgid "Styrkur"
+msgstr "Strength"
+
+#: views/beer/templates/beer.jinja:62 views/main/templates/macros.jinja:289
+msgid "Magn"
+msgstr "Volume"
+
+#: views/beer/templates/beer.jinja:65 views/main/templates/macros.jinja:185
+#: views/main/templates/macros.jinja:275
+#: views/user/templates/user_beers_table.jinja:15
+msgid "Verð"
+msgstr "Price"
+
+#: views/beer/templates/beer.jinja:68
+msgid "Tegund"
+msgstr "Type"
+
+#: views/beer/templates/beer.jinja:71
+msgid "Book stuðull"
+msgstr "Book coefficient"
+
+#: views/beer/templates/beer.jinja:74
+msgid "Hagkvæmni stuðull"
+msgstr "Economic coefficient"
+
+#: views/beer/templates/beer.jinja:82
+msgid "Breyta drykk"
+msgstr "Edit drink"
+
+#: views/beer/templates/beer.jinja:146
+msgid "Setja"
+msgstr "Add"
+
+#: views/beer/templates/beer.jinja:146
+msgid "í smökkun"
+msgstr "to tasting"
+
+#: views/beer/templates/beer.jinja:154 views/beer/templates/beer.jinja:163
+#: views/user/templates/user.jinja:78
+msgid "Búa til smökkun"
+msgstr "Create tasting"
+
+#: views/beer/templates/beer.jinja:183 views/user/templates/user.jinja:181
+msgid "Búa til nýtt smökkun"
+msgstr "Create new tasting"
+
+#: views/beer/templates/beer.jinja:194 views/beer/templates/beer.jinja:220
+#: views/beernight/templates/public_beernights.jinja:33
+#: views/user/templates/admin.jinja:36 views/user/templates/user.jinja:192
+#: views/user/templates/user.jinja:228
+msgid "Loka"
+msgstr "Close"
+
+#: views/beer/templates/beer.jinja:196 views/beer/templates/beer.jinja:222
+#: views/user/templates/admin.jinja:38 views/user/templates/user.jinja:194
+msgid "Klára"
+msgstr "Finish"
+
+#: views/beer/templates/beer.jinja:210
+msgid "Hlaða upp mynd"
+msgstr "Upload image"
+
+#: views/beer/templates/beer.jinja:216
+msgid "Veldu mynd á drykk"
+msgstr "Choose image for drink"
+
+#: views/beer/templates/beer_list.jinja:54 views/main/templates/_list.jinja:7
+msgid "Fjöldi"
+msgstr "Quantity"
+
+#: views/beer/templates/beer_list.jinja:56
+msgid "Leitaðu að drykk"
+msgstr "Search for drink"
+
+#: views/beer/templates/beer_list.jinja:59
+msgid "Leitarsíur"
+msgstr "Filters"
+
+#: views/beer/templates/beer_list.jinja:68
+msgid "Raða eftir"
+msgstr "Sort by"
+
+#: views/beer/templates/beer_list.jinja:72
+msgid "Stafrófsröð(A-Ö)"
+msgstr "Alphabetical(A-Ö)"
+
+#: views/beer/templates/beer_list.jinja:73
+msgid "Stafrófsröð(Ö-A)"
+msgstr "Alphabetical(Ö-A)"
+
+#: views/beer/templates/beer_list.jinja:76
+msgid "Áfengismagn(Hátt-Lágt)"
+msgstr "Alcohol(High-Low)"
+
+#: views/beer/templates/beer_list.jinja:77
+msgid "Áfengismagn(Lágt-Hátt)"
+msgstr "Alcohol(Low-High)"
+
+#: views/beer/templates/beer_list.jinja:80
+msgid "Verð(Hátt-Lágt)"
+msgstr "Price(High-Low)"
+
+#: views/beer/templates/beer_list.jinja:81
+msgid "Verð(Lágt-Hátt)"
+msgstr "Price(Low-High)"
+
+#: views/beer/templates/beer_list.jinja:84
+msgid "Magn(Hátt-Lágt)"
+msgstr "Volume(High-Low)"
+
+#: views/beer/templates/beer_list.jinja:85
+msgid "Magn(Lágt-Hátt)"
+msgstr "Volume(Low-High)"
+
+#: views/beer/templates/beer_list.jinja:88
+msgid "Einkunn(Hátt-Lágt)"
+msgstr "Rating(High-Low)"
+
+#: views/beer/templates/beer_list.jinja:89
+msgid "Einkunn(Lágt-Hátt)"
+msgstr "Rating(Low-High)"
+
+#: views/beer/templates/beer_list.jinja:92
+msgid "Book stuðull(Hátt-Lágt)"
+msgstr "Book coefficient(High-Low)"
+
+#: views/beer/templates/beer_list.jinja:93
+msgid "Book stuðull(Lágt-Hátt)"
+msgstr "Book coefficient(Low-High)"
+
+#: views/beer/templates/beer_list.jinja:96
+msgid "Hagkvæmast(Mest-Minnst)"
+msgstr "Most economical(Most-Least)"
+
+#: views/beer/templates/beer_list.jinja:97
+msgid "Hagkvæmast(Minnst-Mest)"
+msgstr "Most economical(Least-Most)"
+
+#: views/beer/templates/comment.jinja:37
+msgid "eyða"
+msgstr "delete"
+
+#: views/beer/templates/comment.jinja:39
+msgid "tilkynna"
+msgstr "report"
+
+#: views/beer/templates/comment.jinja:41
+msgid "svara"
+msgstr "reply"
+
+#: views/beer/templates/comment.jinja:45
+msgid "Svara athugasemd"
+msgstr "Reply to comment"
+
+#: views/beer/templates/comment.jinja:48
+#: views/beer/templates/comment_section.jinja:11
+msgid "Senda"
+msgstr "Send"
+
+#: views/beer/templates/comment_section.jinja:8
+msgid "Skrifaðu athugasemd"
+msgstr "Write comment"
+
+#: views/beer/templates/comment_section.jinja:17
+msgid "Það eru"
+msgstr "They are"
+
+#: views/beer/templates/comment_section.jinja:17
+msgid "athugasemdir"
+msgstr "comments"
+
+#: views/beer/templates/comment_section.jinja:20
+msgid "Kemur"
+msgstr "Nothing"
+
+#: views/beer/templates/comment_section.jinja:21
+msgid "Seinna"
+msgstr "Nothing"
+
+#: views/beernight/beernight.py:97
+msgid "Tókst að afrita smökkun {} til {}."
+msgstr "Successfully copied {} to {}."
+
+#: views/beernight/beernight.py:103 views/beernight/beernight.py:108
+#: views/beernight/beernight.py:112
+msgid "Ekki tókst að afrita smökkun."
+msgstr "Failed to copy tasting."
+
+#: views/beernight/beernight.py:155
+msgid "Mynd ekki á réttu formi"
+msgstr "Image not in the right format"
+
+#: views/beernight/beernight.py:165
+msgid "Ekki var fyllt rétt inn í reiti!"
+msgstr "Fields not filled in correctly!"
+
+#: views/beernight/beernight.py:220
+msgid "Drykk bætt við smökkun"
+msgstr "Drink added to tasting"
+
+#: views/beernight/beernight.py:223
+msgid "Ekki tókst að bæta drykk við smökkun"
+msgstr "Failed to add drink to tasting"
+
+#: views/beernight/beernight.py:227 views/beernight/beernight.py:248
+msgid "Ekki tókst að senda athugasemd"
+msgstr "Failed to send comment"
+
+#: views/beernight/beernight.py:241
+msgid "Drykkur var fjarlægður úr smökkun"
+msgstr "Drink was removed from tasting"
+
+#: views/beernight/beernight.py:244
+msgid "Ekki tókst að fjarlægja drykk úr smökkun"
+msgstr "Failed to remove drink from tasting"
+
+#: views/beernight/beernight.py:283
+msgid "Ekki er hægt að bjóða sjálfum sér"
+msgstr "Not possible to invite yourself"
+
+#: views/beernight/beernight.py:289
+msgid "Boð sent til {}"
+msgstr "Invitation sent to {}"
+
+#: views/beernight/beernight.py:296
+msgid "Notandi ekki til"
+msgstr "User does not exist"
+
+#: views/beernight/beernight.py:299
+msgid "Ekki tókst að senda boð"
+msgstr "Failed to send invitation"
+
+#: views/beernight/beernight.py:309
+msgid "Boð samþykkt"
+msgstr "Invitation accepted"
+
+#: views/beernight/beernight.py:311
+msgid "Ekki tókst að samþykkja boð"
+msgstr "Failed to accept invitation"
+
+#: views/beernight/beernight.py:320
+msgid "Boði eytt"
+msgstr "Invitation deleted"
+
+#: views/beernight/beernight.py:322
+msgid "Ekki tókst að eyða boði"
+msgstr "Failed to delete invitation"
+
+#: views/beernight/beernight.py:337
+msgid "{} var gerður að stjórnanda"
+msgstr "{} was made an admin"
+
+#: views/beernight/beernight.py:339
+msgid "Ekki tókst að gera {} að stjórnanda"
+msgstr "Failed to make {} an admin"
+
+#: views/beernight/beernight.py:341
+msgid "{} er nú þegar stjórnandi"
+msgstr "{} is already an admin"
+
+#: views/beernight/beernight.py:343 views/beernight/beernight.py:370
+msgid "Notandi hefur ekki leyfi fyrir aðgerð"
+msgstr "User does not have permission for operation"
+
+#: views/beernight/beernight.py:363
+msgid "{} var fjarlægður"
+msgstr "{} has been removed"
+
+#: views/beernight/beernight.py:365
+msgid "Ekki tókst að fjarlægja meðlim"
+msgstr "Failed to remove member"
+
+#: views/beernight/beernight.py:368
+msgid "{} ekki hægt að fjarlægja stjórnanda"
+msgstr "{} not possible to remove admin"
+
+#: views/beernight/beernight.py:473
+#: views/beernight/templates/beernight_beers_table.jinja:4
+#: views/beernight/templates/beernight_results.jinja:107
+msgid "Drykkur"
+msgstr "Drink"
+
+#: views/beernight/beernight.py:474
+msgid "Þátttakandi"
+msgstr "Member"
+
+#: views/beernight/beernight.py:475
+#: views/beernight/templates/beernight_beers_table.jinja:10
+#: views/beernight/templates/beernight_members_table.jinja:10
+#: views/main/templates/macros.jinja:436
+#: views/other/templates/beer_tasting.jinja:29
+msgid "Ásýnd"
+msgstr "Sight"
+
+#: views/beernight/beernight.py:476
+#: views/beernight/templates/beernight_beers_table.jinja:13
+#: views/beernight/templates/beernight_members_table.jinja:13
+#: views/main/templates/macros.jinja:453
+#: views/other/templates/beer_tasting.jinja:36
+msgid "Lykt"
+msgstr "Smell"
+
+#: views/beernight/beernight.py:477
+#: views/beernight/templates/beernight_beers_table.jinja:16
+#: views/beernight/templates/beernight_members_table.jinja:16
+#: views/main/templates/macros.jinja:470
+#: views/other/templates/beer_tasting.jinja:43
+msgid "Bragð"
+msgstr "Taste"
+
+#: views/beernight/beernight.py:478
+#: views/beernight/templates/beernight_beers_table.jinja:19
+#: views/beernight/templates/beernight_members_table.jinja:19
+#: views/main/templates/macros.jinja:487
+#: views/other/templates/beer_tasting.jinja:50
+msgid "Áferð"
+msgstr "Texture"
+
+#: views/beernight/beernight.py:479
+#: views/beernight/templates/beernight_beers_table.jinja:22
+#: views/beernight/templates/beernight_members_table.jinja:22
+#: views/main/templates/macros.jinja:504
+#: views/other/templates/beer_tasting.jinja:57
+msgid "Geðþáttaákvörðun"
+msgstr "Gut feeling"
+
+#: views/beernight/beernight.py:480
+#: views/beernight/templates/beernight_beers_table.jinja:25
+#: views/beernight/templates/beernight_members_table.jinja:25
+msgid "Heildareinkunn"
+msgstr "Total rating"
+
+#: views/beernight/beernight.py:495
+msgid "Gekk að merkja sem meðmæli"
+msgstr "Successfully marked as featured"
+
+#: views/beernight/beernight.py:500
+msgid "Ekki gekk að merkja sem meðmæli"
+msgstr "Failed to mark as featured"
+
+#: views/beernight/beernight.py:514
+msgid "Gekk að afmerkja sem meðmæli"
+msgstr "Successfully de-marked as featured"
+
+#: views/beernight/beernight.py:519
+msgid "Ekki gekk að afmerkja sem meðmæli"
+msgstr "Failed to de-mark as featured"
+
+#: views/beernight/beernight.py:649
+msgid "Smökkun var breytt"
+msgstr "Tasting was edited"
+
+#: views/beernight/beernight.py:652
+msgid "Ekki tókst að breyta smökkun"
+msgstr "Failed to edit tasting"
+
+#: views/beernight/templates/beernight.jinja:65
+msgid "Afrita smökkun"
+msgstr "Copy tasting"
+
+#: views/beernight/templates/beernight.jinja:73
+msgid "Breyta smökkun"
+msgstr "Edit tasting"
+
+#: views/beernight/templates/beernight.jinja:80
+msgid "Merkja sem meðmæli"
+msgstr "Mark as featured"
+
+#: views/beernight/templates/beernight.jinja:85
+msgid "Af merkja sem meðmæli"
+msgstr "Remove from featured"
+
+#: views/beernight/templates/beernight.jinja:96
+#: views/user/templates/user.jinja:51
+msgid "Breyta"
+msgstr "Edit"
+
+#: views/beernight/templates/beernight.jinja:108
+msgid "Bættu vin við smökkunina"
+msgstr "Add friend to tasting"
+
+#: views/beernight/templates/beernight.jinja:122
+#: views/user/templates/user_beernight_table_admin.jinja:21
+#: views/user/templates/user_beernight_table_member.jinja:21
+msgid "Meðlimir"
+msgstr "Members"
+
+#: views/beernight/templates/beernight.jinja:140
+msgid "Gera stjórnanda"
+msgstr "Make admin"
+
+#: views/beernight/templates/beernight.jinja:144
+msgid "Fjarlægja meðlim"
+msgstr "Remove member"
+
+#: views/beernight/templates/beernight.jinja:172
+#: views/beernight/templates/beernight.jinja:177
+msgid "Yfirlit"
+msgstr "Results"
+
+#: views/beernight/templates/beernight.jinja:185
+#: views/user/templates/admin.jinja:9
+msgid "Búa til drykk"
+msgstr "Make drink"
+
+#: views/beernight/templates/beernight_beers_table.jinja:7
+#: views/beernight/templates/beernight_results.jinja:14
+msgid "Fjöldi einkunna"
+msgstr "Number of ratings"
+
+#: views/beernight/templates/beernight_members_table.jinja:4
+msgid "Nafn þátttakenda"
+msgstr "Member name"
+
+#: views/beernight/templates/beernight_members_table.jinja:7
+msgid "Fjöldi drykkja gefið einkunn"
+msgstr "Number of rated drinks"
+
+#: views/beernight/templates/beernight_results.jinja:9
+msgid "Yfirlit fyrir"
+msgstr "Results for"
+
+#: views/beernight/templates/beernight_results.jinja:17
+msgid "Fjöldi þáttakenda"
+msgstr "Number of members"
+
+#: views/beernight/templates/beernight_results.jinja:20
+msgid "Fjöldi drykkja"
+msgstr "Number of drinks"
+
+#: views/beernight/templates/beernight_results.jinja:23
+msgid "Heildar magn"
+msgstr "Total quantity"
+
+#: views/beernight/templates/beernight_results.jinja:29
+msgid "Búð til"
+msgstr "Created at"
+
+#: views/beernight/templates/beernight_results.jinja:32
+msgid "Einkunn smökkunar"
+msgstr "Tasting rating"
+
+#: views/beernight/templates/beernight_results.jinja:35
+#: views/beernight/templates/beernight_results.jinja:77
+msgid "Meðaleinkunn drykkja"
+msgstr "Average rating of drinks"
+
+#: views/beernight/templates/beernight_results.jinja:38
+msgid "Heildar magn hreins áfengis í ml"
+msgstr "Total volume of pure alcohol in ml"
+
+#: views/beernight/templates/beernight_results.jinja:46
+msgid "Sækja niðurstöður(.csv)"
+msgstr "Download results(.csv)"
+
+#: views/beernight/templates/beernight_results.jinja:52
+#: views/beernight/templates/beernight_results.jinja:100
+msgid "Þátttakendur"
+msgstr "Members"
+
+#: views/beernight/templates/beernight_results.jinja:65
+msgid "Drykkir"
+msgstr "Drinks"
+
+#: views/beernight/templates/beernight_results.jinja:78
+msgid "Hver stöpull sýnir meðaleinkunn drykkjar frá öllum þátttakendum"
+msgstr "Each bar shows the average rating of a drink from all members"
+
+#: views/beernight/templates/beernight_results.jinja:84
+#: views/beernight/templates/beernight_results.jinja:110
+#: views/beernight/templates/beernight_results.jinja:136
+msgid "Flokkur"
+msgstr "Category"
+
+#: views/beernight/templates/beernight_results.jinja:101
+msgid ""
+"Hægt er að sjá samanburð allra einkunna sem þátttakendur gefa í öllum "
+"flokkum fyrir alla drykki"
+msgstr ""
+"It is possible to see comparison of all ratings that members have given in "
+"all categories for all drinks"
+
+#: views/beernight/templates/beernight_results.jinja:130
+msgid ""
+"Hver lína sýnir meðaleinkunnagjöf ákveðins ákveðins þátttakanda fyrir þá "
+"drykki sem sem viðkomandi hefur drukkið"
+msgstr ""
+"Each line shows the average rating for a specific member of tasting for "
+"those drinks that said member has tasted"
+
+#: views/beernight/templates/public_beernights.jinja:22
+msgid "Taktu mig eitthvert"
+msgstr "Surprise me"
+
+#: views/beernight/templates/public_beernights.jinja:25
+msgid "Opnar smakkanir"
+msgstr "Open tastings"
+
+#: views/beernight/templates/public_beernights.jinja:50
+msgid "Meðmæli"
+msgstr "Recommendations"
+
+#: views/beernight/templates/public_beernights.jinja:61
+msgid "Vinsælar smakkanir"
+msgstr "Popular tastings"
+
+#: views/beernight/templates/public_beernights.jinja:71
+msgid "Flokkar"
+msgstr "Categories"
+
+#: views/beernight/templates/public_beernights.jinja:101
+msgid "Ný"
+msgstr "New"
+
+#: views/main/main.py:36
+msgid "Við fundum ekki síðuna sem þú baðst um."
+msgstr "Page not found."
+
+#: views/main/main.py:42
+msgid "Alvarleg villa kom upp, vinsamlega reynið aftur"
+msgstr "Serious error occurred, please try again"
+
+#: views/main/main.py:142
+msgid "{} er óvirkur notandi, hafðu samband við kerfisstjóra"
+msgstr "{} is a disabled user, please contact system admin"
+
+#: views/main/templates/__base.jinja:29
+msgid "Villa!"
+msgstr "Error!"
+
+#: views/main/templates/__base.jinja:38
+msgid "Hafið samband við vefstjóra eða reynið aftur."
+msgstr "Please contact the system administrator or try again."
+
+#: views/main/templates/__base.jinja:44
+msgid "Reyna aftur"
+msgstr "Try again"
+
+#: views/main/templates/_header.jinja:9
+msgid "Bjórar"
+msgstr "Beers"
+
+#: views/main/templates/_header.jinja:12
+msgid "Rauðvín"
+msgstr "Redwine"
+
+#: views/main/templates/_header.jinja:15
+msgid "Hvítvín"
+msgstr "Whitewine"
+
+#: views/main/templates/_header.jinja:18
+msgid "Sterkt"
+msgstr "Strong"
+
+#: views/main/templates/_header.jinja:21
+msgid "Smakkanir"
+msgstr "Tastings"
+
+#: views/main/templates/_header.jinja:25
+msgid "Mín síða"
+msgstr "My page"
+
+#: views/main/templates/_header.jinja:30
+msgid "Annað"
+msgstr "Other"
+
+#: views/main/templates/_header.jinja:34
+msgid "Bjórsmökkun upplýsingar"
+msgstr "Beertasting information"
+
+#: views/main/templates/_header.jinja:35
+msgid "Bjórsmökkun utanaðkomandi"
+msgstr "Beertasting info(external link)"
+
+#: views/main/templates/_header.jinja:36
+msgid "Hversu fullur er ég?"
+msgstr "How drunk am?"
+
+#: views/main/templates/_header.jinja:41 views/user/templates/admin.jinja:6
+msgid "Stjórnsíða"
+msgstr "Admin page"
+
+#: views/main/templates/_header.jinja:59
+msgid "Skrá út"
+msgstr "Logout"
+
+#: views/main/templates/_header.jinja:63
+msgid "Skrá inn"
+msgstr "Login"
+
+#: views/main/templates/login_user.jinja:6
+msgid "Skrá inn með Google aðgangi"
+msgstr "Log in with Google account"
+
+#: views/main/templates/macros.jinja:52 views/main/templates/macros.jinja:57
+msgid "Fyrri"
+msgstr "Previous"
+
+#: views/main/templates/macros.jinja:65 views/main/templates/macros.jinja:70
+msgid "Næsta"
+msgstr "Next"
+
+#: views/main/templates/macros.jinja:139 views/main/templates/macros.jinja:206
+#: views/main/templates/macros.jinja:528 views/main/templates/macros.jinja:604
+msgid "Engin einkunn"
+msgstr "No rating"
+
+#: views/main/templates/macros.jinja:141
+msgid "Mjög illa liðið"
+msgstr "Terribly regarded"
+
+#: views/main/templates/macros.jinja:143
+msgid "Illa liðið"
+msgstr "Badly regarded"
+
+#: views/main/templates/macros.jinja:145
+msgid "Þokkalega liðið"
+msgstr "Ok regarded"
+
+#: views/main/templates/macros.jinja:147
+msgid "Ágætlega liðið"
+msgstr "Well regarded"
+
+#: views/main/templates/macros.jinja:149
+msgid "Vel liðið"
+msgstr "Excellently regarded"
+
+#: views/main/templates/macros.jinja:151
+msgid "Óþekkt"
+msgstr "Unknown"
+
+#: views/main/templates/macros.jinja:188
+msgid "Ágengismagn"
+msgstr "Alcoholvolume"
+
+#: views/main/templates/macros.jinja:191 views/main/templates/macros.jinja:281
+msgid "Einkunn drykkjar frá notendum"
+msgstr "Drink rating from users"
+
+#: views/main/templates/macros.jinja:194 views/main/templates/macros.jinja:295
+msgid ""
+"Book stuðullinn er blanda nokkurra þátta, m.a. verð, áfengismagn og einkunn "
+"drykkjar. Nákvæm lýsing er hernaðarleyndarmál. Há tala er betri."
+msgstr ""
+"The Book coefficient is a combination of a couple of factors, e.g., price, "
+"alcohol volume and drink rating. Exact description of the coefficient is "
+"TOP SECRET. Higher number is better."
+
+#: views/main/templates/macros.jinja:197 views/main/templates/macros.jinja:292
+msgid ""
+"Áfengismagn fyrir hverja krónu. Hagkvæmari drykkurinn hefur hærri töli. "
+"(ml*alcohol)/kr"
+msgstr ""
+"Alcohol volume per kr. The more economic drink has a higher number. "
+"(ml*alcohol)/kr"
+
+#: views/main/templates/macros.jinja:208
+msgid "Mjög illa liðinn"
+msgstr "Terribly regarded"
+
+#: views/main/templates/macros.jinja:210
+msgid "Illa liðinn"
+msgstr "Badly regarded"
+
+#: views/main/templates/macros.jinja:212
+msgid "Þokkalega liðinn"
+msgstr "Ok regarded"
+
+#: views/main/templates/macros.jinja:214
+msgid "Ágætlega liðinn"
+msgstr "Well regarded"
+
+#: views/main/templates/macros.jinja:216 views/main/templates/macros.jinja:218
+msgid "Vel liðinn"
+msgstr "Excellently regarded"
+
+#: views/main/templates/macros.jinja:253
+msgid "Tegund drykkjar"
+msgstr "Drink type"
+
+#: views/main/templates/macros.jinja:278
+msgid "Áfengismagn"
+msgstr "Alcohol-volume"
+
+#: views/main/templates/macros.jinja:344
+#: views/other/templates/beer_tasting.jinja:7
+#: views/user/templates/user_invite_table.jinja:8
+msgid "Smökkun"
+msgstr "Tasting"
+
+#: views/main/templates/macros.jinja:348
+#: views/user/templates/user_invite_table.jinja:5
+msgid "Frá"
+msgstr "From"
+
+#: views/main/templates/macros.jinja:352
+msgid "Dagssetning"
+msgstr "Date"
+
+#: views/main/templates/macros.jinja:359
+#: views/user/templates/user_invite_table.jinja:25
+msgid "Samþykkja"
+msgstr "Accept"
+
+#: views/main/templates/macros.jinja:360
+#: views/user/templates/user_invite_table.jinja:26
+msgid "Hafna"
+msgstr "Reject"
+
+#: views/main/templates/macros.jinja:539 views/main/templates/macros.jinja:615
+msgid "stjarna"
+msgstr "star"
+
+#: views/main/templates/macros.jinja:550 views/main/templates/macros.jinja:561
+#: views/main/templates/macros.jinja:572 views/main/templates/macros.jinja:583
+#: views/main/templates/macros.jinja:626 views/main/templates/macros.jinja:637
+#: views/main/templates/macros.jinja:648 views/main/templates/macros.jinja:659
+msgid "stjörnur"
+msgstr "stars"
+
+#: views/other/templates/beer_tasting.jinja:9
+msgid ""
+"Smökkun er ekki lengur þamb búið bless heldur hefur hún þróast yfir í "
+"listform sem á sér fáa líka. Frá kraft bjórum yfir í pissandi lager bjóra, "
+"allir hafa þeir sín sérkenni, persónuleika og fingrafar."
+msgstr ""
+"Tasting is not just chug chug, bye bye see you later any more. It has "
+"evolved into an art form with few equals. Everything from craft beers to "
+"piss poor lagers, everyone of them has its own distinct personality and "
+"fingerprint."
+
+#: views/other/templates/beer_tasting.jinja:10
+msgid ""
+"Sumir bjórar eru gerðir til að drekka án umhugsunar, aðrir til að staldra "
+"við, meta og mæla. Allt er það smekksatriði þó í lokin."
+msgstr ""
+"Some beers are made to drink without a second thought while others are made "
+"to think about, measure and ponder over. It’s all a matter of preference in "
+"the end though."
+
+#: views/other/templates/beer_tasting.jinja:11
+msgid ""
+"Ég er ekki sérfræðingur fyrir fimm aura en þetta eru þeir þættir sem mér og "
+"aðrir meðlimir í bjórklúbbnum Guðbjarti finnst gott að hafa í huga þegar "
+"kemur að smökkun."
+msgstr ""
+"I am not a specialist by any means but these are the traits that I, and "
+"other members of the beer-tasting group Guðbjartur, find the most "
+"important  to keep in mind while admiring beers."
+
+#: views/other/templates/beer_tasting.jinja:13
+msgid ""
+"Haltu þeim bjórum sem eiga að vera kaldir köldum og þeim sem eiga að vera "
+"volgir volgum. Það er fátt verra en hrímaður Guinnes eða piss volgur "
+"pilsner."
+msgstr ""
+"Keep the beers that are supposed to be cool, cool and those that are "
+"supposed to be warm, warm. There are few things that are worse than an ice "
+"cold Guinness or a piss warm pilsner."
+
+#: views/other/templates/beer_tasting.jinja:14
+msgid ""
+"Notaðu rétta glasið sem býður bjórnum heim og lætur honum líða vel. Þetta "
+"geta oftast verið einföld bjórglös t.d. tulip glös, stundum jafnvel krúsir. "
+"Lykilatriði er að hafa það hreint."
+msgstr ""
+"Use the right glass that invites the beer in for a cup of tea and makes it "
+"feel welcome. These can be quite simple beer glasses like tulip glasses and "
+"sometimes even pints. A key is to have it clean."
+
+#: views/other/templates/beer_tasting.jinja:15
+msgid ""
+"Drekktu bjórinn í hófi svo hans sé notið til fullnustu. Það er fátt verra "
+"en að klára 3 flöskur af rándýru eðalöli og muna svo ekki eftir því þegar "
+"fram líða stundir."
+msgstr ""
+"Drink responsibly so that each beer can be enjoyed to its fullest. There "
+"are few things worse than finishing 3 bottles of expensive luxury beers and "
+"not even remember it later on."
+
+#: views/other/templates/beer_tasting.jinja:16
+msgid ""
+"Njóttu með vinum, hlæðu, spjallaðu og ræddu hvað þér finnst. Lífið er "
+"leikur og bjórinn er partur af því."
+msgstr ""
+"Enjoy the experience with your friends, laugh, chat and discuss your "
+"opinion of the beers. Life was not made to be taken too seriously."
+
+#: views/other/templates/beer_tasting.jinja:17
+msgid "Ekki hlusta á mig, gerðu það sem þú villt gera, ég er ekki mamma þín."
+msgstr "Do not listen to me, do what you want, I’m not your mother."
+
+#: views/other/templates/beer_tasting.jinja:22
+msgid "Hvernig smakka ég bjór?"
+msgstr "How do I taste beer?"
+
+#: views/other/templates/beer_tasting.jinja:23
+msgid "-Let me introduce one bad boy."
+msgstr "-Let me introduce one bad boy."
+
+#: views/other/templates/beer_tasting.jinja:30
+msgid "-Look at that bad boy."
+msgstr "-Look at that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:32
+msgid ""
+"Þegar þú hellir bjórnum fylgstu með útlitinum. Sé bjórinn mjög kolsýrður "
+"hallaðu þá glasinu meðan þú hellir. Eigi bjórinn ekki að vera kolsýrður "
+"reyndu þá að hella í mitt glasið svo lyktin og bragðir brjótist fram. Berðu "
+"glasið upp að ljósi og hallaðu því lítið eitt. Taktu eftir hvort hann sé "
+"skýr eða í móðu. Skoðaðu litinn og hvernig froðan hegðar sér."
+msgstr ""
+"When pooring beer keep an eye on its appearance. If the beer is carbonated "
+"poor at an angle. If the beer is not meant to be carbonated poor in the "
+"middle of the glass so that the aroma and taste breaks through. Bring the "
+"glass up to a light source and tilt it a bit. Notice if it is clear or "
+"foggy. Examine the color and how the foam behaves."
+
+#: views/other/templates/beer_tasting.jinja:37
+msgid "-Sniff at that bad boy."
+msgstr "-Sniff at that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:39
+msgid ""
+"Ruggaðu glasinu í hringi til að opna bjórinn upp og stingdu svo nefinnu í "
+"það til að finna lykt af bjórnum. Þú getur hitað bjórinn upp með því að "
+"setja lófann á glasið þar sem bjórinn er til að virkja lyktia betur ef þú "
+"þarft. Taktu eftir þeim tónum lyktar sem þú finnur, eru þeir veikir, "
+"sterkir, ríkir. Passa þeir við restina af bjórnum. Sumum finnst gott að "
+"athuga ásýnd bjórsins eftir að hafa lyktað of svo lykta í annað sinn eftir "
+"það. Þá er bjórinn  búinn að jafna sig eilítið og fær aðra lykt. Taktu þá "
+"eftir muninum á lyktinni í bæði skiptin."
+msgstr ""
+"Swirl the glass around to open the beer, stick your nose in it to smell the "
+"beer. You can heat the beer up by placing your palm on the glass where the "
+"beer is to the smell gets activated more. Notice the notes in the smell, "
+"are they weak, strong, rich or subtle. Do they match the rest of the beer. "
+"Some people like to examine the sight of the beers after having tasted it "
+"and then smell it for a second time. Then the beer has settled and gives "
+"off a different aroma. Try to notice this difference."
+
+#: views/other/templates/beer_tasting.jinja:44
+msgid "-Taste at that bad boy."
+msgstr "-Taste at that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:46
+msgid ""
+"Taktu sopa. Taktu nóg til að bjórnum hylji tunguna. Leyfðu honum að leika "
+"um varirnar, tunguna, góminn og tennurnar. Þegar þú kyngir fyrsta sopanum "
+"hafðu munninn lokaðan og andaðu út um nefið. Taktu eftir fyrsta bragðinu "
+"sem þú finnur hvernig það varir eða breytist og svo eftirbragðinu."
+msgstr ""
+"Take a sip. Take enough to cover your tongue. Let it flow around your lips, "
+"tongue, gums and teeth. When you swallow the first sip keep your mouth "
+"closed and breath out through your nose. Notice the first sense of taste "
+"you feel and how it lingers into the aftertaste."
+
+#: views/other/templates/beer_tasting.jinja:51
+msgid "-Gargle that bad boy."
+msgstr "-Gargle that bad boy."
+
+#: views/other/templates/beer_tasting.jinja:53
+msgid ""
+"Taktu annan sopa taktu nú eftir áferð bjórsins og þyngd. Til dæmis kolsýru, "
+"þykkt og tilfinningu í munni. Drekktu fleiri sopa ef þú getur og leggðu mat "
+"á hversu hæglega bjórinn er drukkinn."
+msgstr ""
+"Take another sip and now notice the texture, feel and wight of the beer. "
+"For example how carbonated it is, its consistency and thickness. Take more "
+"sips if you can and evaluate how easily the beer is drunken."
+
+#: views/other/templates/beer_tasting.jinja:58
+msgid "-How bad was that boy?"
+msgstr "-How bad was that boy?"
+
+#: views/other/templates/beer_tasting.jinja:60
+msgid ""
+"Berðu nú bjórinn saman við aðra bjóra af svipaðir tegund. Naustu þess að "
+"drekka bjórinn. Olli hann þér vonbrigðum eða var hann nákvæmlega eins og þú "
+"hélst. Berð þú einhvern illvilja ganvart honum. Drap bjórinn mögulega ömmu "
+"þína með þvottasnúru. Hvernig líður þér með það? Þessi þáttur endurspeglar "
+"oftast meðaltal annarra þátta en það er algerlega undir smakkaranum komið. "
+"Slakaðu svo á og njóttu."
+msgstr ""
+"Compare the beer to other beers of the same type. Did you enjoy drinking "
+"it? Did it disappoint or was it exactly how you expected. Do you harbor bad "
+"feelings towards the beer for some reason? Did the beer kill your "
+"grandmother with a laundry basket? How does that make you feel? This aspect "
+"of the evaluation normally reflects the average of all the other parts but "
+"it is completely up to the taster. So take a breath and relax."
+
+#: views/other/templates/how_drunk_alpha.jinja:9
+msgid "Hversu full/t/ur er ég?"
+msgstr "How drunk am I?"
+
+#: views/other/templates/how_drunk_alpha.jinja:11
+msgid "Hvað ertu lengi að skrifa stafrófið?"
+msgstr "How fast can you type the alphabet?"
+
+#: views/other/templates/how_drunk_alpha.jinja:15
+msgid "Hæstu stigin þín"
+msgstr "High score"
+
+#: views/other/templates/how_drunk_alpha.jinja:23
+msgid "Endurstilla"
+msgstr "Reset"
+
+#: views/other/templates/how_drunk_alpha.jinja:30
+msgid "Stig"
+msgstr "Score"
+
+#: views/other/templates/how_drunk_alpha.jinja:37
+msgid "Villur"
+msgstr "Errors"
+
+#: views/user/user.py:214
+msgid "Notanda var breytt"
+msgstr "User was edited"
+
+#: views/user/user.py:236
+msgid "Notandi er ekki lengur vefstjóri"
+msgstr "User is no longer admin"
+
+#: views/user/user.py:240
+msgid "Notandi er nú vefstjóri"
+msgstr "User is now admin"
+
+#: views/user/user.py:253
+msgid "{} var eytt"
+msgstr "{} has been deleted"
+
+#: views/user/user.py:264 views/user/user.py:275
+msgid "Notandi {} var óvirkjaður"
+msgstr "User {} was disabled"
+
+#: views/user/user.py:311
+msgid "Hlutverki var breytt"
+msgstr "Role has been changed"
+
+#: views/user/user.py:339
+msgid "Ekki tókst að senda stig"
+msgstr "Failed to send score"
+
+#: views/user/templates/admin.jinja:10
+msgid "Skoða notendur"
+msgstr "View users"
+
+#: views/user/templates/admin.jinja:23
+msgid "Búa til nýjan drykk"
+msgstr "Create drink"
+
+#: views/user/templates/admin.jinja:32
+msgid "Veldu mynd á drykkinn"
+msgstr "Choose image for drink"
+
+#: views/user/templates/user.jinja:56
+msgid "Breyta notanda"
+msgstr "Edit user"
+
+#: views/user/templates/user.jinja:61
+msgid "Gera að notanda"
+msgstr "Make user"
+
+#: views/user/templates/user.jinja:63
+msgid "Gera að vefstjóra"
+msgstr "Make admin"
+
+#: views/user/templates/user.jinja:69
+msgid "Eyða notanda"
+msgstr "Delete user"
+
+#: views/user/templates/user.jinja:84
+msgid "Smökkunin mín"
+msgstr "My taste"
+
+#: views/user/templates/user.jinja:87 views/user/templates/user.jinja:108
+#: views/user/templates/user.jinja:144
+msgid "Skoða öll"
+msgstr "View all"
+
+#: views/user/templates/user.jinja:105
+msgid "Smökkun sem gestur"
+msgstr "Tasting as a guest"
+
+#: views/user/templates/user.jinja:129 views/user/templates/user.jinja:134
+msgid "Boð í smökkun"
+msgstr "Invitation to tasting"
+
+#: views/user/templates/user.jinja:163
+msgid "Uppáhalds drykkir"
+msgstr "Favorite drinks"
+
+#: views/user/templates/user.jinja:164
+msgid "Þú átt"
+msgstr "You have"
+
+#: views/user/templates/user.jinja:164
+msgid "uppáhalds drykki"
+msgstr "favourit drinks"
+
+#: views/user/templates/user.jinja:206
+msgid "Þú ert við það að eyða notenda!"
+msgstr "You are about to delete user!"
+
+#: views/user/templates/user.jinja:213
+msgid "Stór ákvörðun buddy"
+msgstr "Big decision buddy"
+
+#: views/user/templates/user.jinja:223
+msgid "Ertu viss um að þú viljir eyða þessum notanda?"
+msgstr "Are you sure you want to delete this user?"
+
+#: views/user/templates/user.jinja:230
+msgid "Eyða"
+msgstr "Delete"
+
+#: views/user/templates/user_beernight_list_admin.jinja:2
+msgid "Allar smakkanirnar mínar"
+msgstr "All my tastings"
+
+#: views/user/templates/user_beernight_list_member.jinja:2
+msgid "Allar smakkanir sem gestur"
+msgstr "All tastings as a guest"
+
+#: views/user/templates/user_beernight_table_admin.jinja:5
+#: views/user/templates/user_beernight_table_member.jinja:5
+#: views/user/templates/user_beers_table.jinja:5
+#: views/user/templates/user_table.jinja:4
+msgid "Nafn"
+msgstr "Name"
+
+#: views/user/templates/user_beernight_table_admin.jinja:9
+#: views/user/templates/user_beernight_table_member.jinja:9
+msgid "Búið til"
+msgstr "Created at"
+
+#: views/user/templates/user_beernight_table_admin.jinja:12
+#: views/user/templates/user_beernight_table_member.jinja:12
+msgid "Sýnilegur öllum"
+msgstr "Public"
+
+#: views/user/templates/user_beernight_table_admin.jinja:15
+#: views/user/templates/user_beernight_table_member.jinja:15
+#: views/user/templates/user_beers_table.jinja:9
+msgid "Einkunn"
+msgstr "Rating"
+
+#: views/user/templates/user_beernight_table_admin.jinja:18
+#: views/user/templates/user_beernight_table_member.jinja:18
+msgid "Eignadi"
+msgstr "Owner"
+
+#: views/user/templates/user_beernight_table_member.jinja:29
+msgid "Já"
+msgstr "Yes"
+
+#: views/user/templates/user_beernight_table_member.jinja:29
+msgid "Nei"
+msgstr "No"
+
+#: views/user/templates/user_beers_list.jinja:2
+msgid "Allir uppáhalds drykkir"
+msgstr "All favorite drinks"
+
+#: views/user/templates/user_beers_table.jinja:12
+msgid "Alkóhól"
+msgstr "Alcohol"
+
+#: views/user/templates/user_invite_table.jinja:11
+msgid "Sent"
+msgstr "Sent"
+
+#: views/user/templates/user_table.jinja:8
+msgid "Tölvupóstur"
+msgstr "Email"
+
+#: views/user/templates/user_table.jinja:12
+msgid "Kyn"
+msgstr "Gender"
+
+#: views/user/templates/user_table.jinja:16
+msgid "Aldur"
+msgstr "Age"
+
+#: views/user/templates/user_table.jinja:20
+msgid "Staða"
+msgstr "Status"
+
+#: views/user/templates/user_table.jinja:36
+msgid "Virkja"
+msgstr "Activate"
+
+#: views/user/templates/user_table.jinja:38
+msgid "Óvirkja"
+msgstr "Deactivate"
+
+#~ msgid ""
+#~ "Haltu þeim bjórum sem eiga að vera kaldir köldum og þeim sem eiga að "
+#~ "vera volgir volgum. Það er fátt verra en hrímaður Guinnes eða pissvolgur "
+#~ "pilsner."
+#~ msgstr ""
+#~ "Keep the beers that are supposed to be cool, cool and  those that are "
+#~ "supposed to be warm, warm. There are few things that are worse than an "
+#~ "ice cold Guinness or a piss warm pilsner."
+
+#~ msgid "-Bragð"
+#~ msgstr "Taste"
+
+#~ msgid "Taste at that bad boy."
+#~ msgstr "-Taste that bad boy."
+
+#~ msgid "Styrkur:"
+#~ msgstr "Strength:"
+
+#~ msgid "Magn:"
+#~ msgstr "Volume:"
+
+#~ msgid "Verð:"
+#~ msgstr "Price:"
+
+#~ msgid "Tegund:"
+#~ msgstr "Type:"
+
+#~ msgid "Book stuðull:"
+#~ msgstr "Book coefficient:"
+
+#~ msgid "Hagkvæmni stuðull:"
+#~ msgstr "Economic coefficient:"
+
+#~ msgid "Veldu mynd á drykk:"
+#~ msgstr "Choose image for drink"
+
+#~ msgid "Fjöldi:"
+#~ msgstr "Quantity:"
+
+#~ msgid "Fjöldi einkunna:"
+#~ msgstr "Number of ratings:"
+
+#~ msgid "Fjöldi þáttakenda:"
+#~ msgstr "Number of members:"
+
+#~ msgid "Fjöldi bjóra:"
+#~ msgstr "Number of beers:"
+
+#~ msgid "Heildar bjórmagn:"
+#~ msgstr "Total beer volume:"
+
+#~ msgid "Búð til:"
+#~ msgstr "Created at: "
+
+#~ msgid "Fjöldi bjóra gefið einkunn"
+#~ msgstr "Number of rated beers"
+
+#~ msgid "Fjöldi bjóra"
+#~ msgstr "Number of beers"
+
+#~ msgid "Heildar bjórmagn"
+#~ msgstr "Total"
+
+#~ msgid "Bjór"
+#~ msgstr "Beer"
+
+#~ msgid "{} er óvirkur notandi, hafðu samband við kerfisstjóra'"
+#~ msgstr "{} is a disabled user, please contact system admin"
+
+#~ msgid "Drykkur var fjarlægður úr smökkuni"
+#~ msgstr "Drink removed from tasting"

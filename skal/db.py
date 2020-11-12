@@ -226,13 +226,14 @@ def make_beernightbeer(form, beernight_id, image):
         beernight.beers.append(beer)
         db.session.commit()
         if beer:
-            picture_file = save_beernight_beer_picture(image, beer)
-            if picture_file:
-                if beer.image_path:
-                    if path.exists(os.path.join(beer.data_path, beer.image_path)):
-                        os.remove(os.path.join(beer.data_path, beer.image_path))
-                beer.image_path = picture_file
-                db.session.commit()
+            if image:
+                picture_file = save_beernight_beer_picture(image, beer)
+                if picture_file:
+                    if beer.image_path:
+                        if path.exists(os.path.join(beer.data_path, beer.image_path)):
+                            os.remove(os.path.join(beer.data_path, beer.image_path))
+                    beer.image_path = picture_file
+                    db.session.commit()
         return beer
     except Exception as e:
         print(e)
@@ -319,10 +320,12 @@ def make_member_beernight_admin(beernight_id, member_id):
 def copy_public_beernight(form, beernight_id):
     try:
         old_beernight = Beernight.query.get(beernight_id)
-        if old_beernight.is_public:
+        if old_beernight.is_public or old_beernight.is_user_admin(current_user.id):
+            user = User.query.get(current_user.id)
             beernight = Beernight()
             form.populate_obj(beernight)
-            beernight.admins.append(current_user)
+            beernight.admins.append(user)
+            beernight.members.append(user)
             beernight.creator_id = current_user.id
             beernight.category = old_beernight.category
             for b in old_beernight.beers:
@@ -330,7 +333,10 @@ def copy_public_beernight(form, beernight_id):
                 db.session.add(beernightBeer)
                 db.session.flush()
                 beernight.beers.append(beernightBeer)
-            old_beernight.copy_count += 1
+            if not old_beernight.copy_count:
+                old_beernight.copy_count = 1
+            else:
+                old_beernight.copy_count += 1
             db.session.add(beernight)
             db.session.commit()
             os.mkdir(os.path.join(current_user.user_beernights_path, str(beernight.id)))

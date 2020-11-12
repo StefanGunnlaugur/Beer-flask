@@ -1,5 +1,4 @@
 .r-radios {
-	margin-bottom: 2em; /* demo style */
 	position: relative;
 }
 
@@ -140,4 +139,8 @@ input[disabled] + .r-radio svg {
 	fill: #ccc;
 	transform: scale(.5);
 	opacity: .3;
+}
+
+fieldset label{
+	margin-bottom: 0rem;
 }

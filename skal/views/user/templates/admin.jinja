@@ -3,11 +3,11 @@
     
     <div class="containter">
         <div class="row">
-            <span class="h2">Stjórnsíða</span>
+            <span class="h2">{{ _('Stjórnsíða') }}</span>
         </div>
         <div class="row">
-            <button class="btn btn-success mx-2" data-toggle='modal', data-target='#makeBeerModal'>Bæta við bjór</button>
-            <a href="{{url_for('user.user_list')}}" class="btn btn-info mx-2">Skoða notendur</a>
+            <button class="btn btn-success mx-2" data-toggle='modal', data-target='#makeBeerModal'>{{ _('Búa til drykk') }}</button>
+            <a href="{{url_for('user.user_list')}}" class="btn btn-info mx-2">{{ _('Skoða notendur') }}</a>
         </div>
     </div>
    
@@ -20,7 +20,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Búa til nýjan bjór</h5>
+                    <h5 class="modal-title">{{ _('Búa til nýjan drykk') }}</h5>
                     <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                     </button>
@@ -29,13 +29,13 @@
                     {% with form=beerform %}
                         {% include 'forms/_form.jinja' %}
                     {% endwith %}
-                    <label for="beer_image">Veldu mynd á bjórinn: *</label>
+                    <label for="beer_image">{{ _('Veldu mynd á drykkinn') }} : *</label>
                     <input type="file" id="picture" name="picture"accept="image/*" capture />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Loka') }}</button>
                     <button class='btn btn-primary' type='submit'>
-                        Klára
+                        {{ _('Klára') }}
                         <span class='ml-1'><i class='fa fa-check'></i></span>
                     </button>
                 </div>

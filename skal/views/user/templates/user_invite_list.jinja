@@ -19,7 +19,7 @@
 
 {% block no_results %}
     {% if invites.total == 0 %}
-        {{macros.no_results("Engin boð",
-            "Til að sjá boð þarf fyrst að bjóða þér í smökkun.")}}
+        {{macros.no_results("{{ _('Engin boð') }}",
+            "{{ _('Til að sjá boð þarf fyrst að bjóða þér í smökkun.') }}")}}
     {% endif %}
 {% endblock %}

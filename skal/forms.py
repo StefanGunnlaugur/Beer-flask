@@ -79,15 +79,21 @@ class UserEditForm(Form):
 class BeernightForm(ModelForm):
     class Meta:
         model = Beernight
-        exclude = ['uuid', 'is_featured','copy_count']
-    name = TextField('Nafn')
+        exclude = ['uuid', 'is_featured','copy_count','image_path']
+        validators = {
+            'name': [InputRequired()],
+            'is_public': [InputRequired()]
+                }
+    name = TextField(
+        'Nafn',
+        [validators.required()])
     category = SelectField(
     'Flokkur',
     choices=[
         (None, ''),
         ('Allskonar', 'Allskonar'),
         ('Meðmæli', 'Meðmæli'),
-        ('Þemabjórar', 'Þemabjórar'),
+        ('Þemasmökkun', 'Þemasmökkun'),
         ('Jól', 'Jól'),
         ('Páskar', 'Páskar'),
         ('Sumar', 'Sumar'),
@@ -98,22 +104,85 @@ class BeernightForm(ModelForm):
 class CopyBeernightForm(ModelForm):
     class Meta:
         model = Beernight
-        exclude = ['uuid', 'is_public', 'is_featured', 'category', 'copy_count']
+        exclude = ['uuid', 'is_public', 'is_featured', 'category', 'copy_count','image_path']
+        validators = {
+            'name': [InputRequired()],
+                }
 
-
-
+class EditBeernightForm(ModelForm):
+    class Meta:
+        model = Beernight
+        exclude = ['uuid', 'is_featured','copy_count','image_path']
+        validators = {
+            'name': [InputRequired()],
+            'is_public': [InputRequired()]
+                }
+    name = TextField(
+        'Nafn',
+        [validators.required()])
+    category = SelectField(
+    'Flokkur',
+    choices=[
+        (None, ''),
+        ('Allskonar', 'Allskonar'),
+        ('Meðmæli', 'Meðmæli'),
+        ('Þemasmökkun', 'Þemasmökkun'),
+        ('Jól', 'Jól'),
+        ('Páskar', 'Páskar'),
+        ('Sumar', 'Sumar'),
+        ('Tilraun', 'Tilraun'),
+        ('Fyllirí', 'Fyllirí')
+        ])
 
 
 class BeernightbeerForm(ModelForm):
     class Meta:
         model = BeernightBeer
-        exclude = ['book_score', 'economic_score', 'is_custom_made', 'product_number', 'image_path']
+        exclude = ['book_score', 'economic_score', 'is_custom_made', 'product_number', 'image_path','country','manufacturer', 'description', 'drink_detail']
         validators = {
                     'name': [InputRequired()],
                     'alcohol': [InputRequired()],
                     'volume': [InputRequired()],
                     'beer_type': [InputRequired()],
                       }
+    name = TextField(
+        'Nafn',
+        [validators.required()])
+    category = SelectField(
+    'Flokkur',
+    choices=[
+        (None, ''),
+        ('Bjór', 'Bjór'),
+        ('Rauðvín', 'Rauðvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Annað', 'Annað'),
+        ])
+
+class EditBeernightbeerForm(ModelForm):
+    class Meta:
+        model = BeernightBeer
+        exclude = ['book_score', 'economic_score', 'is_custom_made', 'product_number', 'image_path','country','manufacturer', 'description', 'drink_detail']
+        validators = {
+                    'name': [InputRequired()],
+                    'alcohol': [InputRequired()],
+                    'volume': [InputRequired()],
+                    'beer_type': [InputRequired()],
+                      }
+    name = TextField(
+        'Nafn',
+        [validators.required()])
+    category = SelectField(
+    'Flokkur áfengis',
+    choices=[
+        (None, ''),
+        ('Bjór', 'Bjór'),
+        ('Rauðvín', 'Rauðvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Sterkt', 'Sterkt'),
+        ('Annað', 'Annað'),
+        ])
+
 
 
 class BeerForm(ModelForm):
@@ -126,6 +195,45 @@ class BeerForm(ModelForm):
                     'volume': [InputRequired()],
                     'beer_type': [InputRequired()],
                       }
+    name = TextField(
+        'Nafn',
+        [validators.required()])
+    category = SelectField(
+    'Flokkur',
+    choices=[
+        (None, ''),
+        ('Bjór', 'Bjór'),
+        ('Rauðvín', 'Rauðvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Annað', 'Annað'),
+        ])
+
+            
+class EditBeerForm(ModelForm):
+    class Meta:
+        model = Beer
+        exclude = ['book_score', 'economic_score','product_id', 'image_path']
+        validators = {
+                    'name': [InputRequired()],
+                    'alcohol': [InputRequired()],
+                    'volume': [InputRequired()],
+                    'beer_type': [InputRequired()],
+                      }
+    name = TextField(
+        'Nafn',
+        [validators.required()])
+    category = SelectField(
+    'Flokkur',
+    choices=[
+        (None, ''),
+        ('Bjór', 'Bjór'),
+        ('Rauðvín', 'Rauðvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Hvítvín', 'Hvítvín'),
+        ('Annað', 'Annað'),
+        ])
+
 
 class UploadBeernightImageForm(FlaskForm):
     picture = FileField('Hlaða upp mynd á smökkun', validators=[FileAllowed(['jpg', 'png'])])

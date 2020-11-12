@@ -10,8 +10,8 @@ LOG_PATH = os.path.join(APP_ROOT, os.pardir, 'logs', 'info.log')
 # For other static files, like the SKAL manual
 DATA_BASE_DIR = os.path.join(APP_ROOT, os.pardir, 'data/')
 IMAGE_DIR = os.path.join(DATA_BASE_DIR, 'images/')
+ICON_DIR = os.path.join(IMAGE_DIR, 'icons/')
 AUDIO_DIR = os.path.join(DATA_BASE_DIR, 'audio/')
-BEERNIGHT_IMAGE_DIR = os.path.join(IMAGE_DIR, 'beernights/')
 BEERS_IMAGE_DIR = os.path.join(IMAGE_DIR, 'beers/')
 USERS_DATA_DIR = os.path.join(IMAGE_DIR, 'users/')
 STATIC_DATA_DIR = os.path.join(IMAGE_DIR, 'static/')
@@ -62,7 +62,7 @@ COLORS = {
     'siteBackground': '#f1f1f1',
     'headerColor': '#f0ad4e',
     'redWine':'#ef4d4d',
-    'whiteWine':'#dbf47c',
+    'whiteWine':'#caf042',
     'spirits':'#E38200',
     'headerFadedColor': '#f9deb9',
     'fontColor': '#000000',
@@ -84,3 +84,7 @@ COLORS = {
 }
 
 
+LANGUAGES = {
+  'en': 'English',
+  'is': 'Icelandic'
+}

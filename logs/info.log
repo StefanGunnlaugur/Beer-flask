@@ -1,6 +1,8 @@
-[2020-10-16 02:05:13,373] ERROR in user: Error creating a verification : '<' not supported between instances of 'int' and 'NoneType'
+[2020-10-22 22:04:06,805] ERROR in main: Error sending a beernight image : 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/user/user.py", line 328, in beer_comment
-    if game_score > 0 and game_score < user.game_score:
-TypeError: '<' not supported between instances of 'int' and 'NoneType'
+  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/main/main.py", line 166, in get_flag_icon
+    return send_from_directory(
+  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/flask/helpers.py", line 767, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
 

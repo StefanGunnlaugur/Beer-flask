@@ -78,12 +78,11 @@ class User(db.Model, UserMixin):
     uuid = db.Column(
         db.String,
         default=str(uuid.uuid4()))
-    name = db.Column(db.String(255))
+    name = db.Column(db.String(255),nullable=False,)
     email = db.Column(
         db.String(255),
         unique=True)
     avatar = db.Column(db.String(200))
-    active = db.Column(db.Boolean, default=False)
     tokens = db.Column(db.Text)
     password = db.Column(db.String(255))
     sex = db.Column(db.String(255))
@@ -203,7 +202,7 @@ class Beer(BaseModel, db.Model):
     id = db.Column(
         db.Integer, primary_key=True, nullable=False, autoincrement=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    name = db.Column(db.String(255), info={'label': 'Nafn',})
+    name = db.Column(db.String(255), nullable=False, info={'label': 'Nafn',})
     price = db.Column(db.Integer, info={'label': 'Verð(kr)',})
     alcohol = db.Column(db.Float, info={'label': 'Áfengi(%)',})
     book_score = db.Column(db.Float)
@@ -240,6 +239,11 @@ class Beer(BaseModel, db.Model):
             if r.user_id == user_id:
                 return r.rating
         return None
+
+    @property
+    def data_path(self):
+        return app.config['BEERS_IMAGE_DIR']
+
 
     @property
     def get_type(self):
@@ -284,7 +288,7 @@ class Beer(BaseModel, db.Model):
 
     @property
     def get_printable_id(self):
-        return "Bjór-{}".format(self.id)
+        return "Drykkur-{}".format(self.id)
         
 
     @property
@@ -478,6 +482,7 @@ class Beernight(BaseModel, db.Model):
         cascade='all, delete, delete-orphan')
     name = db.Column(
         db.String(255),
+        #nullable=False,
         info={
             'validators': [validators.InputRequired()],
             'label': 'Nafn'})
@@ -656,7 +661,7 @@ class Beernight(BaseModel, db.Model):
 
     @property
     def ajax_rate_action(self):
-        return url_for('beernight.beernight_rate', id=self.id)
+        return url_for('beernight.beernight_rate', beernight_id=self.id)
 
     @property
     def num_beers(self):
@@ -807,6 +812,8 @@ class BeernightBeer(BaseModel, db.Model):
     manufacturer = db.Column(db.String(255), info={'label': 'Framleiðandi',})
     description = db.Column(db.String(500), info={'label': 'Lýsing',})
     beer_type = db.Column(db.String(255), info={'label': 'Tegund',})
+    drink_detail = db.Column(db.String(255), info={'label': 'Tegund nánar'})
+    category = db.Column(db.String(255), info={'label': 'Flokkur áfengis'})
     product_number = db.Column(db.Integer)
     image_path = db.Column(db.String)
     ratings = db.relationship(
@@ -857,7 +864,7 @@ class BeernightBeer(BaseModel, db.Model):
         return 0
 
     def get_att(self, att):
-        if self.orginal_beer:
+        if getattr(self, att) == None and not self.is_custom_made:
             a = getattr(self.orginal_beer, att)
             return a
         else:
@@ -878,7 +885,7 @@ class BeernightBeer(BaseModel, db.Model):
 
     @property
     def get_printable_id(self):
-        return "Bjór-{}".format(self.id)
+        return "Drykkur-{}".format(self.id)
         
     @property
     def calculateBook(self):
@@ -914,7 +921,7 @@ class BeernightBeer(BaseModel, db.Model):
 
     @property
     def ajax_rate_action(self):
-        return url_for('beernight.beernight_beer_rate', id=self.id)
+        return url_for('beernight.beernight_beer_rate', id=self.id, beernight_id=self.beernight.id)
 
     def get_category_len(self, cat):
         counter = 0

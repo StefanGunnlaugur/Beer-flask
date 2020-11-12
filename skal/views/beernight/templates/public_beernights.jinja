@@ -19,10 +19,10 @@
 
     <div class='col w-100 mb-2'>
         <div class="mb-2">
-            <a  href='{{url_for("beernight.random_beernight")}}' class="btn btn-dark float-right">{{macros.btn_icon('question')}}Taktu mig eitthvert</a>
+            <a  href='{{url_for("beernight.random_beernight")}}' class="btn btn-dark float-right">{{macros.btn_icon('question')}}{{ _('Taktu mig eitthvert') }}</a>
         </div>
         <div class='mb-3'>
-            <h1 class='font-weight-bold'>Opnar smakkanir</h1>
+            <h1 class='font-weight-bold'>{{ _('Opnar smakkanir') }}</h1>
         </div>
         <div class="w-100">
             <input class="" type="text" id="beernightFilterInput" onkeyup="filterFunction()" placeholder="Leitaðu að smökkuni t.d. jól">
@@ -30,13 +30,13 @@
     </div>
     <div class="collapse" id="collapse-beernight-search">
         <div class="col">
-            <button class="btn btn-dark float-right mb-2" id="close-beer-search">Loka{{macros.btn_icon('angle-up')}}</button>
+            <button class="btn btn-dark float-right mb-2" id="close-beer-search">{{ _('Loka') }}{{macros.btn_icon('angle-up')}}</button>
         </div>
         <div class="col" style="max-height: 40em; overflow-y: scroll;">
             <div class="lists">
                 <ul class="list-group list-public-beernights" id="beerListUL">
                     {% for b in beernights %}
-                        <li class="list-group-item">
+                        <li class="list-group-item py-1">
                             {{macros.beernight_line(b, current_user)}}
                         </li>
                     {% endfor %}
@@ -47,10 +47,10 @@
     {% if beernights|length > 0 %}
         <div class='row mt-4'>
             <div class='col-12'>
-                <h3 class='font-weight-bold'>Meðmæli</h3>
+                <h3 class='font-weight-bold'>{{ _('Meðmæli') }}</h3>
             </div>
         </div>
-        {% with items=featured_beernights, type="beernight"%}
+        {% with items=featured_beernights, type="beernight-featured"%}
             {% include 'carousel_item.jinja'%}
         {% endwith %}
     {% endif %}
@@ -58,17 +58,17 @@
     {% if beernights|length > 0 %}
         <div class='row mt-4'>
             <div class='col-12'>
-                <h3 class='font-weight-bold'>Vinsælar smakkanir</h3>
+                <h3 class='font-weight-bold'>{{ _('Vinsælar smakkanir') }}</h3>
             </div>
         </div>
-        {% with items=popular_beernights, type="beernight"%}
+        {% with items=popular_beernights, type="beernight-popular"%}
             {% include 'carousel_item.jinja'%}
         {% endwith %}
     {% endif %}
 
     <div class='row mt-4'>
         <div class='col-12'>
-            <h3 class='font-weight-bold'>Flokkar</h3>
+            <h3 class='font-weight-bold'>{{ _('Flokkar') }}</h3>
         </div>
     </div>
     
@@ -98,7 +98,7 @@
         {% endfor %}
         <div class="card">
             <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapse-{{c}}" aria-expanded="true" aria-controls="collapse-{{c}}">
-                <p class="h3">Ný</p>
+                <p class="h3">{{ _('Ný') }}</p>
             </div>
 
             <div id="collapse-{{c}}" class="collapse" aria-labelledby="collapse-{{c}}" data-parent="#accordion">

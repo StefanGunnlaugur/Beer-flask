@@ -51,12 +51,12 @@
     <div class="container">
         <div class='col-12 mb-4'>
             <h1 class='font-weight-bold row'>{{cat_name}}</h1>
-            <span class="row">Fjöldi: {{beer_list | length}}</span>
+            <span class="row">{{ _('Fjöldi') }} : {{beer_list | length}}</span>
         </div>
-        <input type="text" id="beerFilterInput" onkeyup="filterFunction()" placeholder="Leitaðu að bjór">
-        <div class="row">
-            <div class="mb-3 row" style="color: #303030; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-users" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
-                <span class="py-2" style="color: {{config.COLORS.warning}}; cursor: pointer;"><i class="fas fa-plus mr-2" aria-hidden="true"></i> Leitarsíur</span>
+        <input type="text" id="beerFilterInput" onkeyup="filterFunction()" placeholder="{{ _('Leitaðu að drykk') }}">
+        <div class="">
+            <div class="mb-3" style="color: #303030; padding-left: 8px;" data-toggle="collapse" data-target="#collapse-users" aria-expanded="false" aria-controls="collapse-users" style="cursor: pointer;">
+                <span class="py-2" style="color: {{config.COLORS.warning}}; cursor: pointer;"><i class="fas fa-plus mr-2" aria-hidden="true"></i> {{ _('Leitarsíur') }}</span>
             </div>
         </div>
         <div class="wrapper row">
@@ -65,36 +65,36 @@
                 <div class="row col">
                     <div class="dropdown" style="padding-left:20px;">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Raða eftir
+                            {{ _('Raða eftir') }}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=name&order=asc" class="btn btn-light w-50 text-left">Stafrófsröð(A-Ö)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=name&order=dsc" class="btn btn-light w-50 text-left">Stafrófsröð(Ö-A)</a>
+                            <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=name&order=asc" class="btn btn-light w-50 text-left">{{ _('Stafrófsröð(A-Ö)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=name&order=dsc" class="btn btn-light w-50 text-left">{{ _('Stafrófsröð(Ö-A)') }}</a>
                             </div>
-                            <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=alcohol&order=dsc" class="btn btn-light w-50 text-left">Áfengismagn(Hátt-Lágt)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=alcohol&order=asc" class="btn btn-light w-50 text-left">Áfengismagn(Lágt-Hátt)</a>
+                            <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=alcohol&order=dsc" class="btn btn-light w-50 text-left">{{ _('Áfengismagn(Hátt-Lágt)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=alcohol&order=asc" class="btn btn-light w-50 text-left">{{ _('Áfengismagn(Lágt-Hátt)') }}</a>
                             </div>
-                           <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=price&order=dsc" class="btn btn-light w-50 text-left">Verð(Hátt-Lágt)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=price&order=asc" class="btn btn-light w-50 text-left">Verð(Lágt-Hátt)</a>
+                           <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=price&order=dsc" class="btn btn-light w-50 text-left">{{ _('Verð(Hátt-Lágt)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=price&order=asc" class="btn btn-light w-50 text-left">{{ _('Verð(Lágt-Hátt)') }}</a>
                             </div>
-                            <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=volume&order=dsc" class="btn btn-light w-50 text-left">Magn(Hátt-Lágt)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=volume&order=asc" class="btn btn-light w-50 text-left">Magn(Lágt-Hátt)</a>
+                            <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=volume&order=dsc" class="btn btn-light w-50 text-left">{{ _('Magn(Hátt-Lágt)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=volume&order=asc" class="btn btn-light w-50 text-left">{{ _('Magn(Lágt-Hátt)') }}</a>
                             </div>
-                            <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=rating&order=dsc" class="btn btn-light w-50 text-left">Einkunn(Hátt-Lágt)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=rating&order=asc" class="btn btn-light w-50 text-left">Einkunn(Lágt-Hátt)</a>
+                            <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=rating&order=dsc" class="btn btn-light w-50 text-left">{{ _('Einkunn(Hátt-Lágt)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=rating&order=asc" class="btn btn-light w-50 text-left">{{ _('Einkunn(Lágt-Hátt)') }}</a>
                             </div>
-                            <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=book_score&order=dsc" class="btn btn-light w-50 text-left">Book stuðull(Hátt-Lágt)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=book_score&order=asc" class="btn btn-light w-50 text-left">Book stuðull(Lágt-Hátt)</a>
+                            <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=book_score&order=dsc" class="btn btn-light w-50 text-left">{{ _('Book stuðull(Hátt-Lágt)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=book_score&order=asc" class="btn btn-light w-50 text-left">{{ _('Book stuðull(Lágt-Hátt)') }}</a>
                             </div>
-                            <div class="dropdown-item btn-group">
-                                <a style="font-size:14px" href="{{url}}?sort_by=economic_score&order=dsc" class="btn btn-light w-50 text-left">Hagkvæmast(Mest-Minnst)</a>
-                                <a style="font-size:14px" href="{{url}}?sort_by=economic_score&order=asc" class="btn btn-light w-50 text-left">Hagkvæmast(Minnst-Mest)</a>
+                            <div class="dropdown-item btn-group" style="padding: 0.25rem 0.5rem">
+                                <a style="font-size:12px" href="{{url}}?sort_by=economic_score&order=dsc" class="btn btn-light w-50 text-left">{{ _('Hagkvæmast(Mest-Minnst)') }}</a>
+                                <a style="font-size:12px" href="{{url}}?sort_by=economic_score&order=asc" class="btn btn-light w-50 text-left">{{ _('Hagkvæmast(Minnst-Mest)') }}</a>
                             </div>
                         </div>
                     </div>
@@ -102,12 +102,12 @@
                 <div class="form-group w-100">
                     <div class="items-collection w-100 row btn-group .btn-group-justified">
                         {% for c in categories %}
-                            <div class="items col" style="max-width: 20%;">
+                            <div class="items col" style="">
                                 <div class="info-block block-info clearfix">
                                     <div data-toggle="buttons" class="bizmoduleselect">
                                         <label class="btn btn-default category-button">
-                                            <div class="itemcontent">
-                                                <small id='cat-name' class="text-nowrap" style="">{{c}}</small>
+                                            <div class="itemcontent mx-auto">
+                                                <small id='cat-name' class="text-nowrap mx-2" style="">{{c}}</small>
                                             </div>
                                         </label>
                                     </div>
@@ -120,7 +120,7 @@
             
         </div>
         <div class="mh-100" >
-            <ul id="drinkList" class="list-group-flush list-group-mine">
+            <ul id="drinkList" class="list-group-flush list-group-mine p-0">
                 {% for b in beer_list[:10] %}
                     <li class="list-group-item mb-1">
                         {{macros.beer_line(b, current_user, true)}}
@@ -279,12 +279,14 @@
                 .on('shown.bs.collapse', function() {
                     $(this)
                         .parent()
+                        .parent()
                         .find(".fa-plus")
                         .removeClass("fa-plus")
                         .addClass("fa-minus");
                 })
                 .on('hidden.bs.collapse', function() {
                     $(this)
+                        .parent()
                         .parent()
                         .find(".fa-minus")
                         .removeClass("fa-minus")

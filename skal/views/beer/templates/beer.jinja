@@ -7,40 +7,82 @@
 	</svg>
     <link rel="stylesheet" href="{{ url_for("static", filename = 'css/radio--rating.css') }}">
     <link rel="stylesheet" href="{{ url_for("static", filename = 'css/heartbox-fav.css') }}">
+    <style type="text/css">   
+        .img-upload-btn {
+            display: none;
+        }
+
+        .beer-img:hover + .img-upload-btn, .img-upload-btn:hover {
+            display: inline-block;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+        }
+
+        /* Make the image responsive */
+        .image-container .beer-img {
+            height: auto;
+        }
+
+        /* Style the button and place it in the middle of the container/image */
+        .image-container .img-upload-btn {
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+    </style>
     <div class="beer-containter col">
         <div class="beer-header mb-10">
             <p class="h2">{{beer.name}}</p>
         </div>
         <div class="row">
             <div class="col-4 text-center">
-                <img class='img-responsive mh-100 mw-100' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                <div class="image-container">
+                    <img class='beer-img img-responsive mh-100 mw-100' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                    {%if current_user.is_authenticated and current_user.is_admin()%}
+                        <button class="btn btn-info img-upload-btn" data-toggle='modal', data-target='#uploadBeerImageModal' data-url="{{url_for('beer.uploadBeerImage', beer_id=beer.id)}}">Breyta {{macros.btn_icon('image', 'r')}}</button>
+                    {% endif %}
+                </div>
             </div>
             <div class="col-8">
                 <div class="row">
                     <div class="col-4">
                         <div style="margin: 20px 0px">
-                            <span>Styrkur: {{beer.alcohol}}%</span>
+                            <span>{{ _('Styrkur') }} : {{beer.alcohol}}%</span>
                         </div>
                         <div style="margin: 20px 0px">
                             <span>{{macros.btn_icon('star', 'r')}}{{beer.average_rating}}</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>Magn: {{beer.volume}}ml</span>
+                            <span>{{ _('Magn') }} : {{beer.volume}}ml</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>Verð: {{beer.price}}kr.</span>
+                            <span>{{ _('Verð') }} : {{beer.price}}kr.</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>Tegund: {{beer.get_type}}</span>
+                            <span>{{ _('Tegund') }} : {{beer.get_type}}</span>
                         </div>
                          <div class="my-20" style="margin: 20px 0px">
-                            <span>Book stuðull: {{beer.calculateBook|round(2)}}</span>
+                            <span>{{ _('Book stuðull') }} : {{beer.calculateBook|round(2)}}</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>Hagkvæmni stuðull: {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
+                            <span>{{ _('Hagkvæmni stuðull') }} : {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col d-flex flex-column">
+                        {% if current_user.is_authenticated and current_user.is_admin()%}
+                            <div class="mb-3">
+                                <a class="btn btn-success mb-2 float-right" href="{{url_for('beer.beer_edit', beer_id=beer.id)}}">
+                                    {{macros.btn_icon('edit', 'r')}}
+                                    {{ _('Breyta drykk') }}
+                                </a>
+                            </div>
+                        {% endif %}
                         {% if not current_user.is_anonymous %}
                             <!--
                             <div style="margin: 20px 0px">
@@ -98,9 +140,10 @@
                             -->
                             {{macros.public_star_rating(beer, beer.float_average_rating, 10)}}
                             {% include 'beer_like_heart.jinja' %}
+                            
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Setja {{beer.category | lower}} í smökkun
+                                    {{ _('Setja') }} {{beer.category | lower}} {{ _('í smökkun') }}
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {% if not current_user.beernights_admin%}
@@ -108,7 +151,7 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
                                             {{macros.btn_icon('plus', 'r')}}
-                                            Búa til smökkun
+                                            {{ _('Búa til smökkun') }}
                                         </a>                                    
                                     {% else %}
                                         {% for b in current_user.beernights_admin %}
@@ -117,7 +160,7 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal' style="cursor: pointer;">
                                             {{macros.btn_icon('plus', 'r')}}
-                                            Búa til smökkun
+                                            {{ _('Búa til smökkun') }}
                                         </a>        
                                     {% endif %}
                                 </div>
@@ -137,7 +180,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Búa til nýtt smökkun</h5>
+                    <h5 class="modal-title">{{ _('Búa til nýtt smökkun') }}</h5>
                     <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                     </button>
@@ -148,15 +191,44 @@
                     {% endwith %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Loka</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Loka') }}</button>
                     <button class='btn btn-primary' type='submit'>
-                        Klára
+                        {{ _('Klára') }}
                         <span class='ml-1'><i class='fa fa-check'></i></span>
                     </button>
                 </div>
                 </div>
             </div>
         </form>
+    </div>
+
+    <div class="modal fade" id='uploadBeerImageModal' tabindex="-1">
+        <div class="modal-dialog">
+            <form id="beerImageForm" method='POST' enctype="multipart/form-data">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ _('Hlaða upp mynd') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="beer_image">{{ _('Veldu mynd á drykk') }} :</label>
+                        <input type="file" id="picture" name="picture"accept="image/*" capture />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Loka') }}</button>
+                        <button class='btn btn-primary' type='submit'>
+                            {{ _('Klára') }}
+                            <span class='ml-1'><i class='fa fa-check'></i></span>
+                        </button>
+                    </div>
+                    <div>
+                        <p><img class='img-responsive mh-100 mw-100 mb-5 rounded-circle' id="img" style="display:none" alt="from phone"/></p>
+                    </div>
+                </div>
+            </form>
+        </div>   
     </div>
 {% endblock%}
 
@@ -176,6 +248,17 @@
             //setStars();
             setHeart();
         }
+
+        $(document).ready(function(){
+            $("#uploadBeerImageModal").on("show.bs.modal", function(event){
+                // Get the button that triggered the modal
+                var button = $(event.relatedTarget);
+
+                // Extract value from the custom data-* attribute
+                var url = button.data("url");
+                $(this).find('#beerImageForm').attr('action', url)
+            });
+        });
 
         function setStars(){
             var inputs = document.getElementsByClassName("radio_star");
