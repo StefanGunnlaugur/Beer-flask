@@ -11,53 +11,52 @@
             <span class="row">{{comment.created_at | datetime(format='med-low')}}</span>
         </div>
     </div>
-    <div class="ml-3">
-        <span style="font-size: 1em;" class="font-italic row mx-2">{{comment.text}}</span>
-        <div class="media-left ml-1">
-            <div class="vote-wrap">
-                <div class="save-post" style="cursor: pointer;">
-                    {% if current_user.is_authenticated and comment.is_liked_by_user(current_user.id) %}
-                        <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: red;" class="fas fa-heart" aria-badge="Save"></span></a>
-                    {% elif current_user.is_authenticated %}
-                        <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: gray;" class="fas fa-heart" aria-badge="Save"></span></a>
-                    {% endif %}
+    <div class="col">
+        <div class="ml-3">
+            <span style="font-size: 1em;" class="font-italic row mx-2">{{comment.text}}</span>
+            <div class="media-left ml-1">
+                <div class="vote-wrap">
+                    <div class="save-post" style="cursor: pointer;">
+                        {% if current_user.is_authenticated and comment.is_liked_by_user(current_user.id) %}
+                            <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: red;" class="fas fa-heart" aria-badge="Save"></span></a>
+                        {% elif current_user.is_authenticated %}
+                            <a onclick="likeComment({{comment.id}}, '/beer/comment/like/')"><span id="comment-like-heart-{{comment.id}}" style="font-size: 16px; color: gray;" class="fas fa-heart" aria-badge="Save"></span></a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="panel-collapse collapse in ml-3" id="collapse-{{comment.id}}">
+        <div class="panel-collapse collapse in ml-3 mt-2" id="collapse-{{comment.id}}">
 
-
-
-
-        <div class="media-body">
-            {% if current_user.is_authenticated%}
-                <div class="comment-meta mt-2">
-                    {% if comment.user_id == current_user.id%}
-                    <span><a href="{{url_for('beer.delete_comment', id=beer.id, comment_id=comment.id)}}">{{ _('eyða') }}</a></span>
-                    {% endif %}
-                    <span><a href="{{url_for('beer.report_comment', id=comment.id)}}">{{ _('tilkynna') }}</a></span>
-                    <span>
-                        <a class="" role="button" data-toggle="collapse" data-target="#collapse-{{comment.id}}-reply" href="#replyCommentT" aria-expanded="false" aria-controls="collapseExample">{{ _('svara') }}</a>
-                    </span>
-                    <div class="collapse" id="collapse-{{comment.id}}-reply">
-                        <div class="form-group">
-                            <label for="comment">{{ _('Svara athugasemd') }}</label>
-                            <textarea name="comment" id="comment-input-{{comment.id}}" class="form-control replay-text" rows="3"></textarea>
+            <div class="media-body">
+                {% if current_user.is_authenticated%}
+                    <div class="comment-meta mt-2">
+                        {% if comment.user_id == current_user.id%}
+                        <span><a href="{{url_for('beer.delete_comment', id=beer.id, comment_id=comment.id)}}">{{ _('eyða') }}</a></span>
+                        {% endif %}
+                        <span><a href="{{url_for('beer.report_comment', id=comment.id)}}">{{ _('tilkynna') }}</a></span>
+                        <span>
+                            <a class="" role="button" data-toggle="collapse" data-target="#collapse-{{comment.id}}-reply" href="#replyCommentT" aria-expanded="false" aria-controls="collapseExample">{{ _('svara') }}</a>
+                        </span>
+                        <div class="collapse" id="collapse-{{comment.id}}-reply">
+                            <div class="form-group">
+                                <label for="comment">{{ _('Svara athugasemd') }}</label>
+                                <textarea name="comment" id="comment-input-{{comment.id}}" class="form-control replay-text" rows="3"></textarea>
+                            </div>
+                            <button type="submit" id='submit-comment-button-{{comment.id}}' class="btn btn-info" onclick="postReply({{comment.id}})" disabled>{{ _('Senda') }}</button>
                         </div>
-                        <button type="submit" id='submit-comment-button-{{comment.id}}' class="btn btn-info" onclick="postReply({{comment.id}})" disabled>{{ _('Senda') }}</button>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
 
-            <!-- comment-meta -->
-            {% if comment.replies %}
-                {% for c in comment.replies %}
-                    {% with comment=c %}
-                        {% include 'comment.jinja'%}
-                    {% endwith %}
-                {% endfor %}
-            {% endif %}
+                <!-- comment-meta -->
+                {% if comment.replies %}
+                    {% for c in comment.replies %}
+                        {% with comment=c %}
+                            {% include 'comment.jinja'%}
+                        {% endwith %}
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

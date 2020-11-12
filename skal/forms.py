@@ -82,7 +82,7 @@ class BeernightForm(ModelForm):
         exclude = ['uuid', 'is_featured','copy_count','image_path']
         validators = {
             'name': [InputRequired()],
-            'is_public': [InputRequired()]
+            'is_public': []
                 }
     name = TextField(
         'Nafn',

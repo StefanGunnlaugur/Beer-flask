@@ -36,7 +36,7 @@
             cursor: pointer;
         }
     </style>
-    <div class="beer-containter col">
+    <div class="beer-containter col d-none d-lg-block d-xl-block">
         <div class="beer-header mb-10">
             <p class="h2">{{beer.name}}</p>
         </div>
@@ -53,26 +53,31 @@
                 <div class="row">
                     <div class="col-4">
                         <div style="margin: 20px 0px">
-                            <span>{{ _('Styrkur') }} : {{beer.alcohol}}%</span>
+                            <span>{{ _('Styrkur') }}: {{beer.alcohol}}%</span>
                         </div>
                         <div style="margin: 20px 0px">
                             <span>{{macros.btn_icon('star', 'r')}}{{beer.average_rating}}</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>{{ _('Magn') }} : {{beer.volume}}ml</span>
+                            <span>{{ _('Magn') }}: {{beer.volume}}ml</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>{{ _('Verð') }} : {{beer.price}}kr.</span>
+                            <span>{{ _('Verð') }}: {{beer.price}}kr.</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>{{ _('Tegund') }} : {{beer.get_type}}</span>
+                            <span>{{ _('Tegund') }}: {{beer.get_type}}</span>
                         </div>
                          <div class="my-20" style="margin: 20px 0px">
                             <span>{{ _('Book stuðull') }} : {{beer.calculateBook|round(2)}}</span>
                         </div>
                         <div class="my-20" style="margin: 20px 0px">
-                            <span>{{ _('Hagkvæmni stuðull') }} : {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
+                            <span>{{ _('Hagkvæmni stuðull') }}: {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
                         </div>
+                        {% if beer.product_id %}
+                            <div class="my-20" style="margin: 20px 0px">
+                                <a style="color: #007bff;" href="https://www.vinbudin.is/heim/vorur/stoek-vara.aspx/?productid={{beer.product_id}}/">{{ _('Hlekkur á vínbúðina') }}</a>
+                            </div>
+                        {% endif%}
                     </div>
                     <div class="col d-flex flex-column">
                         {% if current_user.is_authenticated and current_user.is_admin()%}
@@ -84,60 +89,6 @@
                             </div>
                         {% endif %}
                         {% if not current_user.is_anonymous %}
-                            <!--
-                            <div style="margin: 20px 0px">
-                                <form class="beer-rating-form" id="ratingForm" action="{{beer.ajax_rate_action}}" method="POST">
-                                    <fieldset class="r-radios">
-                                        <input class="radio_star" type="radio" name="r_input" id="r_input_0" onchange="postBeerRating(value)" value="0" checked>
-                                        <label for="r_input_0" class="r-radio r-radio--none">
-                                            <svg aria-hidden="true" focusable="false">
-                                            <use xlink:href="#no_rating"/>
-                                            </svg>
-                                            <span>Engin einkunn</span>
-                                        </label>
-                                        <input class="radio_star" type="radio" name="r_input" id="r_input_1" onchange="postBeerRating(value)" value="1">
-                                        <label for="r_input_1" class="r-radio">
-                                            <svg aria-hidden="true" focusable="false">
-                                                <use xlink:href="#star"/>
-                                            </svg>
-                                            <span role="presentation">1 Stjarna</span>
-                                        </label>
-
-                                        <input class="radio_star" type="radio" name="r_input" id="r_input_2" onchange="postBeerRating(value)" value="2">
-                                        <label for="r_input_2" class="r-radio">
-                                            <svg aria-hidden="true" focusable="false">
-                                                <use xlink:href="#star"/>
-                                            </svg>
-                                            <span role="presentation">2 Stjarna</span>
-                                        </label>
-
-                                        <input class="radio_star" type="radio" name="r_input" id="r_input_3" onchange="postBeerRating(value)" value="3">
-                                        <label for="r_input_3" class="r-radio">
-                                            <svg aria-hidden="true" focusable="false">
-                                                <use xlink:href="#star"/>
-                                            </svg>
-                                            <span role="presentation">3 Stjarna</span>
-                                        </label>
-
-                                        <input class="radio_star" type="radio" name="r_input" id="r_input_4" onchange="postBeerRating(value)" value="4">
-                                        <label for="r_input_4" class="r-radio">
-                                            <svg aria-hidden="true" focusable="false">
-                                                <use xlink:href="#star"/>
-                                            </svg>
-                                            <span role="presentation">4 Stjarna</span>
-                                        </label>
-
-                                        <input class="radio_star" type="radio" name="r_input" id="r_input_5" onchange="postBeerRating(value)" value="5">
-                                        <label for="r_input_5" class="r-radio">
-                                            <svg aria-hidden="true" focusable="false">
-                                                <use xlink:href="#star"/>
-                                            </svg>
-                                            <span role="presentation">5 Stjarna</span>
-                                        </label>
-                                    </fieldset>
-                                </form>
-                            </div>
-                            -->
                             {{macros.public_star_rating(beer, beer.float_average_rating, 10)}}
                             {% include 'beer_like_heart.jinja' %}
                             
@@ -167,6 +118,99 @@
                             </div>
                         {% endif %}
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="beer-containter col d-lg-none d-xl-none">
+        <div class="beer-header mb-10">
+            <p class="h2">{{beer.name}}</p>
+        </div>
+        <div class="">
+            <div class="text-center row">
+                <div class="image-container">
+                    <img class='beer-img img-responsive mh-100 mw-100' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }} alt={{ beer.name }} onerror="this.src ='../static/images/roundlogo.png'" loading="lazy" />
+                    {%if current_user.is_authenticated and current_user.is_admin()%}
+                        <button class="btn btn-info img-upload-btn" data-toggle='modal', data-target='#uploadBeerImageModal' data-url="{{url_for('beer.uploadBeerImage', beer_id=beer.id)}}">Breyta {{macros.btn_icon('image', 'r')}}</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div style="margin: 20px 0px">
+                        <span>{{ _('Styrkur') }}: {{beer.alcohol}}%</span>
+                    </div>
+                    <div style="margin: 20px 0px">
+                        <span>{{macros.btn_icon('star', 'r')}}{{beer.average_rating}}</span>
+                    </div>
+                    <div class="my-20" style="margin: 20px 0px">
+                        <span>{{ _('Magn') }}: {{beer.volume}}ml</span>
+                    </div>
+                    <div class="my-20" style="margin: 20px 0px">
+                        <span>{{ _('Verð') }}: {{beer.price}}kr.</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="my-20" style="margin: 20px 0px">
+                        <span>{{ _('Tegund') }}: {{beer.get_type}}</span>
+                    </div>
+                        <div class="my-20" style="margin: 20px 0px">
+                        <span>{{ _('Book stuðull') }}: {{beer.calculateBook|round(2)}}</span>
+                    </div>
+                    <div class="my-20" style="margin: 20px 0px">
+                        <span>{{ _('Hagkvæmni stuðull') }}: {{beer.bang_for_buck}} (ml*alcohol)/kr</span>
+                    </div>
+                    {% if beer.product_id %}
+                        <div class="my-20" style="margin: 20px 0px">
+                            <a style="color: #007bff;" href="https://www.vinbudin.is/heim/vorur/stoek-vara.aspx/?productid={{beer.product_id}}/">{{ _('Hlekkur á vínbúðina') }}</a>
+                        </div>
+                    {% endif%}
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex flex-column w-100 mb-3">
+                    {% if current_user.is_authenticated and current_user.is_admin()%}
+                        <div class="mb-3">
+                            <a class="btn btn-success mb-2 float-right" href="{{url_for('beer.beer_edit', beer_id=beer.id)}}">
+                                {{macros.btn_icon('edit', 'r')}}
+                                {{ _('Breyta drykk') }}
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if not current_user.is_anonymous %}
+                        <div class="mx-auto">
+                            {{macros.public_star_rating(beer, beer.float_average_rating, 7)}}
+                        </div>
+                        <div class="mx-auto">
+                            {% include 'beer_like_heart.jinja' %}
+                        </div>
+                        <div class="dropdown mx-auto">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ _('Setja') }} {{beer.category | lower}} {{ _('í smökkun') }}
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                {% if not current_user.beernights_admin%}
+                                    <a class="dropdown-item disabled">Ekkert smökkun í boði</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal'>
+                                        {{macros.btn_icon('plus', 'r')}}
+                                        {{ _('Búa til smökkun') }}
+                                    </a>                                    
+                                {% else %}
+                                    {% for b in current_user.beernights_admin %}
+                                        <a class="dropdown-item" href='{{url_for("beernight.add_beer_to_beernight", id=beer.id, beernight_id=b.id)}}'>{{b.name}}</a>
+                                    {% endfor%}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" data-toggle='modal', data-target='#makeBeernightModal' style="cursor: pointer;">
+                                        {{macros.btn_icon('plus', 'r')}}
+                                        {{ _('Búa til smökkun') }}
+                                    </a>        
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

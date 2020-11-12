@@ -1,9 +1,9 @@
 <!-- https://bootsnipp.com/snippets/ZkexO -->
 <link rel="stylesheet" href="{{ url_for("static", filename = 'css/comment-section.css') }}">
 
-<div class="container mb-5">
+<div class="container mb-5 mt-3">
   <div class="post-comments">
-    {% if current_user%}
+    {% if current_user.is_authenticated %}
       <div class="form-group">
         <label for="comment">{{ _('Skrifaðu athugasemd') }}</label>
         <textarea name="comment" id="comment-input" class="form-control" rows="3"></textarea>
