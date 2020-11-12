@@ -1,0 +1,1 @@
+web: gunicorn skal:my_app
