@@ -148,6 +148,16 @@ class User(db.Model, UserMixin):
         return ids
 
     @property
+    def only_member_beernight_ids(self):
+        ids = []
+        admin_ids = self.admin_beernight_ids
+        for b in self.beernights_member:
+            if b.id not in admin_ids:
+                ids.append(b.id)
+        return ids
+
+
+    @property
     def get_member_beernights(self):
         beernights = []
         for b in self.beernights_member:

@@ -20,7 +20,7 @@ from flask import current_app as app
 from flask_security import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 import random
-from skal.decorators import (roles_accepted, member_of_beernight, 
+from skal.decorators import (roles_accepted, member_of_beernight, creator_of_beernight, 
                     member_of_or_public_beernight, admin_of_beernight, not_member_of_beernight)
 from skal.models import (User, db, Beer, BeerRating, BeerComment, CommentLike, CommentReport,
                         Beernight, BeernightBeer, BeernightbeerComment, BeernightbeerRating)
@@ -373,6 +373,52 @@ def beernight_remove_member(beernight_id, member_id):
         app.logger.error('Error creating a verification : {}\n{}'.format(
             error, traceback.format_exc()))
         return redirect(url_for('beernight.beernight_detail', beernight_id=id)) 
+
+@beernight.route('/beernight/<int:beernight_id>/delete')
+@login_required
+@creator_of_beernight
+def beernight_delete(beernight_id):
+    try:
+        beernight = Beernight.query.get(beernight_id)
+        print('111111')
+        if beernight.is_user_creator(current_user.id):
+            print('444444')
+            db.session.delete(beernight)
+            db.session.commit()
+            flash(gettext('Smökkun eytt'), category="success")
+        else:
+            flash(gettext('Stofnandi getur aðeins eytt smökkun'), category="warning")
+        return redirect(url_for('user.admin_beernight_list'))
+    except Exception as error:
+        flash(gettext('Ekki tókst að eyða drykk'),
+                    category="warning")
+        app.logger.error('Error creating a verification : {}\n{}'.format(
+            error, traceback.format_exc()))
+        return redirect(url_for('beer.beer_list', drink_type='beer'))
+
+@beernight.route('/beernight/<int:beernight_id>/leave')
+@login_required
+@member_of_beernight
+def beernight_leave(beernight_id):
+    try:
+        beernight = Beernight.query.get(beernight_id)
+        if not beernight.is_user_creator(current_user.id):
+            member = User.query.get(current_user.id)
+            if beernight.is_user_member(current_user.id):
+                beernight.members.remove(member)
+            if beernight.is_user_admin(current_user.id):
+                beernight.admins.remove(member)
+            db.session.commit()
+            flash(gettext('Smökkun yfirgefin'), category="success")
+        else:
+            flash(gettext('Stofnandi getur ekki yfirgefið smökkun'), category="warning")
+        return redirect(url_for('user.current_user_detail'))
+    except Exception as error:
+        flash(gettext('Ekki tókst að eyða drykk'),
+                    category="warning")
+        app.logger.error('Error creating a verification : {}\n{}'.format(
+            error, traceback.format_exc()))
+        return redirect(url_for('beer.beer_list', drink_type='beer'))
 
 @beernight.route('/beernight/<int:beernight_id>/results', methods=['GET', 'POST'])
 @login_required

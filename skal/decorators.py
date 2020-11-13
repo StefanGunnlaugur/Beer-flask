@@ -51,8 +51,21 @@ def admin_of_beernight(func):
         if not current_user.is_authenticated:
             return redirect(url_for('login'))
         beernight = Beernight.query.get(beernight_id)
-        is_member = beernight.is_user_admin(current_user.id)
-        if not is_member:
+        is_admin = beernight.is_user_admin(current_user.id)
+        if not is_admin:
+            flash("Ekki heimilað.", category="danger")
+            return redirect(url_for('user.current_user_detail'))
+        return func(beernight_id=beernight_id, *args, **kwargs)
+    return wrapper
+
+def creator_of_beernight(func):
+    @wraps(func)
+    def wrapper(beernight_id, *args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for('login'))
+        beernight = Beernight.query.get(beernight_id)
+        is_creator = beernight.is_user_creator(current_user.id)
+        if not is_creator:
             flash("Ekki heimilað.", category="danger")
             return redirect(url_for('user.current_user_detail'))
         return func(beernight_id=beernight_id, *args, **kwargs)

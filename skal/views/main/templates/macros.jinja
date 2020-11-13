@@ -308,35 +308,81 @@
 {% endmacro %}
 
 {% macro beernight_line(beernight, current_user)%}
-    <div class="beer-line row" style=''>
-        <div class="ml-1 d-flex align-items-center">
-            <a href='{{url_for("beernight.beernight_detail", beernight_id=beernight.id)}}' style='padding:0;' class="mh-100 justify-content-center d-flex align-items-center">
-                <img class='img-responsive' style='max-width: 100px; max-height: 100px;' src={{ url_for("beernight.send_beernight_image", beernight_id=beernight.id) }} alt={{ beernight.name }}/>
-            </a>
+    <div class="beer-line row" style=''  data-toggle="collapse" data-target="#collapse-beernight-{{beernight.id}}" aria-expanded="false" aria-controls="collapse-beernight" style="cursor: pointer;">
+        <div class="d-flex flex-row w-100">
+            <div class="ml-1 d-flex align-items-center">
+                <a href='{{url_for("beernight.beernight_detail", beernight_id=beernight.id)}}' style='padding:0;' class="mh-100 justify-content-center d-flex align-items-center">
+                    <img class='img-responsive' style='max-width: 100px; max-height: 100px;' src={{ url_for("beernight.send_beernight_image", beernight_id=beernight.id) }} alt={{ beernight.name }}/>
+                </a>
+            </div>
+
+            <div class="beer-line-info col">
+                <div class="row">
+                    <a class="h4" href='{{url_for("beernight.beernight_detail", beernight_id=beernight.id)}}'>{{beernight.name}}</a>
+                </div>
+
+                <div class="row">
+                    <div style="width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="col">
+                        <span style="width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip" title="{{ _('Eigandi') }} {{beernight.creator}}">{{btn_icon('user', 'r')}}{{beernight.creator}}</span>
+                    </div>
+                    <div class="col">
+                        <span data-toggle="tooltip" title="{{ _('Fjöldi bjóra') }}">{{btn_icon('beer', 'r')}}{{beernight.num_beers}}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <span data-toggle="tooltip" title="{{ _('Búið til') }}">{{beernight.created_at | datetime(format='low')}}</span>
+                    </div>
+                    <div class="col">
+                        <span data-toggle="tooltip" title="{{ _('Einkunn smökkunar') }}">{{btn_icon('star', 'r')}}{{beernight.average_rating}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-none d-lg-block d-xl-block col">
+                {% if current_user.is_authenticated %}
+                    <div class="mt-2 ml-2">
+                        {% if beernight.is_user_admin(current_user.id) %}
+                            <button class="btn btn-dark text-danger float-right" data-href='{{url_for("beernight.beernight_delete", beernight_id=beernight.id)}}' data-toggle="modal" data-target="#confirm-delete">
+                                <span class=''>
+                                    {{ _('Eyða') }}
+                                    <i class='fa fa-trash'></i>
+                                </span>
+                            </button>
+                        {% endif %}
+                        {% if beernight.is_user_in_beernight(current_user.id) and not beernight.is_user_creator(current_user.id)%}
+                            <button class="btn btn-dark text-warning float-right" data-href='{{url_for("beernight.beernight_leave", beernight_id=beernight.id)}}'  data-toggle="modal" data-target="#confirm-leave">
+                                <span class=''>
+                                    {{ _('Yfirgefa') }}
+                                    <i class='fa fa-door-open'></i>
+                                </span>
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
-
-        <div class="beer-line-info col">
-            <div class="row">
-                <a class="h4" href='{{url_for("beernight.beernight_detail", beernight_id=beernight.id)}}'>{{beernight.name}}</a>
-            </div>
-
-            <div class="row">
-                <div style="width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="col">
-                    <span style="width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip" title="{{ _('Eigandi') }} {{beernight.creator}}">{{btn_icon('user', 'r')}}{{beernight.creator}}</span>
+        <div class="collapse collapse-non flex-row d-lg-none d-xl-none" id="collapse-beernight-{{beernight.id}}">
+            {% if current_user.is_authenticated %}
+                <div class="mt-2 ml-2">
+                    {% if beernight.is_user_admin(current_user.id) %}
+                        <button class="btn btn-dark text-danger float-right" data-href='{{url_for("beernight.beernight_delete", beernight_id=beernight.id)}}' data-toggle="modal" data-target="#confirm-delete">
+                            <span class=''>
+                                {{ _('Eyða') }}
+                                <i class='fa fa-trash'></i>
+                            </span>
+                        </button>
+                    {% endif %}
+                    {% if beernight.is_user_in_beernight(current_user.id) and not beernight.is_user_creator(current_user.id)%}
+                        <button class="btn btn-dark text-warning float-right" data-href='{{url_for("beernight.beernight_leave", beernight_id=beernight.id)}}'  data-toggle="modal" data-target="#confirm-leave">
+                            <span class=''>
+                                {{ _('Yfirgefa') }}
+                                <i class='fa fa-door-open'></i>
+                            </span>
+                        </button>
+                    {% endif %}
                 </div>
-                <div class="col">
-                    <span data-toggle="tooltip" title="{{ _('Fjöldi bjóra') }}">{{btn_icon('beer', 'r')}}{{beernight.num_beers}}</span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col">
-                    <span data-toggle="tooltip" title="{{ _('Búið til') }}">{{beernight.created_at | datetime(format='low')}}</span>
-                </div>
-                <div class="col">
-                    <span data-toggle="tooltip" title="{{ _('Einkunn smökkunar') }}">{{btn_icon('star', 'r')}}{{beernight.average_rating}}</span>
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 {% endmacro %}

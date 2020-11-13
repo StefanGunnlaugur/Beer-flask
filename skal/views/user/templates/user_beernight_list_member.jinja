@@ -24,3 +24,55 @@
             "{{ _('Til að sjá smakkanir þarf fyrst bjóða þér í þær.') }}")}}
     {% endif %}
 {% endblock %}
+
+{% block modals %}
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="deleteconfirmlabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{ _('ATH!') }}
+                </div>
+                <div class="modal-body">
+                    {{ _('Ertu viss um að þú viljir eyða smökkun?') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Hætta við') }}</button>
+                    <a class="btn btn-danger btn-ok">{{ _('Eyða') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-leave" tabindex="-1" role="dialog" aria-labelledby="leaveconfirmlabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{ _('ATH!') }}
+                </div>
+                <div class="modal-body">
+                    {{ _('Ertu viss um að þú viljir yfirgefa smökkun?') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Hætta við') }}</button>
+                    <a class="btn btn-danger btn-ok">{{ _('Yfirgefa') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+        $('#confirm-leave').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+    </script>
+{% endblock %}

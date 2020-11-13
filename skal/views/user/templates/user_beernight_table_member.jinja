@@ -20,6 +20,8 @@
             <th>
                 {{ _('Meðlimir') }}
             </th>
+            <th>
+            </th>
         </thead>
         <tbody>
             {% for b in beernights %}
@@ -30,6 +32,16 @@
                     <td>{{b.average_rating}}</td>
                     <td>{{b.creator.name}}</td>
                     <td>{{b.members | length}}</td>
+                    <td>
+                        {% if b.is_user_in_beernight(current_user.id) and not b.is_user_creator(current_user.id)%}
+                            <button class="btn btn-dark text-warning" data-href='{{url_for("beernight.beernight_leave", beernight_id=b.id)}}'  data-toggle="modal" data-target="#confirm-leave">
+                                <span class=''>
+                                    {{ _('Yfirgefa') }}
+                                    <i class='fa fa-door-open'></i>
+                                </span>
+                            </button>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

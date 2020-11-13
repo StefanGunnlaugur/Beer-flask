@@ -81,7 +81,7 @@
     <div class="col">
         <div class="wrapper">
             <div class="row w-100 d-flex justify-content-between">
-                <div style="background-color: {% if beernights_admin|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 80%" class="d-inline mb-2" data-toggle="collapse" data-target="#collapse-beernights-admin" aria-expanded="false" aria-controls="collapse-admins" style="cursor: pointer;">
+                <div style="background-color: {% if beernights_admin|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 80%" class="d-inline mb-2 line-click" data-toggle="collapse" data-target="#collapse-beernights-admin" aria-expanded="false" aria-controls="collapse-admins" style="cursor: pointer;">
                     <p class="my-2 ml-3">{% if beernights_admin|length > 0 %}<i class="fas fa-plus mr-2" aria-hidden="true">{% else %}<i class="fas fa-ghost mr-2" aria-hidden="true">{% endif %}</i> {{ _('Smökkunin mín') }}</p>
                 </div>
                 <div class="d-inline float-right" style="width: 15%">
@@ -89,7 +89,7 @@
                     <a class="btn btn-dark float-right d-none d-lg-block d-xl-block" href="{{url_for('user.admin_beernight_list')}}">{{macros.btn_icon_clean('eye')}}{{ _('Skoða öll') }}</a>
                 </div>
             </div>
-            <div class="collapse" id="collapse-beernights-admin">
+            <div class="collapse collapse-line" id="collapse-beernights-admin">
                 {% if beernights_admin|length > 0 %}
                         <ul class="list-group list-public-admin" id="beerListUL">
                             {% for b in beernights_admin %}
@@ -103,7 +103,7 @@
         </div>
         <div class="wrapper">
             <div class="row w-100 d-flex justify-content-between">
-                <div style="background-color: {% if beernights_member|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 80%" class="d-inline mb-2" data-toggle="collapse" data-target="#collapse-beernights-member" aria-expanded="false" aria-controls="collapse-member" style="cursor: pointer;">
+                <div style="background-color: {% if beernights_member|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 80%" class="d-inline mb-2 line-click" data-toggle="collapse" data-target="#collapse-beernights-member" aria-expanded="false" aria-controls="collapse-member" style="cursor: pointer;">
                     <p class="my-2 ml-3">{% if beernights_member|length > 0 %}<i class="fas fa-plus mr-2" aria-hidden="true">{% else %}<i class="fas fa-ghost mr-2" aria-hidden="true">{% endif %}</i> {{ _('Smökkun sem gestur') }}</p>
                 </div>
                 <div class="d-inline" style="width: 15%">
@@ -111,7 +111,7 @@
                     <a class="btn btn-dark float-right d-none d-lg-block d-xl-block" href="{{url_for('user.member_beernight_list')}}">{{macros.btn_icon_clean('eye')}}{{ _('Skoða öll') }}</a>
                 </div>
             </div>
-            <div class="collapse" id="collapse-beernights-member">
+            <div class="collapse collapse-line" id="collapse-beernights-member">
                 {% if beernights_member|length > 0 %}
                         <ul class="list-group list-public-member" id="beerListUL">
                             {% for b in beernights_member %}
@@ -126,7 +126,7 @@
 
         <div class="wrapper">
             <div class="row w-100 d-flex justify-content-between">
-                <div style="background-color: {% if invites|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 80%" class="d-inline mb-2" data-toggle="collapse" data-target="#collapse-invites" aria-expanded="false" aria-controls="collapse-invites" style="cursor: pointer;">
+                <div style="background-color: {% if invites|length > 0 %}{{config.COLORS.headerColor}}{% else %} {{config.COLORS.headerFadedColor}} {% endif %}; padding-left: 8px; width: 80%" class="d-inline mb-2 line-click" data-toggle="collapse" data-target="#collapse-invites" aria-expanded="false" aria-controls="collapse-invites" style="cursor: pointer;">
                     <div class="row m-0 ml-3">
                         {% if invites|length > 0 %}
                             <span class="my-2 w-75"><i class="fas fa-plus mr-2" aria-hidden="true"></i> {{ _('Boð í smökkun') }}</span>
@@ -148,7 +148,7 @@
                     <a class="btn btn-dark float-right d-none d-lg-block d-xl-block" href="{{url_for('user.invites_list')}}">{{macros.btn_icon_clean('eye')}}{{ _('Skoða öll') }}</a>
                 </div>
             </div>
-            <div class="collapse" id="collapse-invites">
+            <div class="collapse collapse-line" id="collapse-invites">
                 {% if invites|length > 0 %}
                     <ul class="list-group list-public-invites" id="invitesUL">
                         {% for i in invites %}
@@ -177,6 +177,39 @@
 {% endblock %}
 
 {% block modals %}
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="deleteconfirmlabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{ _('ATH!') }}
+                </div>
+                <div class="modal-body">
+                    {{ _('Ertu viss um að þú viljir eyða smökkun?') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Hætta við') }}</button>
+                    <a class="btn btn-danger btn-ok">{{ _('Eyða') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-leave" tabindex="-1" role="dialog" aria-labelledby="leaveconfirmlabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{ _('ATH!') }}
+                </div>
+                <div class="modal-body">
+                    {{ _('Ertu viss um að þú viljir yfirgefa smökkun?') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ _('Hætta við') }}</button>
+                    <a class="btn btn-danger btn-ok">{{ _('Yfirgefa') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id='makeBeernightModal' tabindex="-1">
         <form method='POST' enctype="multipart/form-data">
@@ -245,9 +278,20 @@
     {{super()}}
     
     <script>
+
+        $('#confirm-delete').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+        $('#confirm-leave').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+        /*
         $(document).ready(function () {
-        $('.collapse')
+        $('.collapse-line')
             .on('shown.bs.collapse', function() {
+                var el = $(this)
+                console.log(el)
                 $(this)
                     .parent()
                     .find(".fa-plus")
@@ -261,6 +305,33 @@
                     .removeClass("fa-minus")
                     .addClass("fa-plus");
             });
+
+        });
+        */
+        $(document).ready(function () {
+            $('.line-click')
+                .on('click', function() {
+                    var el = $(this)
+                                .parent()
+                                .parent()
+                                .find(".collapse")
+                                .first()
+                                .is('.collapse:not(.show)')
+                    if(el){
+                        $(this)
+                            .find(".fa-plus")
+                            .first()
+                            .removeClass("fa-plus")
+                            .addClass("fa-minus");
+                    }
+                    else{
+                        $(this)
+                            .find(".fa-minus")
+                            .first()
+                            .removeClass("fa-minus")
+                            .addClass("fa-plus");
+                    }
+                })
         });
         
         $(document).ready(function(){

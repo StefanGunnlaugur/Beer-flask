@@ -169,7 +169,7 @@ def admin_beernight_list():
 def member_beernight_list():
     page = int(request.args.get('page', 1))
     user = User.query.get(current_user.id)
-    beernights = Beernight.query.filter(Beernight.id.in_(user.member_beernight_ids)).order_by(
+    beernights = Beernight.query.filter(Beernight.id.in_(user.only_member_beernight_ids)).order_by(
             resolve_order(
                 Beernight,
                 request.args.get('sort_by', default='created_at'),
