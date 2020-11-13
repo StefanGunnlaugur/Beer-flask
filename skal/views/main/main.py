@@ -133,6 +133,7 @@ def callback():
                 role = Role.query.filter(Role.name == 'Notandi').first()
                 user = User()
                 user.email = email
+                user.name = user_data['name']
                 user.active = True
                 user.roles.append(role)
                 db.session.flush()
