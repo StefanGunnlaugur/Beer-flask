@@ -1,4 +1,4 @@
-./scraper/images
-./scraper/new_img
-./data/images/users/*
-!./somefolder/.gitkeep 
+/scraper/images
+/scraper/new_img
+/data/images/users/*
+!/somefolder/.gitkeep 
