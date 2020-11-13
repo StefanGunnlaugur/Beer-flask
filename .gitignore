@@ -2,3 +2,4 @@
 /scraper/new_img
 /data/images/users/*
 !/data/images/users/.gitkeep 
+.env
