@@ -34,7 +34,6 @@ To add defaults to the database run:
 
 ```
 python manage.py add_default_roles
-python manage.py add_default_configuration
 ```
 
 Create a super user with `python manage.py add_user`

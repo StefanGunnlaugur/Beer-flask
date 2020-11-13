@@ -55,11 +55,12 @@ def not_in_chrome():
 class Auth:
     CLIENT_ID = ('650289903160-ajch8e2nn95ro1heod5oide8giothkpi.apps.googleusercontent.com')
     CLIENT_SECRET = 'PGWHtFUXtjYxabbrLnyIw-Xn'
-    REDIRECT_URI = 'http://localhost:5000/gCallback'
+    REDIRECT_URI = os.environ.get('CALLBACK_URI')
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
     SCOPE = ['profile', 'email']
+
 
 
 class Config:
