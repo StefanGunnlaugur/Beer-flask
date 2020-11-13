@@ -33,7 +33,7 @@ def downloadImage(imageUrl, filePath):
 
 
 def get_images():
-    with open('data-all-14-10-2020.json') as json_file:
+    with open('data-all-13-11-2020.json') as json_file:
         data = json.load(json_file)
         c = 0
         for b in data:

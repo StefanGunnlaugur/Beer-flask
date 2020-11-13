@@ -137,7 +137,7 @@ class AddUser(Command):
 
 class AddBeersFromJson(Command):
     def run(self):
-        with open('scraper/data-all-14-10-2020.json') as json_file:
+        with open('scraper/data-all-13-11-2020.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 beer = Beer.query.filter_by(name=p['name']).first()
@@ -149,7 +149,7 @@ class AddBeersFromJson(Command):
                 if p['alcohol']:
                     beer.alcohol = float(p['alcohol'].replace('%', ''))
                 if p['taste']:
-                    beer.get_type = p['taste']
+                    beer.beer_type = p['taste']
                 if p['type']:
                     beer.drink_detail = p['type']
                 if p['volume']:

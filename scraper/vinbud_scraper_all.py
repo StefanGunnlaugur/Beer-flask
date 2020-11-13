@@ -16,12 +16,11 @@ d4 = today.strftime("%d-%m-%Y")
 
 allDrinks = []
 if path.exists('data-all-{}.json'.format(d4)):
-    with open('data-16-09-2020.json') as json_file:
+    with open('data-all-{}.json'.format(d4)) as json_file:
         allDrinks = json.load(json_file)
 
-start_page = max(1, math.floor(len(allDrinks)/30))
 print(len(allDrinks))
-print(start_page)
+start_page = max(1, math.floor(len(allDrinks)/30))
 url = "https://www.vinbudin.is/heim/vorur/vorur?page={}".format(start_page)
 #ATH MIKILVÆGT:
 # verðið að ná í driverinn https://github.com/mozilla/geckodriver/releases
@@ -30,6 +29,7 @@ url = "https://www.vinbudin.is/heim/vorur/vorur?page={}".format(start_page)
 driver = webdriver.Firefox()
 driver.implicitly_wait(50)
 driver.get(url)
+print(start_page)
 next_button = driver.find_elements_by_class_name("next")
 for i in range(start_page - 1, 120):
     soup=BeautifulSoup(driver.page_source, 'html')
@@ -100,7 +100,7 @@ for i in range(start_page - 1, 120):
         json.dump(allDrinks, outfile,ensure_ascii=False)
     next_button[0].click()
     #fer eftir internet tengingu hvad tharf ad sleepa lengi
-    sleep(4)
+    sleep(2)
 
 
 
