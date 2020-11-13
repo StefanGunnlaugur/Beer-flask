@@ -103,6 +103,7 @@ def create_directories(user_id):
 
 @main.route('/gCallback')
 def callback():
+    print('asdfsadfsadfasdf')
     if current_user is not None and current_user.is_authenticated:
         return redirect(url_for('main.index'))
     if 'error' in request.args:
@@ -124,6 +125,8 @@ def callback():
         resp = google.get(Auth.USER_INFO)
         if resp.status_code == 200:
             user_data = resp.json()
+            print('XXXXXXXXxxxxxxxXxxxxXXxxxX')
+            print(user_data)
             email = user_data['email']
             user = User.query.filter_by(email=email).first()
             if user is None:
