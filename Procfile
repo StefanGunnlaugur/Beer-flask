@@ -1,1 +1,1 @@
-web: gunicorn skal:my_app
+web: gunicorn skal:app
