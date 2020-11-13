@@ -248,9 +248,9 @@
         <div class="ml-3 d-flex align-items-center"style="width: 4em;">
             <a href='{{url_for("beer.beer_detail", id=beer.id)}}' class="mx-auto beer-line-image bg-white mh-100 justify-content-center d-flex align-items-center">
                 {%if load_image%}
-                    <img class='img-responsive' style='max-width: 100px; max-height: 100px;' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }}/>
+                    <img class='img-responsive' style='max-width: 4em; max-height: 100px;' src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }}/>
                 {% else %}
-                    <img class='img-responsive lazy' style='max-width: 100px; max-height: 100px;' data-src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }}/>
+                    <img class='img-responsive lazy' style='max-width: 4em; max-height: 100px;' data-src={{ url_for("beer.send_beer_image", id=beer.id) }} alt={{ beer.name }}/>
                 {% endif %}
             </a>
         </div>
