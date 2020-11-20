@@ -93,6 +93,7 @@ def beer_detail(id):
                 BeerComment,
                 request.args.get('sort_by', default='created_at'),
                 order=request.args.get('order', default='desc'))).all()
+
     form = BeernightForm(request.form)
     if request.method == 'POST':
         if form.validate():
@@ -168,6 +169,7 @@ def beer_comment(id):
         else:
             comment = add_beer_comment(current_user.id, beer, input_comment)
         return Response(url_for('beer.beer_detail', id=id), status=200)
+        #return redirect(url_for('beer.beer_detail', id=id))
     except Exception as error:
         flash('Ekki tókst að senda athugasemd',
                     category="warning")
@@ -176,7 +178,7 @@ def beer_comment(id):
         return Response(error, status=500)
 
 
-@beer.route('/beer/<int:id>/comment/delete/<int:comment_id>')
+@beer.route('/beer/<int:id>/comment/delete/<int:comment_id>', methods=['POST'])
 @login_required
 def delete_comment(id, comment_id):
     try:
@@ -185,7 +187,8 @@ def delete_comment(id, comment_id):
         if user_id == comment.user_id:
             db.session.delete(comment)
             db.session.commit()
-        return redirect(url_for('beer.beer_detail', id=id))
+        #return redirect(url_for('beer.beer_detail', id=id))
+        return Response(url_for('beer.beer_detail', id=id), status=200)
     except Exception as error:
         flash(gettext('Ekki tókst að eyða athugasemd'),
                     category="warning")
@@ -211,7 +214,7 @@ def report_comment(id):
                     category="warning")
         app.logger.error('Error creating a verification : {}\n{}'.format(
             error, traceback.format_exc()))
-        return redirect(url_for('beer.beer_detail', id=id))
+        return redirect(url_for('beer.beer_list'))
 
 @beer.route('/beer/comment/like/', methods=['POST'])
 @login_required

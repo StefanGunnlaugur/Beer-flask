@@ -1,57 +1,12 @@
-[2020-11-13 15:47:52,299] ERROR in beernight: Error creating a verification : (psycopg2.ProgrammingError) can't adapt type 'builtin_function_or_method'
-[SQL: SELECT beernight.id AS beernight_id, beernight.created_at AS beernight_created_at, beernight.uuid AS beernight_uuid, beernight.name AS beernight_name, beernight.copy_count AS beernight_copy_count, beernight.is_featured AS beernight_is_featured, beernight.is_public AS beernight_is_public, beernight.image_path AS beernight_image_path, beernight.category AS beernight_category, beernight.creator_id AS beernight_creator_id, "beernightRating_1".id AS "beernightRating_1_id", "beernightRating_1".created_at AS "beernightRating_1_created_at", "beernightRating_1".rating AS "beernightRating_1_rating", "beernightRating_1".beernight_id AS "beernightRating_1_beernight_id", "beernightRating_1".user_id AS "beernightRating_1_user_id", "beernightbeerRating_1".id AS "beernightbeerRating_1_id", "beernightbeerRating_1".created_at AS "beernightbeerRating_1_created_at", "beernightbeerRating_1".rating AS "beernightbeerRating_1_rating", "beernightbeerRating_1".taste AS "beernightbeerRating_1_taste", "beernightbeerRating_1".smell AS "beernightbeerRating_1_smell", "beernightbeerRating_1".feel AS "beernightbeerRating_1_feel", "beernightbeerRating_1".sight AS "beernightbeerRating_1_sight", "beernightbeerRating_1".beer_id AS "beernightbeerRating_1_beer_id", "beernightbeerRating_1".user_id AS "beernightbeerRating_1_user_id", "beernightbeerComment_1".id AS "beernightbeerComment_1_id", "beernightbeerComment_1".created_at AS "beernightbeerComment_1_created_at", "beernightbeerComment_1".text AS "beernightbeerComment_1_text", "beernightbeerComment_1".beer_id AS "beernightbeerComment_1_beer_id", "beernightbeerComment_1".user_id AS "beernightbeerComment_1_user_id", "beernightbeerComment_1".parent_comment_id AS "beernightbeerComment_1_parent_comment_id", "beernightBeer_1".id AS "beernightBeer_1_id", "beernightBeer_1".beernight_id AS "beernightBeer_1_beernight_id", "beernightBeer_1".orginal_beer_id AS "beernightBeer_1_orginal_beer_id", "beernightBeer_1".is_custom_made AS "beernightBeer_1_is_custom_made", "beernightBeer_1".name AS "beernightBeer_1_name", "beernightBeer_1".price AS "beernightBeer_1_price", "beernightBeer_1".alcohol AS "beernightBeer_1_alcohol", "beernightBeer_1".book_score AS "beernightBeer_1_book_score", "beernightBeer_1".economic_score AS "beernightBeer_1_economic_score", "beernightBeer_1".volume AS "beernightBeer_1_volume", "beernightBeer_1".country AS "beernightBeer_1_country", "beernightBeer_1".manufacturer AS "beernightBeer_1_manufacturer", "beernightBeer_1".description AS "beernightBeer_1_description", "beernightBeer_1".beer_type AS "beernightBeer_1_beer_type", "beernightBeer_1".drink_detail AS "beernightBeer_1_drink_detail", "beernightBeer_1".category AS "beernightBeer_1_category", "beernightBeer_1".product_number AS "beernightBeer_1_product_number", "beernightBeer_1".image_path AS "beernightBeer_1_image_path", beernightinvitation_1.id AS beernightinvitation_1_id, beernightinvitation_1.created_at AS beernightinvitation_1_created_at, beernightinvitation_1.receiver_id AS beernightinvitation_1_receiver_id, beernightinvitation_1.sender_id AS beernightinvitation_1_sender_id, beernightinvitation_1.beernight_id AS beernightinvitation_1_beernight_id 
-FROM beernight LEFT OUTER JOIN "beernightRating" AS "beernightRating_1" ON beernight.id = "beernightRating_1".beernight_id LEFT OUTER JOIN "beernightBeer" AS "beernightBeer_1" ON beernight.id = "beernightBeer_1".beernight_id LEFT OUTER JOIN "beernightbeerRating" AS "beernightbeerRating_1" ON "beernightBeer_1".id = "beernightbeerRating_1".beer_id LEFT OUTER JOIN "beernightbeerComment" AS "beernightbeerComment_1" ON "beernightBeer_1".id = "beernightbeerComment_1".beer_id LEFT OUTER JOIN beernightinvitation AS beernightinvitation_1 ON beernight.id = beernightinvitation_1.beernight_id 
-WHERE beernight.id = %(param_1)s]
-[parameters: {'param_1': <built-in function id>}]
-(Background on this error at: http://sqlalche.me/e/f405)
+[2020-11-13 15:50:48,410] ERROR in beernight: Error creating a verification : name 'beer' is not defined
 Traceback (most recent call last):
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1243, in _execute_context
-    self.dialect.do_execute(
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 552, in do_execute
-    cursor.execute(statement, parameters)
-psycopg2.ProgrammingError: can't adapt type 'builtin_function_or_method'
+  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/beernight/beernight.py", line 415, in beernight_leave
+    flash(gettext('Smökkun yfirgefin'.format(beer.name)), category="success")
+NameError: name 'beer' is not defined
 
-The above exception was the direct cause of the following exception:
-
+[2020-11-20 02:13:39,429] ERROR in beer: Error creating a verification : redirect() got an unexpected keyword argument 'status'
 Traceback (most recent call last):
-  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/beernight/beernight.py", line 405, in beernight_leave
-    beernight = Beernight.query.get(id)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 959, in get
-    return self._get_impl(ident, loading.load_on_pk_identity)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 1069, in _get_impl
-    return db_load_fn(self, primary_key_identity)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/loading.py", line 282, in load_on_pk_identity
-    return q.one()
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 3288, in one
-    ret = self.one_or_none()
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 3257, in one_or_none
-    ret = list(self)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 3330, in __iter__
-    return self._execute_and_instances(context)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 3355, in _execute_and_instances
-    result = conn.execute(querycontext.statement, self._params)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 988, in execute
-    return meth(self, multiparams, params)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 287, in _execute_on_connection
-    return connection._execute_clauseelement(self, multiparams, params)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1101, in _execute_clauseelement
-    ret = self._execute_context(
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1247, in _execute_context
-    self._handle_dbapi_exception(
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1466, in _handle_dbapi_exception
-    util.raise_from_cause(sqlalchemy_exception, exc_info)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 398, in raise_from_cause
-    reraise(type(exception), exception, tb=exc_tb, cause=cause)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 152, in reraise
-    raise value.with_traceback(tb)
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 1243, in _execute_context
-    self.dialect.do_execute(
-  File "/Users/stefan/opt/anaconda3/envs/beer-dev/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 552, in do_execute
-    cursor.execute(statement, parameters)
-sqlalchemy.exc.ProgrammingError: (psycopg2.ProgrammingError) can't adapt type 'builtin_function_or_method'
-[SQL: SELECT beernight.id AS beernight_id, beernight.created_at AS beernight_created_at, beernight.uuid AS beernight_uuid, beernight.name AS beernight_name, beernight.copy_count AS beernight_copy_count, beernight.is_featured AS beernight_is_featured, beernight.is_public AS beernight_is_public, beernight.image_path AS beernight_image_path, beernight.category AS beernight_category, beernight.creator_id AS beernight_creator_id, "beernightRating_1".id AS "beernightRating_1_id", "beernightRating_1".created_at AS "beernightRating_1_created_at", "beernightRating_1".rating AS "beernightRating_1_rating", "beernightRating_1".beernight_id AS "beernightRating_1_beernight_id", "beernightRating_1".user_id AS "beernightRating_1_user_id", "beernightbeerRating_1".id AS "beernightbeerRating_1_id", "beernightbeerRating_1".created_at AS "beernightbeerRating_1_created_at", "beernightbeerRating_1".rating AS "beernightbeerRating_1_rating", "beernightbeerRating_1".taste AS "beernightbeerRating_1_taste", "beernightbeerRating_1".smell AS "beernightbeerRating_1_smell", "beernightbeerRating_1".feel AS "beernightbeerRating_1_feel", "beernightbeerRating_1".sight AS "beernightbeerRating_1_sight", "beernightbeerRating_1".beer_id AS "beernightbeerRating_1_beer_id", "beernightbeerRating_1".user_id AS "beernightbeerRating_1_user_id", "beernightbeerComment_1".id AS "beernightbeerComment_1_id", "beernightbeerComment_1".created_at AS "beernightbeerComment_1_created_at", "beernightbeerComment_1".text AS "beernightbeerComment_1_text", "beernightbeerComment_1".beer_id AS "beernightbeerComment_1_beer_id", "beernightbeerComment_1".user_id AS "beernightbeerComment_1_user_id", "beernightbeerComment_1".parent_comment_id AS "beernightbeerComment_1_parent_comment_id", "beernightBeer_1".id AS "beernightBeer_1_id", "beernightBeer_1".beernight_id AS "beernightBeer_1_beernight_id", "beernightBeer_1".orginal_beer_id AS "beernightBeer_1_orginal_beer_id", "beernightBeer_1".is_custom_made AS "beernightBeer_1_is_custom_made", "beernightBeer_1".name AS "beernightBeer_1_name", "beernightBeer_1".price AS "beernightBeer_1_price", "beernightBeer_1".alcohol AS "beernightBeer_1_alcohol", "beernightBeer_1".book_score AS "beernightBeer_1_book_score", "beernightBeer_1".economic_score AS "beernightBeer_1_economic_score", "beernightBeer_1".volume AS "beernightBeer_1_volume", "beernightBeer_1".country AS "beernightBeer_1_country", "beernightBeer_1".manufacturer AS "beernightBeer_1_manufacturer", "beernightBeer_1".description AS "beernightBeer_1_description", "beernightBeer_1".beer_type AS "beernightBeer_1_beer_type", "beernightBeer_1".drink_detail AS "beernightBeer_1_drink_detail", "beernightBeer_1".category AS "beernightBeer_1_category", "beernightBeer_1".product_number AS "beernightBeer_1_product_number", "beernightBeer_1".image_path AS "beernightBeer_1_image_path", beernightinvitation_1.id AS beernightinvitation_1_id, beernightinvitation_1.created_at AS beernightinvitation_1_created_at, beernightinvitation_1.receiver_id AS beernightinvitation_1_receiver_id, beernightinvitation_1.sender_id AS beernightinvitation_1_sender_id, beernightinvitation_1.beernight_id AS beernightinvitation_1_beernight_id 
-FROM beernight LEFT OUTER JOIN "beernightRating" AS "beernightRating_1" ON beernight.id = "beernightRating_1".beernight_id LEFT OUTER JOIN "beernightBeer" AS "beernightBeer_1" ON beernight.id = "beernightBeer_1".beernight_id LEFT OUTER JOIN "beernightbeerRating" AS "beernightbeerRating_1" ON "beernightBeer_1".id = "beernightbeerRating_1".beer_id LEFT OUTER JOIN "beernightbeerComment" AS "beernightbeerComment_1" ON "beernightBeer_1".id = "beernightbeerComment_1".beer_id LEFT OUTER JOIN beernightinvitation AS beernightinvitation_1 ON beernight.id = beernightinvitation_1.beernight_id 
-WHERE beernight.id = %(param_1)s]
-[parameters: {'param_1': <built-in function id>}]
-(Background on this error at: http://sqlalche.me/e/f405)
+  File "/Users/stefan/Documents/Projects/Beer-flask/skal/views/beer/beer.py", line 171, in beer_comment
+    return redirect(url_for('beer.beer_detail', id=id), status=200)
+TypeError: redirect() got an unexpected keyword argument 'status'
 

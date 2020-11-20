@@ -32,7 +32,7 @@
                 {% if current_user.is_authenticated%}
                     <div class="comment-meta mt-2">
                         {% if comment.user_id == current_user.id%}
-                        <span><a href="{{url_for('beer.delete_comment', id=beer.id, comment_id=comment.id)}}">{{ _('eyða') }}</a></span>
+                            <span><a style="cursor: pointer;" class="delete-el" id="commentDel-{{beer.id}}-{{comment.id}}" >{{ _('eyða') }}</a></span>
                         {% endif %}
                         <span><a href="{{url_for('beer.report_comment', id=comment.id)}}">{{ _('tilkynna') }}</a></span>
                         <span>

@@ -123,8 +123,6 @@ def add_beer_comment(user_id, beer, text, parent_id=None):
             beer_comment = BeerComment(user_id, beer, text, parent_id)
             db.session.add(beer_comment)
             db.session.commit()
-            print(beer_comment)
-            print(beer_comment.parent_comment_id)
             return beer_comment
         return True
     except Exception as e:

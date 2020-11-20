@@ -417,8 +417,9 @@
                         var response = JSON.parse(xhr.responseText);
                         if('url' in response){
                             var url = response['url'];
-                            window.onbeforeunload = null;
-                            window.location = url;
+                            location.reload();
+                            //window.onbeforeunload = null;
+                            //window.location = url;
                         }
 
                     } else{
@@ -431,6 +432,45 @@
             xhr.open("POST", action, true);
             xhr.send(formData);
         }
+
+        function deleteComment(value, action) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e) {
+                if(this.readyState === XMLHttpRequest.DONE) {
+                    if(xhr.status == '200'){
+                        var response = JSON.parse(xhr.responseText);
+                        if('url' in response){
+                            var url = response['url'];
+                            location.reload();
+                            //window.onbeforeunload = null;
+                            //window.location = url;
+                        }
+
+                    } else{
+                        promptError("Villa koma upp:", xhr.responseText, "");
+                    }
+                }
+            }
+            xhr.open("GET", action, true);
+        }
+
+        $(function () {
+            $('.delete-el').click(function () {
+                var id_str = $(this).attr('id')
+                var beer_id = id_str.split('-')[1];
+                var comment_id = id_str.split('-')[2];
+                $.ajax({
+                    url: '/beer/'+beer_id+'/comment/delete/'+comment_id,
+                    type: 'POST',
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
 
         $('.heart_checkbox').on('click', function() {
             var heart = $(this)
@@ -450,8 +490,9 @@
                 if(this.readyState === XMLHttpRequest.DONE) {
                     if(xhr.status == '200'){
                         var beer_url = xhr.responseText;
-                        window.onbeforeunload = null;
-                        window.location = beer_url;
+                        location.reload();
+                        //window.onbeforeunload = null;
+                        //window.location = beer_url;
                     } else{
                         promptError("Villa koma upp:", xhr.responseText, "");
                     }
