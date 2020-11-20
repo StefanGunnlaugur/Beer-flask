@@ -14,7 +14,7 @@ from sqlalchemy import or_
 
 from skal.decorators import roles_accepted
 from skal.models import User, Role, db, Beer, Beernight, BeernightInvitation
-from skal.db import resolve_order, make_beernight, make_beer
+from skal.db import resolve_order, make_beernight, make_beer, delete_user_db
 from skal.forms import (UserEditForm, ExtendedRegisterForm, RoleForm, BeernightForm,
                         BeerForm)
 
@@ -248,8 +248,7 @@ def user_toggle_admin(id):
 def delete_user(id):
     user = db.session.query(User).get(id)
     name = user.name
-    db.session.delete(user)
-    db.session.commit()
+    delete_user_db(user)
     flash(gettext("{} var eytt".format(name)), category='success')
     return redirect(url_for('user.user_list'))
 

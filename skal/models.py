@@ -166,6 +166,37 @@ class User(db.Model, UserMixin):
         return beernights
 
     @property
+    def get_beernight_ratings(self):
+        obj = BeernightRating.query\
+            .filter(BeernightRating.user_id == self.id).all()
+        return obj
+
+    @property
+    def get_beer_ratings(self):
+        obj = BeerRating.query\
+            .filter(BeerRating.user_id == self.id).all()
+        return obj
+
+    @property
+    def get_beernight_beer_ratings(self):
+        obj = BeernightbeerRating.query\
+            .filter(BeernightbeerRating.user_id == self.id).all()
+        return obj
+
+    @property
+    def get_beer_comments(self):
+        obj = BeerComment.query\
+            .filter(BeerComment.user_id == self.id).all()
+        return obj
+
+    @property
+    def get_beernights(self):
+        obj = Beernight.query\
+            .filter(Beernight.creator_id == self.id).all()
+        return obj
+
+
+    @property
     def user_data_path(self):
         return os.path.join(app.config['USERS_DATA_DIR'], str(self.id))
     

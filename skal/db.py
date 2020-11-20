@@ -403,3 +403,17 @@ def like_dislike_comment_db(comment_id, user_id):
     except Exception as e:
         print(e)
     return False
+
+def delete_user_db(user):
+    beernight_ratings = user.get_beernight_ratings
+    beer_ratings = user.get_beer_ratings
+    beer_beernight_beer_ratings = user.get_beernight_beer_ratings
+    beer_comments = user.get_beer_comments
+    beernights = user.get_beernights
+    cats = [beernights, beernight_ratings, beer_ratings, beer_beernight_beer_ratings, beer_comments]
+    for i in cats:
+        for j in i:
+            db.session.delete(j)
+    db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
