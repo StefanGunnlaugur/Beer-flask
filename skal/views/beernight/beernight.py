@@ -303,7 +303,7 @@ def send_beernight_invitation(beernight_id):
 
 @beernight.route('/accept_beernight_invite/<int:beernight_id>/')
 @login_required
-@not_member_of_beernight
+#@not_member_of_beernight
 def accept_beernight_invite(beernight_id):
     res = accept_beernight_invitation_db(beernight_id)
     if res:
@@ -314,7 +314,7 @@ def accept_beernight_invite(beernight_id):
 
 @beernight.route('/decline_beernight_invite/<int:beernight_id>/')
 @login_required
-@not_member_of_beernight
+#@not_member_of_beernight
 def decline_beernight_invite(beernight_id):
     res = delete_beernight_invitation_db(beernight_id)
     if res:
