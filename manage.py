@@ -140,10 +140,11 @@ class AddBeersFromJson(Command):
         with open('scraper/data-all-13-11-2020.json') as json_file:
             data = json.load(json_file)
             for p in data:
-                beer = Beer.query.filter_by(name=p['name']).first()
+                beer = Beer.query.filter_by(name=p['name']).filter_by(product_id=p['product_number']).first()
                 if beer is None:
                     beer = Beer()
                     beer.name = p['name']
+                
                 if p['price']:
                     beer.price = int(p['price'].replace('.', '').replace(' kr', ''))
                 if p['alcohol']:
@@ -163,7 +164,9 @@ class AddBeersFromJson(Command):
                 db.session.add(beer)
                 beer.economic_score = beer.bang_for_buck
         db.session.commit()
-                
+        b = Beer.query.filter_by(name='Boli Premium').first()
+        print(b)
+        print(b.alcohol)
 
 class changePass(Command):
     def run(self):

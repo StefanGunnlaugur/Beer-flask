@@ -37,10 +37,9 @@
                     <td>{{b.creator.name}}</td>
                     <td>{{b.members | length}}</td>
                     <td>
-                        {% if b.is_user_admin(current_user.id) %}
+                        {% if b.is_user_creator(current_user.id) %}
                             <button class="btn btn-dark text-danger mb-2" data-href='{{url_for("beernight.beernight_delete", beernight_id=b.id)}}' data-toggle="modal" data-target="#confirm-delete">
                                 <span class=''>
-                                    {{ _('Eyða') }}
                                     <i class='fa fa-trash'></i>
                                 </span>
                             </button>

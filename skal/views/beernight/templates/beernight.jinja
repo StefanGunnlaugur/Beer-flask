@@ -375,8 +375,18 @@
                                     {% endfor %}
                                 </ul>
                         {% else %}
-                            {{macros.no_results("{{ _('Engir drykkir í smökkuninni') }}",
-                            "{{ _('Bættu þeim við á skotstundu') }}", url_for('beer.beer_list', drink_type='beer'))}}
+                            <div class='jumbotron w-100'>
+                                <h3 class='font-weight-bold'>
+                                    <span class='text-{% if type %}{{type}}{% else %}warning{% endif %}'>
+                                        <i class='fa fa-{% if icon %}{{icon}}{% else %}exclamation-triangle{% endif%}'></i>
+                                    </span>
+                                    {{ _('Engir drykkir í smökkuninni') }}
+                                </h3>
+                                <p>{{ _('Bættu þeim við á skotstundu') }}</p>
+                                <a href={{url_for('beer.beer_list', drink_type='beer')}} class='btn btn-secondary text-success float-sm-right'>
+                                    {{macros.btn_icon('fa fa-arrow-right', '')}}
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

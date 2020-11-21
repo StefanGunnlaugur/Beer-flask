@@ -21,7 +21,8 @@ from flask_security import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 import random
 from skal.decorators import (roles_accepted, member_of_beernight, creator_of_beernight, 
-                    member_of_or_public_beernight, admin_of_beernight, not_member_of_beernight)
+                    member_of_or_public_beernight, admin_of_beernight, not_member_of_beernight,
+                    member_public_invite_beernight)
 from skal.models import (User, db, Beer, BeerRating, BeerComment, CommentLike, CommentReport,
                         Beernight, BeernightBeer, BeernightbeerComment, BeernightbeerRating)
 from skal.db import (resolve_order, add_beer_rating, add_beer_comment, 
@@ -374,21 +375,24 @@ def beernight_remove_member(beernight_id, member_id):
             error, traceback.format_exc()))
         return redirect(url_for('beernight.beernight_detail', beernight_id=id)) 
 
+def redirect_url(default='user.user_detail'):
+    return request.referrer or \
+           url_for(default)
+           
 @beernight.route('/beernight/<int:beernight_id>/delete')
 @login_required
 @creator_of_beernight
 def beernight_delete(beernight_id):
     try:
         beernight = Beernight.query.get(beernight_id)
-        print('111111')
         if beernight.is_user_creator(current_user.id):
-            print('444444')
             db.session.delete(beernight)
             db.session.commit()
             flash(gettext('Smökkun eytt'), category="success")
         else:
             flash(gettext('Stofnandi getur aðeins eytt smökkun'), category="warning")
-        return redirect(url_for('user.admin_beernight_list'))
+        return redirect(redirect_url())
+        #return redirect(url_for('user.admin_beernight_list'))
     except Exception as error:
         flash(gettext('Ekki tókst að eyða drykk'),
                     category="warning")
@@ -633,7 +637,7 @@ def save_Beernight_picture(form_picture, beernight):
     return picture_fn
 
 @beernight.route('/beernight/sendImage/<int:beernight_id>/')
-@member_of_or_public_beernight
+@member_public_invite_beernight
 def send_beernight_image(beernight_id):
     beernight = Beernight.query.get(beernight_id)
     try:

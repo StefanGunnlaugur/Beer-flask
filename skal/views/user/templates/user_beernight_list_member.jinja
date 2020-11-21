@@ -20,8 +20,15 @@
 
 {% block no_results %}
     {% if beernights.total == 0 %}
-        {{macros.no_results("{{ _('Engar smakkanir') }}",
-            "{{ _('Til að sjá smakkanir þarf fyrst bjóða þér í þær.') }}")}}
+        <div class='jumbotron w-100'>
+            <h3 class='font-weight-bold'>
+                <span class='text-{% if type %}{{type}}{% else %}warning{% endif %}'>
+                    <i class='fa fa-{% if icon %}{{icon}}{% else %}exclamation-triangle{% endif%}'></i>
+                </span>
+                {{ _('Engar smakkanir') }}
+            </h3>
+            <p>{{ _('Til að sjá smakkanir þarf fyrst bjóða þér í þær.') }}</p>
+        </div>
     {% endif %}
 {% endblock %}
 

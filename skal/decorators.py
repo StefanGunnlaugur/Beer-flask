@@ -84,3 +84,24 @@ def member_of_or_public_beernight(func):
         flash("Ekki heimilað.", category="danger")
         return redirect(url_for('user.current_user_detail'))
     return wrapper
+
+
+def member_public_invite_beernight(func):
+    @wraps(func)
+    def wrapper(beernight_id, *args, **kwargs):
+        beernight = Beernight.query.get(beernight_id)
+        if beernight.is_public:
+            return func(beernight_id=beernight_id, *args, **kwargs)
+        if current_user.is_authenticated:
+            is_member = beernight.is_user_member(current_user.id)
+            invites = beernight.invitations
+            is_invite = False
+            for i in invites:
+                if i.receiver_id == current_user.id:
+                    is_invite = True
+            if is_member or is_invite:  
+                return func(beernight_id=beernight_id, *args, **kwargs)
+        flash("Ekki heimilað.", category="danger")
+        return redirect(url_for('user.current_user_detail'))
+    return wrapper
+

@@ -93,7 +93,7 @@ def beer_detail(id):
                 BeerComment,
                 request.args.get('sort_by', default='created_at'),
                 order=request.args.get('order', default='desc'))).all()
-
+    print(beer.alcohol)
     form = BeernightForm(request.form)
     if request.method == 'POST':
         if form.validate():

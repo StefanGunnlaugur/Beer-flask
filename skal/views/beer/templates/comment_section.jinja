@@ -12,17 +12,29 @@
     {% endif %}
     <div class="comments-nav">
       <ul class="nav nav-pills">
-        <li role="presentation" class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="false">
+        <li role="presentation">
+          <a>
               {{ _('Það eru') }} {{comments | length}} {{ _('athugasemdir') }} <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu">
-            <li><a href="#">{{ _('Kemur') }}</a></li>
-            <li><a href="#">{{ _('Seinna') }}</a></li>
-          </ul>
         </li>
       </ul>
     </div>
+
+    <!--
+      <div class="comments-nav">
+        <ul class="nav nav-pills">
+          <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="false">
+                {{ _('Það eru') }} {{comments | length}} {{ _('athugasemdir') }} <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="#">{{ _('Kemur') }}</a></li>
+              <li><a href="#">{{ _('Seinna') }}</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    -->
 
     <div class="column">
 

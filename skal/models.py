@@ -245,7 +245,7 @@ class Beer(BaseModel, db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     name = db.Column(db.String(255), nullable=False, info={'label': 'Nafn',})
     price = db.Column(db.Integer, info={'label': 'Verð(kr)',})
-    alcohol = db.Column(db.Float, info={'label': 'Áfengi(%)',})
+    alcohol = db.Column(db.Float(precision=1), info={'label': 'Áfengi(%)',})
     book_score = db.Column(db.Float)
     economic_score = db.Column(db.Float)
     volume = db.Column(db.Integer, info={'label': 'Magn(ml)',})
