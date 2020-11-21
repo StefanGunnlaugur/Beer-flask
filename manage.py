@@ -144,7 +144,6 @@ class AddBeersFromJson(Command):
                 if beer is None:
                     beer = Beer()
                     beer.name = p['name']
-                
                 if p['price']:
                     beer.price = int(p['price'].replace('.', '').replace(' kr', ''))
                 if p['alcohol']:
@@ -164,9 +163,6 @@ class AddBeersFromJson(Command):
                 db.session.add(beer)
                 beer.economic_score = beer.bang_for_buck
         db.session.commit()
-        b = Beer.query.filter_by(name='Boli Premium').first()
-        print(b)
-        print(b.alcohol)
 
 class changePass(Command):
     def run(self):
