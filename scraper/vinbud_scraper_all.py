@@ -27,11 +27,11 @@ url = "https://www.vinbudin.is/heim/vorur/vorur?page={}".format(start_page)
 
 # create a new Firefox session
 driver = webdriver.Firefox()
-driver.implicitly_wait(50)
+driver.implicitly_wait(100)
 driver.get(url)
 print(start_page)
 next_button = driver.find_elements_by_class_name("next")
-for i in range(start_page - 1, 120):
+for i in range(start_page - 1, 124):
     soup=BeautifulSoup(driver.page_source, 'html')
     for product in soup.find_all('li', class_="product"):
         if product.find('span', class_="category") and product.find('span', class_="category").text:
