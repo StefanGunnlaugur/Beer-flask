@@ -1,6 +1,7 @@
 import requests
 import json
-
+import os.path
+from os import path
 
 def sendRequest(url):
     try:
@@ -33,14 +34,15 @@ def downloadImage(imageUrl, filePath):
 
 
 def get_images():
-    with open('data-all-13-11-2020.json') as json_file:
+    with open('data-all-16-06-2021.json') as json_file:
         data = json.load(json_file)
         c = 0
         for b in data:
             if b['product_number']:
                 url = 'https://www.vinbudin.is/Portaldata/1/Resources/vorumyndir/medium/{}_r.jpg'.format(b['product_number'])
                 file_path = './images/{}.jpg'.format(b['product_number'])
-                res = downloadImage(url, file_path)
+                if not path.exists(file_path):
+                    res = downloadImage(url, file_path)
                 if c % 50 == 0:
                     print(c)
                 #print(res, b['product_number'])
