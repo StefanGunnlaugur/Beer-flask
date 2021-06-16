@@ -137,7 +137,7 @@ class AddUser(Command):
 
 class AddBeersFromJson(Command):
     def run(self):
-        with open('scraper/data-all-26-02-2021.json') as json_file:
+        with open('scraper/data-all-16-06-2021.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 beer = Beer.query.filter_by(name=p['name']).filter_by(product_id=p['product_number']).first()
